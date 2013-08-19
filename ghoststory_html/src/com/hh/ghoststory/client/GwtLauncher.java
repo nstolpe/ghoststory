@@ -1,9 +1,9 @@
 package com.hh.ghoststory.client;
 
-import com.hh.ghoststory.Game;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
+import com.hh.ghoststory.GhostStory;
 
 public class GwtLauncher extends GwtApplication {
 	@Override
@@ -15,6 +15,6 @@ public class GwtLauncher extends GwtApplication {
 
 	@Override
 	public ApplicationListener getApplicationListener () {
-		return new Game();
+		return new GhostStory();
 	}
 }

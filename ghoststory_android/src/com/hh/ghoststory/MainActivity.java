@@ -15,6 +15,6 @@ public class MainActivity extends AndroidApplication {
         cfg.useAccelerometer = false;
         cfg.numSamples = 4;
         
-        initialize(new Game(), cfg);
+        initialize(new GhostStory(), cfg);
     }
 }
