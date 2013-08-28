@@ -2,6 +2,7 @@ package com.hh.ghoststory;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.hh.ghoststory.screens.CreateScreen;
 import com.hh.ghoststory.screens.IsometricScreen;
 import com.hh.ghoststory.screens.MainScreen;
 
@@ -19,6 +20,9 @@ public class GhostStory extends Game {
     }
     public IsometricScreen getIsometricScreen() {
     	return new IsometricScreen(this);
+    }
+    public CreateScreen getCreateScreen() {
+    	return new CreateScreen(this);
     }
 	/***************************************************************************
 	* Overriden methods                                                        *

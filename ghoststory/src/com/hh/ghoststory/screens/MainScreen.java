@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.hh.ghoststory.GhostStory;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class MainScreen extends AbstractScreen {
 	protected Table table;
@@ -33,23 +35,48 @@ public class MainScreen extends AbstractScreen {
         table.setFillParent(true);
         table.debug();
         stage.addActor(table);
-      
+
         startButton = new MainScreenButton("Play Ghost Story");
         table.add(startButton.button).width(500).height(100);
         table.row();
         createButton = new MainScreenButton("Create Character");
         table.add(createButton.button).width(500).height(100);
-        setInputListeners();
 	}
 	
 	@Override
 	public void show() {
 		super.show();
+		stage.addAction(
+			sequence(
+				alpha(0f,0f),
+				fadeIn(1.25f),
+				new Action() {
+					@Override
+					public boolean act(float delta) {
+						setInputListeners();
+						return true;
+					}
+				}
+			)
+		);
+//		stage.addAction(
+//			sequence(
+//				fadeIn(5f),
+//				delay(75f),
+//				fadeOut(0.75f),
+//				new Action() {
+//                   @Override
+//                   public boolean act(float delta) {
+////                       game.setScreen(new MenuScreen(game));
+//                       return true;
+//                   }
+//				}
+//			)
+//		);
 	}
 	
 	@Override
 	public void render(float delta) {
-//		setClear(1, 1, 1, 1f);
 		Gdx.gl.glClearColor(1f, 1f, 1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		stage.act(Gdx.graphics.getDeltaTime());
@@ -64,28 +91,29 @@ public class MainScreen extends AbstractScreen {
 		createButton.font.dispose();
 		stage.dispose();
 	}
-	
+
+	/*
+	 * This is where you'll set input listeners.
+	 */
 	public void setInputListeners() {
-		/*
-		 * This is where you'll set input listeners.
-		 */
 		startButton.button.addListener(new ClickListener() {
 	        @Override
 	        public void clicked (InputEvent event, float x, float y) {
 	            game.setScreen(game.getIsometricScreen());
 	        }
 		});
+		createButton.button.addListener(new ClickListener() {
+			@Override
+			public void clicked (InputEvent event, float x, float y) {
+				game.setScreen(game.getCreateScreen());
+			}
+		});
 	}
-	public void setScreen(int screen) {
-//		switch(screen) {
-//		case 1:
-//			game.setScreen(game.getTurnScreen()); break;
-//		case 2:
-//			game.setScreen(game.getCharacterScreen()); break;
-//		case 3:
-//			game.setScreen(game.getIsometricScreen()); break;
-//		}
-	}
+	
+	/*
+	 * Class to create buttons on the main screen. A factory may be better, or use libGDX skin. Or move
+	 * to own class.
+	 */
 	private class MainScreenButton {
         NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
         NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
@@ -94,8 +122,11 @@ public class MainScreen extends AbstractScreen {
         TextButton button;
         
         public MainScreenButton(String label) {
-    		font = new BitmapFont(Gdx.files.internal("fonts/crimson.fnt"),
-   		         Gdx.files.internal("fonts/crimson.png"), false);
+    		font = new BitmapFont(
+    			Gdx.files.internal("fonts/crimson.fnt"),
+    			Gdx.files.internal("fonts/crimson.png"),
+    			false
+    		);
             style.up = new NinePatchDrawable(up);
             style.down = new NinePatchDrawable(down);
             style.font = font;
