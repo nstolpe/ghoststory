@@ -20,33 +20,25 @@ import com.hh.ghoststory.GhostStory;
 public class MainScreen extends AbstractScreen {
 	protected Table table;
 	private Stage stage;
-	private BitmapFont font;
 	private SpriteBatch batch;
-	private TextButton startButton;
+	private MainScreenButton startButton;
+	private MainScreenButton createButton;
 	
 	public MainScreen(GhostStory game) {
 		super(game);
-		this.font = new BitmapFont(Gdx.files.internal("fonts/crimson.fnt"),
-		         Gdx.files.internal("fonts/crimson.png"), false);
-		this.batch = new SpriteBatch();
+
 		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		Gdx.input.setInputProcessor(stage);
         table = new Table();
         table.setFillParent(true);
         table.debug();
         stage.addActor(table);
-        
-        // All for the text button style here.
-        NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
-        NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
-        TextButtonStyle style = new TextButtonStyle();
-        style.up = new NinePatchDrawable(up);
-        style.down = new NinePatchDrawable(down);
-        style.font = font;
-        style.fontColor = new Color(1f, 1f, 1f, 1f);
-
-        startButton = new TextButton("Play Ghost Story", style);
-        table.add(startButton).width(500).height(100);
+      
+        startButton = new MainScreenButton("Play Ghost Story");
+        table.add(startButton.button).width(500).height(100);
+        table.row();
+        createButton = new MainScreenButton("Create Character");
+        table.add(createButton.button).width(500).height(100);
         setInputListeners();
 	}
 	
@@ -68,7 +60,8 @@ public class MainScreen extends AbstractScreen {
 	public void dispose() {
 		super.dispose();
 		batch.dispose();
-		font.dispose();
+		startButton.font.dispose();
+		createButton.font.dispose();
 		stage.dispose();
 	}
 	
@@ -76,10 +69,9 @@ public class MainScreen extends AbstractScreen {
 		/*
 		 * This is where you'll set input listeners.
 		 */
-		startButton.addListener(new ClickListener() {
+		startButton.button.addListener(new ClickListener() {
 	        @Override
 	        public void clicked (InputEvent event, float x, float y) {
-	            System.out.println("hiii");
 	            game.setScreen(game.getIsometricScreen());
 	        }
 		});
@@ -93,5 +85,23 @@ public class MainScreen extends AbstractScreen {
 //		case 3:
 //			game.setScreen(game.getIsometricScreen()); break;
 //		}
+	}
+	private class MainScreenButton {
+        NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
+        NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
+        TextButtonStyle style = new TextButtonStyle();
+        BitmapFont font;
+        TextButton button;
+        
+        public MainScreenButton(String label) {
+    		font = new BitmapFont(Gdx.files.internal("fonts/crimson.fnt"),
+   		         Gdx.files.internal("fonts/crimson.png"), false);
+            style.up = new NinePatchDrawable(up);
+            style.down = new NinePatchDrawable(down);
+            style.font = font;
+            style.fontColor = new Color(1f, 1f, 1f, 1f);
+            
+            button = new TextButton(label, style);
+        }
 	}
 }
