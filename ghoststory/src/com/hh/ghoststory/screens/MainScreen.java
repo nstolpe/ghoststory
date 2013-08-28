@@ -1,5 +1,9 @@
 package com.hh.ghoststory.screens;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -17,8 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.hh.ghoststory.GhostStory;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-
 public class MainScreen extends AbstractScreen {
 	protected Table table;
 	private Stage stage;
@@ -35,7 +37,6 @@ public class MainScreen extends AbstractScreen {
         table.setFillParent(true);
         table.debug();
         stage.addActor(table);
-
         startButton = new MainScreenButton("Play Ghost Story");
         table.add(startButton.button).width(500).height(100);
         table.row();
@@ -43,6 +44,10 @@ public class MainScreen extends AbstractScreen {
         table.add(createButton.button).width(500).height(100);
 	}
 	
+	/*
+	 * Adds a fade in action to the screen and enables input listeners when it's finished.
+	 * @see com.hh.ghoststory.screens.AbstractScreen#show()
+	 */
 	@Override
 	public void show() {
 		super.show();
@@ -59,20 +64,6 @@ public class MainScreen extends AbstractScreen {
 				}
 			)
 		);
-//		stage.addAction(
-//			sequence(
-//				fadeIn(5f),
-//				delay(75f),
-//				fadeOut(0.75f),
-//				new Action() {
-//                   @Override
-//                   public boolean act(float delta) {
-////                       game.setScreen(new MenuScreen(game));
-//                       return true;
-//                   }
-//				}
-//			)
-//		);
 	}
 	
 	@Override
