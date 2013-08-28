@@ -190,6 +190,20 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		return false;
 	}
 	
+	/*
+	 * Resizes the camera viewport to reflect the new size. Could do a lot more (like show more of the world at larger sizes).
+	 * 
+	 * @see com.hh.ghoststory.screens.AbstractScreen#resize(int, int)
+	 */
+	@Override
+	public void resize(int width, int height) {
+		camera.setToOrtho(false, 10, 10 * (Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth()));
+		camera.position.set(5, 5, 5);
+		camera.direction.set(-1, -1, -1);
+		camera.near = 1;
+		camera.far = 100;
+	}
+	
     private boolean doneLoading() {
     	if (loading && assets.update() != true) {
     		return false;
