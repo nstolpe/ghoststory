@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 
 public class MainScreen extends AbstractScreen {
@@ -87,7 +86,12 @@ public class MainScreen extends AbstractScreen {
 		createButton.font.dispose();
 		stage.dispose();
 	}
-
+	
+	@Override
+	public void resize(int width, int height) {
+		stage.setViewport(width, height, true);
+	}
+	
 	/*
 	 * This is where you'll set input listeners.
 	 */
