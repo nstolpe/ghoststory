@@ -2,6 +2,7 @@ package com.hh.ghoststory.screens;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import com.badlogic.gdx.Gdx;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -19,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 
 public class MainScreen extends AbstractScreen {
@@ -27,6 +30,8 @@ public class MainScreen extends AbstractScreen {
 	private SpriteBatch batch;
 	private MainScreenButton startButton;
 	private MainScreenButton createButton;
+	private EventListener startButtonListener;
+	private EventListener createButtonListener;
 	
 	public MainScreen(GhostStory game) {
 		super(game);
@@ -54,7 +59,7 @@ public class MainScreen extends AbstractScreen {
 		stage.addAction(
 			sequence(
 				alpha(0f,0f),
-				fadeIn(1.25f),
+				fadeIn(0.5f),
 				new Action() {
 					@Override
 					public boolean act(float delta) {
@@ -87,18 +92,48 @@ public class MainScreen extends AbstractScreen {
 	 * This is where you'll set input listeners.
 	 */
 	public void setInputListeners() {
-		startButton.button.addListener(new ClickListener() {
+		startButtonListener = new ClickListener() {
 	        @Override
 	        public void clicked (InputEvent event, float x, float y) {
-	            game.setScreen(game.getIsometricScreen());
+	        	startButton.button.removeListener(startButtonListener);
+	        	createButton.button.removeListener(createButtonListener);
+	    		stage.addAction(
+	    				sequence(
+	    					fadeOut(0.5f),
+	    					new Action() {
+	    						@Override
+	    						public boolean act(float delta) {
+	    							game.setScreen(game.getIsometricScreen());
+	    							return true;
+	    						}
+	    					}
+	    				)
+	    			);
 	        }
-		});
-		createButton.button.addListener(new ClickListener() {
+		};
+		
+		createButtonListener = new ClickListener() {
 			@Override
-			public void clicked (InputEvent event, float x, float y) {
-				game.setScreen(game.getCreateScreen());
-			}
-		});
+	        public void clicked (InputEvent event, float x, float y) {
+	        	startButton.button.removeListener(startButtonListener);
+	        	createButton.button.removeListener(createButtonListener);
+	    		stage.addAction(
+	    				sequence(
+	    					fadeOut(0.5f),
+	    					new Action() {
+	    						@Override
+	    						public boolean act(float delta) {
+	    							game.setScreen(game.getCreateScreen());
+	    							return true;
+	    						}
+	    					}
+	    				)
+	    			);
+	        }
+		};
+		
+		startButton.button.addListener(startButtonListener);
+		createButton.button.addListener(createButtonListener);
 	}
 	
 	/*
