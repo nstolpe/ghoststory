@@ -35,43 +35,19 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	private boolean justDragged = false;
 	private Ghost ghost;
 	
-	private ModelBatch modelBatch;
+	private ModelBatch modelBatch = new ModelBatch();
 	public boolean loading;
-	public AssetManager assets;
+	public AssetManager assets = new AssetManager();
 	public Array<GameModel> game_models = new Array<GameModel>();
-	public Lights lights;
+	public Lights lights = new Lights();
 	
 	public IsometricScreen(GhostStory game) {
 		super(game);
 		
-		modelBatch = new ModelBatch();
-		camera = new OrthographicCamera();
-
 		setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-        ghost = new Ghost();
-        game_models.add(ghost);
+		setupGameModels();
+		setupLights();
         
-        for(int z = 0; z < 10; z++) {
-			for(int x = 0; x < 10; x++) {
-				game_models.add(new Tile(x,0,z));
-			}
-		}
-        
-        lights = new Lights();
-        lights.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1f));
-        lights.add(new PointLight().set(new Color(1f,0f,0f, 1f), 4,2,4, 1));
-        lights.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6,2,0f, 1));
-        lights.ambientLight.set(0.2f, 0.2f, 0.2f, 1f);
-        lights.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -1f, -1f));
-        
-        assets = new AssetManager();
-
-        for (GameModel game_model : game_models) {
-        	if (!assets.isLoaded(game_model.model_resource)) assets.load(game_model.model_resource, Model.class);
-        }
-		loading = true;
-		
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 		Gdx.input.setInputProcessor(this);
 	}
@@ -84,8 +60,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-//        if (loading && assets.update())
-//        	doneLoading();
         
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 // Keep these, might need them when other stuff comes back in.
@@ -98,7 +72,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	    
 		if (doneLoading()) {
 			modelBatch.begin(camera);
-	
 			for (GameModel game_model : game_models) {
 				game_model.update();
 				modelBatch.render(game_model.model, lights);
@@ -205,6 +178,34 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		camera.far = 100;
 	}
 	
+	/*
+	 * Instantiate the game models.
+	 */
+	private void setupGameModels() {
+        ghost = new Ghost();
+        game_models.add(ghost);
+        
+        for(int z = 0; z < 10; z++) {
+			for(int x = 0; x < 10; x++) {
+				game_models.add(new Tile(x,0,z));
+			}
+		}
+        loadGameModelAssets();
+	}
+	
+	/*
+	 * Load the GameModel assets
+	 */
+	private void loadGameModelAssets() {
+        for (GameModel game_model : game_models) {
+        	if (!assets.isLoaded(game_model.model_resource)) assets.load(game_model.model_resource, Model.class);
+        }
+        loading = true;
+	}
+	
+	/*
+	 * Check if assets have all been loaded. Run in a loop.
+	 */
     private boolean doneLoading() {
     	if (loading && assets.update() != true) {
     		return false;
@@ -218,6 +219,12 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
     	return true;
     }
 	   
-
+    private void setupLights() {
+	    lights.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1f));
+	    lights.add(new PointLight().set(new Color(1f,0f,0f, 1f), 4,2,4, 1));
+	    lights.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6,2,0f, 1));
+	    lights.ambientLight.set(0.2f, 0.2f, 0.2f, 1f);
+	    lights.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -1f, -1f));
+    }
 
 }
