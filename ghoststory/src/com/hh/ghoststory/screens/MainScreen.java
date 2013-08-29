@@ -1,9 +1,6 @@
 package com.hh.ghoststory.screens;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -31,6 +28,11 @@ public class MainScreen extends AbstractScreen {
 	private MainScreenButton createButton;
 	private EventListener startButtonListener;
 	private EventListener createButtonListener;
+	private BitmapFont font = new BitmapFont(
+			Gdx.files.internal("fonts/crimson.fnt"),
+			Gdx.files.internal("fonts/crimson.png"),
+			false
+		);
 	
 	public MainScreen(GhostStory game) {
 		super(game);
@@ -44,7 +46,7 @@ public class MainScreen extends AbstractScreen {
         startButton = new MainScreenButton("Play Ghost Story");
         table.add(startButton.button).width(500).height(100);
         table.row();
-        createButton = new MainScreenButton("Create Character");
+        createButton = new MainScreenButton("Create Ghost Character");
         table.add(createButton.button).width(500).height(100);
 	}
 	
@@ -82,8 +84,7 @@ public class MainScreen extends AbstractScreen {
 	public void dispose() {
 		super.dispose();
 		batch.dispose();
-		startButton.font.dispose();
-		createButton.font.dispose();
+		font.dispose();
 		stage.dispose();
 	}
 	
@@ -148,15 +149,9 @@ public class MainScreen extends AbstractScreen {
         NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
         NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
         TextButtonStyle style = new TextButtonStyle();
-        BitmapFont font;
         TextButton button;
         
         public MainScreenButton(String label) {
-    		font = new BitmapFont(
-    			Gdx.files.internal("fonts/crimson.fnt"),
-    			Gdx.files.internal("fonts/crimson.png"),
-    			false
-    		);
             style.up = new NinePatchDrawable(up);
             style.down = new NinePatchDrawable(down);
             style.font = font;
