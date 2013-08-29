@@ -36,7 +36,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	private Ghost ghost;
 	
 	private ModelBatch modelBatch;
-//	private ModelLoader loader;
 	public boolean loading;
 	public AssetManager assets;
 	public Array<GameModel> game_models = new Array<GameModel>();
@@ -46,12 +45,9 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		super(game);
 		
 		modelBatch = new ModelBatch();
-		camera = new OrthographicCamera(10, 10 * (Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth()));
-		// These set the isometric perspective.
-		camera.position.set(5, 5, 5);
-		camera.direction.set(-1, -1, -1);
-		camera.near = 1;
-		camera.far = 100;
+		camera = new OrthographicCamera();
+
+		setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
         ghost = new Ghost();
         game_models.add(ghost);
@@ -68,6 +64,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
         lights.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6,2,0f, 1));
         lights.ambientLight.set(0.2f, 0.2f, 0.2f, 1f);
         lights.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -1f, -1f));
+        
         assets = new AssetManager();
 
         for (GameModel game_model : game_models) {
@@ -197,7 +194,11 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	 */
 	@Override
 	public void resize(int width, int height) {
-		camera.setToOrtho(false, 10, 10 * (Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth()));
+		setupCamera(width, height);
+	}
+	
+	private void setupCamera(int width, int height) {
+		camera.setToOrtho(false, 10, 10 * ((float) height / (float) width));
 		camera.position.set(5, 5, 5);
 		camera.direction.set(-1, -1, -1);
 		camera.near = 1;
