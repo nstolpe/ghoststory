@@ -28,11 +28,6 @@ public class MainScreen extends AbstractScreen {
 	private MainScreenButton createButton;
 	private EventListener startButtonListener;
 	private EventListener createButtonListener;
-	private BitmapFont font = new BitmapFont(
-			Gdx.files.internal("fonts/crimson.fnt"),
-			Gdx.files.internal("fonts/crimson.png"),
-			false
-		);
 	
 	public MainScreen(GhostStory game) {
 		super(game);
@@ -60,7 +55,7 @@ public class MainScreen extends AbstractScreen {
 		stage.addAction(
 			sequence(
 				alpha(0f,0f),
-				fadeIn(0.5f),
+				fadeIn(0.3f),
 				new Action() {
 					@Override
 					public boolean act(float delta) {
@@ -104,7 +99,7 @@ public class MainScreen extends AbstractScreen {
 	        	createButton.button.removeListener(createButtonListener);
 	    		stage.addAction(
 	    				sequence(
-	    					fadeOut(0.5f),
+	    					fadeOut(0.3f),
 	    					new Action() {
 	    						@Override
 	    						public boolean act(float delta) {
@@ -124,7 +119,7 @@ public class MainScreen extends AbstractScreen {
 	        	createButton.button.removeListener(createButtonListener);
 	    		stage.addAction(
 	    				sequence(
-	    					fadeOut(0.5f),
+	    					fadeOut(0.3f),
 	    					new Action() {
 	    						@Override
 	    						public boolean act(float delta) {
@@ -139,25 +134,5 @@ public class MainScreen extends AbstractScreen {
 		
 		startButton.button.addListener(startButtonListener);
 		createButton.button.addListener(createButtonListener);
-	}
-	
-	/*
-	 * Class to create buttons on the main screen. A factory may be better, or use libGDX skin. Or move
-	 * to own class.
-	 */
-	private class MainScreenButton {
-        NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
-        NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
-        TextButtonStyle style = new TextButtonStyle();
-        TextButton button;
-        
-        public MainScreenButton(String label) {
-            style.up = new NinePatchDrawable(up);
-            style.down = new NinePatchDrawable(down);
-            style.font = font;
-            style.fontColor = new Color(1f, 1f, 1f, 1f);
-            
-            button = new TextButton(label, style);
-        }
 	}
 }
