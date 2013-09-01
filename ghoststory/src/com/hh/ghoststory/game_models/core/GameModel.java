@@ -14,7 +14,7 @@ public abstract class GameModel {
 	public ModelInstance model;
 	public Vector3 position = new Vector3(0,0,0);
 	public float rotation = 0;
-	public Vector3 verticalAxis = new Vector3(0,1,0);;
+	public Vector3 verticalAxis = new Vector3(0,1,0);
 	
 	public void update() {
 		setRotation();

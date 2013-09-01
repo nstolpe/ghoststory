@@ -34,6 +34,10 @@ public class Ghost extends DynamicModel {
 		this.setTargetPosition(position);
 	}
 	
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
+		this.targetRotation = rotation;
+	}
 	/*
 	 * Returns a copy so nothing happens to the position vector.
 	 */

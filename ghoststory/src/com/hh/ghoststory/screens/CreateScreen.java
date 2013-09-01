@@ -2,7 +2,6 @@ package com.hh.ghoststory.screens;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import java.util.HashMap;
@@ -12,13 +11,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.lights.Lights;
+import com.badlogic.gdx.graphics.g3d.materials.Material;
+import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -50,6 +54,9 @@ public class CreateScreen extends AbstractScreen {
 	private Ghost ghost;
 	public boolean loading;
 	public Array<GameModel> game_models = new Array<GameModel>();
+	private PerspectiveCamera mcamera = new PerspectiveCamera(75, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	public Lights lights = new Lights();
+	private int GHOST_COLOR = 0;
 	
 	public CreateScreen(GhostStory game) {
 		super(game);
@@ -124,8 +131,21 @@ public class CreateScreen extends AbstractScreen {
         
         ghost = new Ghost();
         game_models.add(ghost);
+        ghost.setPosition(new Vector3(0,-3.5f,0));
+        ghost.verticalAxis = new Vector3(0,1,0);
+        ghost.setRotation(0f);
+        
         assets.load(ghost.model_resource, Model.class);
         loading = true;
+//        mcamera.setToOrtho(false, 10, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
+//		mcamera.position.set(5, 5, 5);
+//		mcamera.direction.set(-1, -1, -1);
+        mcamera.position.set(0, 0, 5);
+        mcamera.update();
+//		mcamera.near = 1;
+//		mcamera.far = 100;
+        lights.ambientLight.set(0.5f, 0.5f, 0.5f, 1f);
+        lights.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -1f, -1f));
 	}
 	
 	@Override
@@ -163,8 +183,10 @@ public class CreateScreen extends AbstractScreen {
         	Table.drawDebug(stage);	
         }
         if (doneLoading()) {
-	        modelBatch.begin(camera);
-	        modelBatch.render(ghost.model);
+	        modelBatch.begin(mcamera);
+	        ghost.update();
+	        ghost.model.transform.rotate(new Vector3(1, 0, 0), -20);
+	        modelBatch.render(ghost.model, lights);
 	        modelBatch.end();
         }
 	}
@@ -178,10 +200,38 @@ public class CreateScreen extends AbstractScreen {
 		ClickListener debugTableListener = new ClickListener() {
     		@Override
     		public void clicked (InputEvent event, float x, float y) {
-    			if (TABLE_DEBUG == true)
-    				TABLE_DEBUG = false;
-    			else
-    				TABLE_DEBUG = true;
+//    			if (TABLE_DEBUG == true)
+//    				TABLE_DEBUG = false;
+//    			else
+//    				TABLE_DEBUG = true;
+			
+    			
+    			String res = new String();
+    			switch (GHOST_COLOR) {
+    				case  0:
+    					System.out.println(GHOST_COLOR);
+    					GHOST_COLOR = 1;
+    					res = "ghost_texture_red.png";
+    					break;
+    				case 1:
+    					System.out.println(GHOST_COLOR);
+    					GHOST_COLOR = 2;
+    					res = "ghost_texture_blue.png";
+    					break;
+    				case 2:
+    					System.out.println(GHOST_COLOR);
+    					GHOST_COLOR = 3;
+    					res = "ghost_texture_orange.png";
+    					break;
+    				case 3:
+    					System.out.println(GHOST_COLOR);
+    					GHOST_COLOR = 0;
+    					res = "ghost_texture_green.png";
+    					break;
+    			}
+    			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, new Texture("models/" + Gdx.files.internal(res))));
+//    			TextureAttribute textureAttribute1 = new TextureAttribute(TextureAttribute.Diffuse, new Texture(Gdx.files.internal("models/ghost_texture_green.png")));
+//    			mat.set(textureAttribute1);
     		}
 		};
 		listeners.put("debug_table_switch", debugTableListener);

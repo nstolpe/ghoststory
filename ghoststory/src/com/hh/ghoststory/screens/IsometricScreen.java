@@ -73,10 +73,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		camera.update();
 	    
 		if (doneLoading()) {
-// Test code to get and reset a texture.			
-//			TextureAttribute textureAttribute1 = new TextureAttribute(TextureAttribute.Diffuse, new Texture(Gdx.files.internal("models/ghost_texture_blue.png")));
-//			Material goo = ghost.model.getMaterial("Material__45");
-//			goo.set(textureAttribute1);
 			modelBatch.begin(camera);
 			for (GameModel game_model : game_models) {
 				game_model.update();

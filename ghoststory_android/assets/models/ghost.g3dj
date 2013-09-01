@@ -1093,14 +1093,14 @@
 	], 
 	"materials": [
 		{
-			"id": "Material__45", 
+			"id": "Texture_001", 
 			"ambient": [ 1.000000,  1.000000,  1.000000], 
 			"diffuse": [ 1.000000,  1.000000,  1.000000], 
 			"specular": [ 1.000000,  1.000000,  1.000000], 
 			"textures": [
 				{
-					"id": "Material__45", 
-					"filename": "ghost_texture_orange.png", 
+					"id": "Texture_001", 
+					"filename": "ghost_texture_green.png", 
 					"type": "DIFFUSE"
 				}
 			]
@@ -1115,7 +1115,7 @@
 					"parts": [
 						{
 							"meshpartid": "mpart1", 
-							"materialid": "Material__45", 
+							"materialid": "Texture_001", 
 							"uvMapping": [[  0]]
 						}
 					]
