@@ -6,11 +6,14 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.lights.PointLight;
+import com.badlogic.gdx.graphics.g3d.materials.Material;
+import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Plane;
@@ -60,7 +63,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-        
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 // Keep these, might need them when other stuff comes back in.
 //	    Gdx.gl20.glEnable(GL20.GL_TEXTURE_2D);
@@ -71,6 +73,10 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		camera.update();
 	    
 		if (doneLoading()) {
+// Test code to get and reset a texture.			
+//			TextureAttribute textureAttribute1 = new TextureAttribute(TextureAttribute.Diffuse, new Texture(Gdx.files.internal("models/ghost_texture_blue.png")));
+//			Material goo = ghost.model.getMaterial("Material__45");
+//			goo.set(textureAttribute1);
 			modelBatch.begin(camera);
 			for (GameModel game_model : game_models) {
 				game_model.update();
@@ -195,6 +201,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	
 	/*
 	 * Load the GameModel assets
+	 * @TODO don't think the check for isLoaded is needed, since the manager should automatically share.
 	 */
 	private void loadGameModelAssets() {
         for (GameModel game_model : game_models) {

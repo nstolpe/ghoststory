@@ -26,7 +26,12 @@ public abstract class GameModel {
 	abstract public void setRotation();
 	abstract public void setTranslation();
 	
-	// Retrieves a model resource from an asset manager and attaches it to the game model.
+	 
+	/*
+	 * Retrieves a model resource from an asset manager and attaches it to the game model.
+	 * This is a little weird. The asset manager is in the screen.
+	 * @TODO Make it not weird. Maybe override the method w/ other options? 
+	 */
 	public void setModelResource(AssetManager assets) {
 		model = new ModelInstance(assets.get(model_resource, Model.class));
 	}

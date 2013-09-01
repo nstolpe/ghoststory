@@ -2,15 +2,25 @@ package com.hh.ghoststory.screens;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
@@ -21,16 +31,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.sun.org.apache.bcel.internal.generic.IFGT;
+import com.hh.ghoststory.game_models.Ghost;
+import com.hh.ghoststory.game_models.core.GameModel;
 
 public class CreateScreen extends AbstractScreen {
 	protected Table table;
 	private Stage stage;
 	private boolean TABLE_DEBUG = false;
+	private Map<String, InputListener> listeners = new HashMap<String, InputListener>();
+	private MainScreenButton tableDebugSwitch;
+	private ModelBatch modelBatch = new ModelBatch();
+	public AssetManager assets = new AssetManager();
+	private Ghost ghost;
+	public boolean loading;
+	public Array<GameModel> game_models = new Array<GameModel>();
 	
 	public CreateScreen(GhostStory game) {
 		super(game);
@@ -87,9 +106,9 @@ public class CreateScreen extends AbstractScreen {
             buttons.debug();
             Button upButton = new Button(upButtonStyle);
             Button downButton = new Button(downButtonStyle);
-            buttons.add(upButton).padBottom(10);
+            buttons.add(upButton).padBottom(4);
             buttons.row();
-            buttons.add(downButton).padTop(10);
+            buttons.add(downButton).padTop(4);
 
             table.add(label).width(80).height(80);
             table.add(textField).width(100).height(80).right();
@@ -98,6 +117,15 @@ public class CreateScreen extends AbstractScreen {
         table.row();
         table.add(new Label("Point Pool:", labelStyle)).colspan(5).height(80).right();
         table.add(new Label(Integer.toString(50), labelStyle)).colspan(4).height(80);
+        table.row();
+        tableDebugSwitch = new MainScreenButton("Debug Table Switch"); 
+        table.add(tableDebugSwitch.button).colspan(9).height(100);
+        setInputListeners();
+        
+        ghost = new Ghost();
+        game_models.add(ghost);
+        assets.load(ghost.model_resource, Model.class);
+        loading = true;
 	}
 	
 	@Override
@@ -134,10 +162,45 @@ public class CreateScreen extends AbstractScreen {
         if (TABLE_DEBUG) {
         	Table.drawDebug(stage);	
         }
+        if (doneLoading()) {
+	        modelBatch.begin(camera);
+	        modelBatch.render(ghost.model);
+	        modelBatch.end();
+        }
 	}
 	
 	@Override
 	public void dispose() {
 		super.dispose();
 	}
+	
+	public void setInputListeners() {
+		ClickListener debugTableListener = new ClickListener() {
+    		@Override
+    		public void clicked (InputEvent event, float x, float y) {
+    			if (TABLE_DEBUG == true)
+    				TABLE_DEBUG = false;
+    			else
+    				TABLE_DEBUG = true;
+    		}
+		};
+		listeners.put("debug_table_switch", debugTableListener);
+		tableDebugSwitch.button.addListener(listeners.get("debug_table_switch"));
+	}
+	
+	/*
+	 * Check if assets have all been loaded. Run in a loop.
+	 */
+    private boolean doneLoading() {
+    	if (loading && assets.update() != true) {
+    		return false;
+    	} else if (loading && assets.update()){
+        	for (GameModel game_model : game_models) {
+        		game_model.setModelResource(assets);
+        	}
+        	loading = false;
+        	return false;
+    	}
+    	return true;
+    }
 }
