@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -49,6 +50,7 @@ public class CreateScreen extends AbstractScreen {
 	private boolean TABLE_DEBUG = false;
 	private Map<String, InputListener> listeners = new HashMap<String, InputListener>();
 	private MainScreenButton tableDebugSwitch;
+	private MainScreenButton ghostSwitch;
 	private ModelBatch modelBatch = new ModelBatch();
 	public AssetManager assets = new AssetManager();
 	private Ghost ghost;
@@ -63,6 +65,7 @@ public class CreateScreen extends AbstractScreen {
 		
 		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		Gdx.input.setInputProcessor(stage);
+		
         table = new Table();
         table.setFillParent(true);
         table.top();
@@ -87,13 +90,13 @@ public class CreateScreen extends AbstractScreen {
         TextureRegionDrawable fieldCursor = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("fonts/cursor.png"))));
         textStyle.cursor = fieldCursor;
 
-        ButtonStyle upButtonStyle = new ButtonStyle();
-        upButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_up_up.png"))));
-        upButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_up_down.png"))));
+        ButtonStyle addButtonStyle = new ButtonStyle();
+        addButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_up_up.png"))));
+        addButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_up_down.png"))));
         
-        ButtonStyle downButtonStyle = new ButtonStyle();
-        downButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_up.png"))));
-        downButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_down.png"))));
+        ButtonStyle subButtonStyle = new ButtonStyle();
+        subButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_up.png"))));
+        subButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_down.png"))));
         
         table.row().left();
         Label nameLabel = new Label("Name:", labelStyle);
@@ -108,14 +111,16 @@ public class CreateScreen extends AbstractScreen {
             Label label = new Label(attrs[i], labelStyle);
             TextField textField = new TextField("6", textStyle);
             textField.setDisabled(true);
-            
+            textField.setName(attrs[i]);
             Table buttons = new Table();
             buttons.debug();
-            Button upButton = new Button(upButtonStyle);
-            Button downButton = new Button(downButtonStyle);
-            buttons.add(upButton).padBottom(4);
+            Button addButton = new Button(addButtonStyle);
+            Button subButton = new Button(subButtonStyle);
+            addButton.setName(attrs[i] + "_up");
+            subButton.setName(attrs[i] + "_down");
+            buttons.add(addButton).padBottom(4);
             buttons.row();
-            buttons.add(downButton).padTop(4);
+            buttons.add(subButton).padTop(4);
 
             table.add(label).width(80).height(80);
             table.add(textField).width(100).height(80).right();
@@ -125,8 +130,11 @@ public class CreateScreen extends AbstractScreen {
         table.add(new Label("Point Pool:", labelStyle)).colspan(5).height(80).right();
         table.add(new Label(Integer.toString(50), labelStyle)).colspan(4).height(80);
         table.row();
+        ghostSwitch = new MainScreenButton("Switch Ghost"); 
+        table.add(ghostSwitch.button).colspan(9).height(80);
+        table.row();
         tableDebugSwitch = new MainScreenButton("Debug Table Switch"); 
-        table.add(tableDebugSwitch.button).colspan(9).height(100);
+        table.add(tableDebugSwitch.button).colspan(9).height(80);
         setInputListeners();
         
         ghost = new Ghost();
@@ -200,42 +208,45 @@ public class CreateScreen extends AbstractScreen {
 		ClickListener debugTableListener = new ClickListener() {
     		@Override
     		public void clicked (InputEvent event, float x, float y) {
-//    			if (TABLE_DEBUG == true)
-//    				TABLE_DEBUG = false;
-//    			else
-//    				TABLE_DEBUG = true;
-			
-    			
+    			if (TABLE_DEBUG == true)
+    				TABLE_DEBUG = false;
+    			else
+    				TABLE_DEBUG = true;    			
+    		}
+		};
+		ClickListener ghostSwitchListener = new ClickListener() {
+			@Override
+			public void clicked (InputEvent event, float x, float y) {
     			String res = new String();
     			switch (GHOST_COLOR) {
     				case  0:
-    					System.out.println(GHOST_COLOR);
     					GHOST_COLOR = 1;
     					res = "ghost_texture_red.png";
     					break;
     				case 1:
-    					System.out.println(GHOST_COLOR);
     					GHOST_COLOR = 2;
     					res = "ghost_texture_blue.png";
     					break;
     				case 2:
-    					System.out.println(GHOST_COLOR);
     					GHOST_COLOR = 3;
     					res = "ghost_texture_orange.png";
     					break;
     				case 3:
-    					System.out.println(GHOST_COLOR);
     					GHOST_COLOR = 0;
     					res = "ghost_texture_green.png";
     					break;
     			}
-    			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, new Texture("models/" + Gdx.files.internal(res))));
-//    			TextureAttribute textureAttribute1 = new TextureAttribute(TextureAttribute.Diffuse, new Texture(Gdx.files.internal("models/ghost_texture_green.png")));
-//    			mat.set(textureAttribute1);
-    		}
+    			// true in the constructor sets the mipmap chain. setFilter sets it and smooths the textures.
+    			// http://www.badlogicgames.com/wordpress/?p=1403
+    			Texture tex = new Texture(Gdx.files.internal("models/" + res), true);
+    			tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
+    			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex));    			
+			}
 		};
 		listeners.put("debug_table_switch", debugTableListener);
 		tableDebugSwitch.button.addListener(listeners.get("debug_table_switch"));
+		listeners.put("ghost_switch", ghostSwitchListener);
+		ghostSwitch.button.addListener(listeners.get("ghost_switch"));
 	}
 	
 	/*
