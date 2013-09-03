@@ -52,7 +52,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
         
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 		Gdx.input.setInputProcessor(this);
-		FileHandle file = Gdx.files.external("character.json");
+		FileHandle file = Gdx.files.external(".ghost_story/character.json");
 		System.out.println(file.readString());
 	}
 	
