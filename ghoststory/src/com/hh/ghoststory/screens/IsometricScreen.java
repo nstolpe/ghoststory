@@ -3,16 +3,15 @@ package com.hh.ghoststory.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.lights.PointLight;
-import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
@@ -53,6 +52,8 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
         
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 		Gdx.input.setInputProcessor(this);
+		FileHandle file = Gdx.files.external("character.json");
+		System.out.println(file.readString());
 	}
 	
 	@Override
@@ -216,6 +217,9 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
         	for (GameModel game_model : game_models) {
         		game_model.setModelResource(assets);
         	}
+			Texture tex = new Texture(Gdx.files.internal("models/ghost_texture_blue.png"), true);
+			tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
+			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex)); 
         	loading = false;
         	return false;
     	}

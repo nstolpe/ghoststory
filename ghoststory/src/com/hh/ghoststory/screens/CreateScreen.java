@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
+import com.badlogic.gdx.graphics.g3d.materials.Material.Attribute;
 import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -42,6 +44,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.game_models.Ghost;
@@ -63,6 +66,7 @@ public class CreateScreen extends AbstractScreen {
 	public Lights lights = new Lights();
 	private int GHOST_COLOR = 0;
 	private Label pointPool;
+	private String[] attrs = { "STR", "INT", "AGI", "REA", "STA", "WIL" };
 	
 	public CreateScreen(GhostStory game) {
 		super(game);
@@ -93,12 +97,11 @@ public class CreateScreen extends AbstractScreen {
         textStyle.background = new NinePatchDrawable(new NinePatch(new Texture("images/text_border.9.png"), 18, 38, 38, 38));
         TextureRegionDrawable fieldCursor = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("fonts/cursor.png"))));
         textStyle.cursor = fieldCursor;
-
-
         
         table.row().left();
         Label nameLabel = new Label("Name:", labelStyle);
         TextField nameText = new TextField("", textStyle);
+        nameText.setName("Name");
         table.add(nameLabel).width(180).height(80).colspan(2);
         table.add(nameText).width(320).height(80).colspan(4);
         
@@ -108,7 +111,7 @@ public class CreateScreen extends AbstractScreen {
 
         table.add(new Label("Point Pool:", labelStyle)).colspan(5).height(80).right();
         
-        pointPool = new Label(Integer.toString(50), labelStyle);
+        pointPool = new Label(Integer.toString(32), labelStyle);
         pointPool.setName("point_pool");
         
         table.add(pointPool).colspan(4).height(80);
@@ -121,6 +124,7 @@ public class CreateScreen extends AbstractScreen {
         setInputListeners();
         
         ghost = new Ghost();
+
         game_models.add(ghost);
         ghost.setPosition(new Vector3(0,-3.5f,0));
         ghost.verticalAxis = new Vector3(0,1,0);
@@ -191,10 +195,21 @@ public class CreateScreen extends AbstractScreen {
 		ClickListener debugTableListener = new ClickListener() {
     		@Override
     		public void clicked (InputEvent event, float x, float y) {
-    			if (TABLE_DEBUG == true)
-    				TABLE_DEBUG = false;
-    			else
-    				TABLE_DEBUG = true;    			
+    			Map<String, String> character = new HashMap<String, String>();
+    			Json json = new Json();
+    			character.put("name", ((TextField) table.findActor("Name")).getText());
+    			for(String attr : attrs) {
+    				character.put(attr, ((TextField) table.findActor(attr)).getText());
+    			}
+    			character.put("texture", (String) ghost.model.userData);
+    			System.out.print(json.toJson(character, String.class));
+    			FileHandle file = Gdx.files.external("character.json");
+    			file.writeString(json.toJson(character, String.class), false);
+    			game.setScreen(game.getIsometricScreen());
+//    			if (TABLE_DEBUG == true)
+//    				TABLE_DEBUG = false;
+//    			else
+//    				TABLE_DEBUG = true;    			
     		}
 		};
 		ClickListener ghostSwitchListener = new ClickListener() {
@@ -222,8 +237,9 @@ public class CreateScreen extends AbstractScreen {
     			// true in the constructor sets the mipmap chain. setFilter sets it and smooths the textures.
     			// http://www.badlogicgames.com/wordpress/?p=1403
     			Texture tex = new Texture(Gdx.files.internal("models/" + res), true);
-    			tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
-    			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex));    			
+    			tex.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.Nearest);
+    			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex));
+    			ghost.model.userData = res;
 			}
 		};
 		listeners.put("debug_table_switch", debugTableListener);
@@ -241,6 +257,7 @@ public class CreateScreen extends AbstractScreen {
     	} else if (loading && assets.update()){
         	for (GameModel game_model : game_models) {
         		game_model.setModelResource(assets);
+        		ghost.model.userData = "ghost_texture_green.png";
         	}
         	loading = false;
         	return false;
@@ -257,7 +274,6 @@ public class CreateScreen extends AbstractScreen {
         subButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_up.png"))));
         subButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_down.png"))));
         
-        String[] attrs = { "STR", "INT", "AGI", "REA", "STA", "WIL" };
         for(int i = 0, l = attrs.length; i < l; i++) {
         	if (i % 2 == 0) table.row().left();
         	

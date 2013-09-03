@@ -1,7 +1,11 @@
 package com.hh.ghoststory;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.hh.ghoststory.screens.CreateScreen;
 import com.hh.ghoststory.screens.IsometricScreen;
 import com.hh.ghoststory.screens.MainScreen;
@@ -9,6 +13,9 @@ import com.hh.ghoststory.screens.MainScreen;
 public class GhostStory extends Game {
 	@Override
 	public void create() {
+		FileHandle file = Gdx.files.external(".ghost_story/character.json");
+		file.file().getParentFile().mkdirs();
+		file.writeString("", false);
 		setScreen(getMainScreen());
 	}
 	
