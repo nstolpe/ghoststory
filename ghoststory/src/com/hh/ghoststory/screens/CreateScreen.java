@@ -45,6 +45,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.game_models.Ghost;
@@ -197,14 +198,15 @@ public class CreateScreen extends AbstractScreen {
     		public void clicked (InputEvent event, float x, float y) {
     			Map<String, String> character = new HashMap<String, String>();
     			Json json = new Json();
+    			json.setOutputType(OutputType.json);
     			character.put("name", ((TextField) table.findActor("Name")).getText());
     			for(String attr : attrs) {
     				character.put(attr, ((TextField) table.findActor(attr)).getText());
     			}
     			character.put("texture", (String) ghost.model.userData);
     			System.out.print(json.toJson(character, String.class));
-    			FileHandle file = Gdx.files.external("character.json");
-    			file.writeString(json.toJson(character, String.class), false);
+    			FileHandle file = Gdx.files.external(".ghost_story/character.json");
+    			file.writeString(json.toJson(character, HashMap.class), false);
     			game.setScreen(game.getIsometricScreen());
 //    			if (TABLE_DEBUG == true)
 //    				TABLE_DEBUG = false;

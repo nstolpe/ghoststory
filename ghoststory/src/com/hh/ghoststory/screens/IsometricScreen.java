@@ -1,5 +1,7 @@
 package com.hh.ghoststory.screens;
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
@@ -19,6 +21,7 @@ import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
@@ -43,17 +46,23 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	public Array<GameModel> game_models = new Array<GameModel>();
 	public Lights lights = new Lights();
 	
+	private String texture;
+	
 	public IsometricScreen(GhostStory game) {
 		super(game);
 		
 		setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		setupGameModels();
 		setupLights();
-        
-		setClear(0.5f, 0.5f, 0.5f, 1f);
-		Gdx.input.setInputProcessor(this);
+
 		FileHandle file = Gdx.files.external(".ghost_story/character.json");
 		System.out.println(file.readString());
+		Json json = new Json();
+		String text = json.toJson(file.readString());
+		HashMap<String, String> character = json.fromJson(HashMap.class, file.readString().toString());
+		texture = character.get("texture");
+		setClear(0.5f, 0.5f, 0.5f, 1f);
+		Gdx.input.setInputProcessor(this);
 	}
 	
 	@Override
@@ -217,7 +226,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
         	for (GameModel game_model : game_models) {
         		game_model.setModelResource(assets);
         	}
-			Texture tex = new Texture(Gdx.files.internal("models/ghost_texture_blue.png"), true);
+			Texture tex = new Texture(Gdx.files.internal("models/" + texture), true);
 			tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
 			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex)); 
         	loading = false;
