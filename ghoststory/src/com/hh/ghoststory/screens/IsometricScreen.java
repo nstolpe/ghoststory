@@ -226,7 +226,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
         	for (GameModel game_model : game_models) {
         		game_model.setModelResource(assets);
         	}
-			Texture tex = new Texture(Gdx.files.internal("models/" + texture), true);
+			Texture tex = new Texture(Gdx.files.internal(texture != null ? "models/" + texture : "models/ghost_texture_blue.png"), true);
 			tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
 			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex)); 
         	loading = false;
