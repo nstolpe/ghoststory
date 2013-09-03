@@ -24,6 +24,8 @@ import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -40,6 +42,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.core.GameModel;
@@ -59,6 +62,7 @@ public class CreateScreen extends AbstractScreen {
 	private PerspectiveCamera mcamera = new PerspectiveCamera(75, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	public Lights lights = new Lights();
 	private int GHOST_COLOR = 0;
+	private Label pointPool;
 	
 	public CreateScreen(GhostStory game) {
 		super(game);
@@ -90,13 +94,7 @@ public class CreateScreen extends AbstractScreen {
         TextureRegionDrawable fieldCursor = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("fonts/cursor.png"))));
         textStyle.cursor = fieldCursor;
 
-        ButtonStyle addButtonStyle = new ButtonStyle();
-        addButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_up_up.png"))));
-        addButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_up_down.png"))));
-        
-        ButtonStyle subButtonStyle = new ButtonStyle();
-        subButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_up.png"))));
-        subButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_down.png"))));
+
         
         table.row().left();
         Label nameLabel = new Label("Name:", labelStyle);
@@ -104,31 +102,16 @@ public class CreateScreen extends AbstractScreen {
         table.add(nameLabel).width(180).height(80).colspan(2);
         table.add(nameText).width(320).height(80).colspan(4);
         
-        String[] attrs = { "STR", "INT", "AGI", "REA", "STA", "WIL" };
-        for(int i = 0, l = attrs.length; i < l; i++) {
-        	if (i % 2 == 0) table.row().left();
-        	
-            Label label = new Label(attrs[i], labelStyle);
-            TextField textField = new TextField("6", textStyle);
-            textField.setDisabled(true);
-            textField.setName(attrs[i]);
-            Table buttons = new Table();
-            buttons.debug();
-            Button addButton = new Button(addButtonStyle);
-            Button subButton = new Button(subButtonStyle);
-            addButton.setName(attrs[i] + "_up");
-            subButton.setName(attrs[i] + "_down");
-            buttons.add(addButton).padBottom(4);
-            buttons.row();
-            buttons.add(subButton).padTop(4);
+        setAttributes(labelStyle, textStyle);
 
-            table.add(label).width(80).height(80);
-            table.add(textField).width(100).height(80).right();
-            table.add(buttons).width(70).height(80);
-        }
         table.row();
+
         table.add(new Label("Point Pool:", labelStyle)).colspan(5).height(80).right();
-        table.add(new Label(Integer.toString(50), labelStyle)).colspan(4).height(80);
+        
+        pointPool = new Label(Integer.toString(50), labelStyle);
+        pointPool.setName("point_pool");
+        
+        table.add(pointPool).colspan(4).height(80);
         table.row();
         ghostSwitch = new MainScreenButton("Switch Ghost"); 
         table.add(ghostSwitch.button).colspan(9).height(80);
@@ -263,5 +246,77 @@ public class CreateScreen extends AbstractScreen {
         	return false;
     	}
     	return true;
+    }
+    
+    private void setAttributes(LabelStyle labelStyle, TextFieldStyle textStyle) {
+        ButtonStyle addButtonStyle = new ButtonStyle();
+        addButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_up_up.png"))));
+        addButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_up_down.png"))));
+        
+        ButtonStyle subButtonStyle = new ButtonStyle();
+        subButtonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_up.png"))));
+        subButtonStyle.down = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("images/arrow_down_down.png"))));
+        
+        String[] attrs = { "STR", "INT", "AGI", "REA", "STA", "WIL" };
+        for(int i = 0, l = attrs.length; i < l; i++) {
+        	if (i % 2 == 0) table.row().left();
+        	
+            Label label = new Label(attrs[i], labelStyle);
+            TextField textField = new TextField("6", textStyle);
+            textField.setDisabled(true);
+            textField.setName(attrs[i]);
+            Table buttons = new Table();
+            buttons.debug();
+            Button addButton = new Button(addButtonStyle);
+            Button subButton = new Button(subButtonStyle);
+            addButton.setName(attrs[i] + "_add");
+            subButton.setName(attrs[i] + "_sub");
+            
+            setAddListener(addButton);
+            setSubListener(subButton);
+            
+            buttons.add(addButton).padBottom(4);
+            buttons.row();
+            buttons.add(subButton).padTop(4);
+
+            table.add(label).width(80).height(80);
+            table.add(textField).width(100).height(80).right();
+            table.add(buttons).width(70).height(80);
+        }
+    }
+    
+    private void setAddListener(final Button addButton) {
+		ClickListener addListener = new ClickListener() {
+    		@Override
+    		public void clicked (InputEvent event, float x, float y) {
+    			int points = Integer.parseInt(pointPool.getText().toString());
+    			if (points > 0) {
+    				String fieldName = addButton.getName().replace("_add", "");
+    				TextField field = (TextField) addButton.getParent().getParent().findActor(fieldName);
+    				int value = Integer.parseInt(field.getText());
+    				field.setText(String.valueOf(value + 1));
+    				pointPool.setText(String.valueOf(points - 1));
+    			}
+    			
+    		}
+		};
+		addButton.addListener(addListener);
+    }
+    private void setSubListener(final Button subButton) {
+    	ClickListener addListener = new ClickListener() {
+    		@Override
+    		public void clicked (InputEvent event, float x, float y) {
+   				String fieldName = subButton.getName().replace("_sub", "");
+				TextField field = (TextField) subButton.getParent().getParent().findActor(fieldName);
+				int value = Integer.parseInt(field.getText());   			
+    			if (value > 6) {
+    				int points = Integer.parseInt(pointPool.getText().toString());
+     				field.setText(String.valueOf(value - 1));
+    				pointPool.setText(String.valueOf(points + 1));
+    			}
+    			
+    		}
+    	};
+    	subButton.addListener(addListener);
     }
 }
