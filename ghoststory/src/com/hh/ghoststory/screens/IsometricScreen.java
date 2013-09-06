@@ -47,6 +47,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	public Lights lights = new Lights();
 	
 	private String texture;
+	private HashMap<String, String> character;
 	
 	public IsometricScreen(GhostStory game) {
 		super(game);
@@ -55,12 +56,9 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		setupGameModels();
 		setupLights();
 
-		FileHandle file = Gdx.files.external(".ghost_story/character.json");
-		System.out.println(file.readString());
-		Json json = new Json();
-		String text = json.toJson(file.readString());
-		HashMap<String, String> character = json.fromJson(HashMap.class, file.readString().toString());
+		loadCharacter();
 		texture = character.get("texture");
+
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 		Gdx.input.setInputProcessor(this);
 	}
@@ -74,20 +72,11 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	public void render(float delta) {
 		super.render(delta);
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-// Keep these, might need them when other stuff comes back in.
-//	    Gdx.gl20.glEnable(GL20.GL_TEXTURE_2D);
-//	    Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
-//	    Gdx.gl20.glClearDepthf(1.0f);
-//	    Gdx.gl20.glEnable(GL20.GL_DEPTH_TEST);
-//	    Gdx.gl20.glDepthFunc(GL20.GL_LESS);
 		camera.update();
-	    
+
 		if (doneLoading()) {
 			modelBatch.begin(camera);
-			for (GameModel game_model : game_models) {
-				game_model.update();
-				modelBatch.render(game_model.model, lights);
-			}
+			renderModels(game_models);
 			modelBatch.end();
 		}
 	}
@@ -129,7 +118,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 
 			ghost.setStartPosition(ghost.position);
 			ghost.setTargetPosition(intersection.x, 0, intersection.z);
-			
 
 			float rotation = MathUtils.atan2(intersection.x - ghost.position.x, intersection.z - ghost.position.z) * 180 / MathUtils.PI;
 			ghost.setTargetRotation(rotation < 0 ? rotation += 360 : rotation);
@@ -207,11 +195,10 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	
 	/*
 	 * Load the GameModel assets
-	 * @TODO don't think the check for isLoaded is needed, since the manager should automatically share.
 	 */
 	private void loadGameModelAssets() {
         for (GameModel game_model : game_models) {
-        	if (!assets.isLoaded(game_model.model_resource)) assets.load(game_model.model_resource, Model.class);
+        	assets.load(game_model.model_resource, Model.class);
         }
         loading = true;
 	}
@@ -242,5 +229,20 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	    lights.ambientLight.set(0.2f, 0.2f, 0.2f, 1f);
 	    lights.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -1f, -1f));
     }
-
+    
+    /*
+     * Loads the character from the character json.
+     */
+    private void loadCharacter() {
+		FileHandle file = Gdx.files.external(".ghost_story/character.json");
+		Json json = new Json();
+		character = json.fromJson(HashMap.class, file.readString().toString());
+    }
+    
+    private void renderModels(Array<GameModel> game_models) {
+		for (GameModel game_model : game_models) {
+			game_model.update();
+			modelBatch.render(game_model.model, lights);
+		}
+    }
 }

@@ -94,17 +94,29 @@ public class Ghost extends DynamicModel {
 	}
 	
 	private void setRotationDirection() {
+//		if (targetRotation > rotation) {
+//			if (targetRotation - rotation < 180) {
+//				rotationDirection = CLOCKWISE;
+//			} else {
+//				targetRotation += 360;
+//				rotationDirection = COUNTER_CLOCKWISE;
+//			}
+//		} else if (targetRotation < rotation){
+//			if (rotation - targetRotation < 180) {
+//				rotationDirection = COUNTER_CLOCKWISE;
+//			} else {
+//				targetRotation += 360;
+//				rotationDirection = COUNTER_CLOCKWISE;
+//			}
+//		}
 		if (targetRotation > rotation && targetRotation - rotation < 180) {
 			rotationDirection = CLOCKWISE;
-		}
-		if (targetRotation < rotation && rotation - targetRotation < 180) {
+		} else if (targetRotation < rotation && rotation - targetRotation < 180) {
 			rotationDirection = COUNTER_CLOCKWISE;
-		}
-		if (targetRotation > rotation && targetRotation - rotation >= 180) {
+		} else if (targetRotation > rotation && targetRotation - rotation >= 180) {
 			rotation += 360;
 			rotationDirection = COUNTER_CLOCKWISE;
-		}
-		if (targetRotation < rotation && rotation - targetRotation >= 180) {
+		} else if (targetRotation < rotation && rotation - targetRotation >= 180) {
 			targetRotation += 360;
 			rotationDirection = CLOCKWISE;
 		}
