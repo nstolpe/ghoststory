@@ -257,10 +257,12 @@ public class CreateScreen extends AbstractScreen {
     	if (loading && assets.update() != true) {
     		return false;
     	} else if (loading && assets.update()){
+
+            ghost.setTexture("models/ghost_texture_green.png");
         	for (GameModel game_model : game_models) {
         		game_model.setModelResource(assets);
-        		ghost.model.userData = "ghost_texture_green.png";
         	}
+            ghost.model.userData = "ghost_texture_green.png";
         	loading = false;
         	return false;
     	}

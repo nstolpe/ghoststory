@@ -59,3 +59,8 @@ old_school_rpg-html/gwt-unitCache/*
 ## */.loadpath
 ## classpath
 ## settings
+
+# IntelliJ IDEA
+.idea/
+*iml
+ghoststory_android/gen/com/hh/ghoststory/Manifest.java

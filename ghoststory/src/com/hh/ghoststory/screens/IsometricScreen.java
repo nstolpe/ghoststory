@@ -46,7 +46,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	public Array<GameModel> game_models = new Array<GameModel>();
 	public Lights lights = new Lights();
 	
-	private String texture;
 	private HashMap<String, String> character;
 	
 	public IsometricScreen(GhostStory game) {
@@ -56,8 +55,8 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		setupGameModels();
 		setupLights();
 
-		loadCharacter();
-		texture = character.get("texture");
+		loadCharacter(".ghost_story/character.json");
+        ghost.setTexture(character.get("texture") != null ? "models/" + character.get("texture") : "models/ghost_texture_blue.png");
 
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 		Gdx.input.setInputProcessor(this);
@@ -76,7 +75,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 
 		if (doneLoading()) {
 			modelBatch.begin(camera);
-			renderModels(game_models);
+			renderModels(game_models, lights);
 			modelBatch.end();
 		}
 	}
@@ -143,7 +142,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 			camera.position.add(delta.x, delta.y, delta.z);
 		}
 		last.set(screenX, screenY, 0);
-		System.out.println("drag");
 		justDragged = true;
 		return false;
 	}
@@ -211,11 +209,8 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
     		return false;
     	} else if (loading && assets.update()){
         	for (GameModel game_model : game_models) {
-        		game_model.setModelResource(assets);
+        		game_model.setModelResource(assets.get(game_model.model_resource, Model.class));
         	}
-			Texture tex = new Texture(Gdx.files.internal(texture != null ? "models/" + texture : "models/ghost_texture_blue.png"), true);
-			tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
-			ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex)); 
         	loading = false;
         	return false;
     	}
@@ -233,13 +228,15 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
     /*
      * Loads the character from the character json.
      */
-    private void loadCharacter() {
-		FileHandle file = Gdx.files.external(".ghost_story/character.json");
+    private void loadCharacter(String file_path) {
+		FileHandle file = Gdx.files.external(file_path);
 		Json json = new Json();
 		character = json.fromJson(HashMap.class, file.readString().toString());
     }
-    
-    private void renderModels(Array<GameModel> game_models) {
+    /*
+     * Renders the GameModels.
+     */
+    private void renderModels(Array<GameModel> game_models, Lights lights) {
 		for (GameModel game_model : game_models) {
 			game_model.update();
 			modelBatch.render(game_model.model, lights);
