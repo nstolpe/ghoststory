@@ -48,6 +48,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.core.GameModel;
 
@@ -196,17 +197,21 @@ public class CreateScreen extends AbstractScreen {
 		ClickListener debugTableListener = new ClickListener() {
     		@Override
     		public void clicked (InputEvent event, float x, float y) {
-    			Map<String, String> character = new HashMap<String, String>();
     			Json json = new Json();
     			json.setOutputType(OutputType.json);
-    			character.put("name", ((TextField) table.findActor("Name")).getText());
-    			for(String attr : attrs) {
-    				character.put(attr, ((TextField) table.findActor(attr)).getText());
-    			}
-    			character.put("texture", (String) ghost.model.userData);
-    			System.out.print(json.toJson(character, String.class));
+                PlayerCharacter character = new PlayerCharacter();
+                character.attributes.stamina = Integer.parseInt(((TextField) table.findActor("STA")).getText());
+                character.attributes.strength = Integer.parseInt(((TextField) table.findActor("STR")).getText());
+                character.attributes.reason = Integer.parseInt(((TextField) table.findActor("REA")).getText());
+                character.attributes.intelligence = Integer.parseInt(((TextField) table.findActor("INT")).getText());
+                character.attributes.will = Integer.parseInt(((TextField) table.findActor("WIL")).getText());
+                character.attributes.agility = Integer.parseInt(((TextField) table.findActor("AGI")).getText());
+                character.name = ((TextField) table.findActor("Name")).getText();
+                character.texture = (String) ghost.model.userData;
+
+    			System.out.print(json.prettyPrint(character));
     			FileHandle file = Gdx.files.external(".ghost_story/character.json");
-    			file.writeString(json.toJson(character, HashMap.class), false);
+    			file.writeString(json.toJson(character), false);
     			game.setScreen(game.getIsometricScreen());
 //    			if (TABLE_DEBUG == true)
 //    				TABLE_DEBUG = false;

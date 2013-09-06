@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
@@ -44,9 +45,10 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	public boolean loading;
 	public AssetManager assets = new AssetManager();
 	public Array<GameModel> game_models = new Array<GameModel>();
+
 	public Lights lights = new Lights();
 	
-	private HashMap<String, String> character;
+	private PlayerCharacter character;
 	
 	public IsometricScreen(GhostStory game) {
 		super(game);
@@ -56,7 +58,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		setupLights();
 
 		loadCharacter(".ghost_story/character.json");
-        ghost.setTexture(character.get("texture") != null ? "models/" + character.get("texture") : "models/ghost_texture_blue.png");
+        ghost.setTexture(character.texture != null ? "models/" + character.texture : "models/ghost_texture_blue.png");
 
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 		Gdx.input.setInputProcessor(this);
@@ -231,7 +233,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
     private void loadCharacter(String file_path) {
 		FileHandle file = Gdx.files.external(file_path);
 		Json json = new Json();
-		character = json.fromJson(HashMap.class, file.readString().toString());
+		character = json.fromJson(PlayerCharacter.class, file.readString().toString());
     }
     /*
      * Renders the GameModels.
