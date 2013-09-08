@@ -73,7 +73,10 @@ public class CreateScreen extends AbstractScreen {
 	public CreateScreen(GhostStory game) {
 		super(game);
 		
-		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2, true);
+        stage.setViewport (Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2, true, 0, 0,
+        Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2);
+        stage.setCamera(camera);
 		Gdx.input.setInputProcessor(stage);
 		
         table = new Table();
@@ -128,7 +131,7 @@ public class CreateScreen extends AbstractScreen {
         ghost = new Ghost();
 
         game_models.add(ghost);
-        ghost.setPosition(new Vector3(0,-3.5f,0));
+        ghost.setPosition(new Vector3(0 ,0, 0));
         ghost.verticalAxis = new Vector3(0,1,0);
         ghost.setRotation(0f);
         
@@ -143,6 +146,7 @@ public class CreateScreen extends AbstractScreen {
 //		mcamera.far = 100;
         lights.ambientLight.set(0.5f, 0.5f, 0.5f, 1f);
         lights.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -1f, -1f));
+
 	}
 	
 	@Override
@@ -171,6 +175,19 @@ public class CreateScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 //		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+
+//      Full window 2d.
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.viewportWidth = Gdx.graphics.getWidth();
+        camera.viewportWidth = Gdx.graphics.getHeight();
+
+// Split window. 3d on bottom, 2d on top. This doesn't work that well. Think the solution is to have 2d be full window
+// and constrain the 3d camera and viewport (below) to the location of a UI element in that. Project model inside element.
+
+//        Gdx.gl.glViewport(0, Gdx.graphics.getHeight() / 2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2);
+//        camera.viewportWidth = Gdx.graphics.getWidth();
+//        camera.viewportHeight = Gdx.graphics.getHeight() / 2;
+
 		Gdx.gl.glClearColor(1f, 1f, 1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -179,10 +196,10 @@ public class CreateScreen extends AbstractScreen {
         if (TABLE_DEBUG) {
         	Table.drawDebug(stage);	
         }
+        Gdx.gl.glViewport(Gdx.graphics.getWidth() / 4, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
         if (doneLoading()) {
 	        modelBatch.begin(mcamera);
 	        ghost.update();
-	        ghost.model.transform.rotate(new Vector3(1, 0, 0), -20);
 	        modelBatch.render(ghost.model, lights);
 	        modelBatch.end();
         }
@@ -191,6 +208,7 @@ public class CreateScreen extends AbstractScreen {
 	@Override
 	public void dispose() {
 		super.dispose();
+        System.out.print("disposed create");
 	}
 	
 	public void setInputListeners() {
@@ -213,6 +231,8 @@ public class CreateScreen extends AbstractScreen {
     			FileHandle file = Gdx.files.external(".ghost_story/character.json");
     			file.writeString(json.toJson(character), false);
     			game.setScreen(game.getIsometricScreen());
+                Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                dispose();
 //    			if (TABLE_DEBUG == true)
 //    				TABLE_DEBUG = false;
 //    			else
