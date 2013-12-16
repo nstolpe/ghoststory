@@ -13,7 +13,7 @@ import com.hh.ghoststory.screens.MainScreen;
 public class GhostStory extends Game {
 	@Override
 	public void create() {
-		FileHandle file = Gdx.files.external(".ghost_story/character.json");
+		FileHandle file = Gdx.files.local(".ghost_story/character.json");
 		file.file().getParentFile().mkdirs();
 		file.writeString("{}", false);
 		setScreen(getMainScreen());

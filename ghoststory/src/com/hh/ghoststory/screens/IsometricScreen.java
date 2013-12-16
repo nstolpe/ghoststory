@@ -231,7 +231,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
      * Loads the character from the character json.
      */
     private void loadCharacter(String file_path) {
-		FileHandle file = Gdx.files.external(file_path);
+		FileHandle file = Gdx.files.local(file_path);
 		Json json = new Json();
 		character = json.fromJson(PlayerCharacter.class, file.readString().toString());
     }

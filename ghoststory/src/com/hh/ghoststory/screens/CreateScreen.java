@@ -228,7 +228,8 @@ public class CreateScreen extends AbstractScreen {
                 character.texture = (String) ghost.model.userData;
 
     			System.out.print(json.prettyPrint(character));
-    			FileHandle file = Gdx.files.external(".ghost_story/character.json");
+    			FileHandle file = Gdx.files.local(".ghost_story/character.json");
+    			System.out.println(file);
     			file.writeString(json.toJson(character), false);
     			game.setScreen(game.getIsometricScreen());
                 Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
