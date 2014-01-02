@@ -14,8 +14,10 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Plane;
@@ -43,6 +45,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	private Ghost ghost;
 	
 	private ModelBatch modelBatch = new ModelBatch();
+    private ModelBatch shadowBatch = new ModelBatch(new DepthShaderProvider());
 	public boolean loading;
 	public AssetManager assets = new AssetManager();
 	public Array<GameModel> game_models = new Array<GameModel>();
@@ -50,6 +53,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	public Environment environment = new Environment();
 	
 	private PlayerCharacter character;
+    private DirectionalShadowLight shadowLight;
 	
 	public IsometricScreen(GhostStory game) {
 		super(game);
@@ -77,6 +81,13 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		camera.update();
 
 		if (doneLoading()) {
+            shadowLight.begin(Vector3.Zero, camera.direction);
+            shadowBatch.begin(shadowLight.getCamera());
+            renderShadows(game_models, environment);
+//            shadowBatch.render(instance);
+            shadowBatch.end();
+            shadowLight.end();
+
 			modelBatch.begin(camera);
 			renderModels(game_models, environment);
 			modelBatch.end();
@@ -224,8 +235,11 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	    environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1f));
 	    environment.add(new PointLight().set(new Color(1f,0f,0f, 1f), 4,2,4, 1));
 	    environment.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6,2,0f, 1));
-	    environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .4f, .4f, .4f, 1f));
-	    environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -1f, -1f));
+//	    environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .4f, .4f, .4f, 1f));
+	    environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
+//        environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+        environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 30f, 30f, 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+        environment.shadowMap = shadowLight;
     }
     
     /*
@@ -241,8 +255,17 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
      */
     private void renderModels(Array<GameModel> game_models, Environment environment) {
 		for (GameModel game_model : game_models) {
-			game_model.update();
+//			game_model.update();
 			modelBatch.render(game_model.model, environment);
+		}
+    }
+    /*
+     * Renders the GameModels shadows.
+     */
+    private void renderShadows(Array<GameModel> game_models, Environment environment) {
+		for (GameModel game_model : game_models) {
+			game_model.update();
+			shadowBatch.render(game_model.model, environment);
 		}
     }
 }

@@ -64,3 +64,6 @@ old_school_rpg-html/gwt-unitCache/*
 .idea/
 *iml
 ghoststory_android/gen/com/hh/ghoststory/Manifest.java
+
+# Game generated files
+character.json
