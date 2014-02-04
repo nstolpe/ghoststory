@@ -16,7 +16,8 @@ public class GhostStory extends Game {
 		FileHandle file = Gdx.files.local(".ghost_story/character.json");
 		file.file().getParentFile().mkdirs();
 		file.writeString("{}", false);
-		setScreen(getMainScreen());
+//		setScreen(getMainScreen());
+		setScreen(getIsometricScreen());
 	}
 	
 	/***************************************************************************

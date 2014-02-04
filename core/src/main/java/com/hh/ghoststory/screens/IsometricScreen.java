@@ -26,6 +26,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.TestShader;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
@@ -37,14 +38,12 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	final Vector3 curr = new Vector3();
 	final Vector3 last = new Vector3(-1, -1, -1);
 	final Vector3 delta = new Vector3();
-	
-	protected String vertexShader;
-	protected String fragmentShader;
-	
+
 	private boolean justDragged = false;
 	private Ghost ghost;
-	
-	private ModelBatch modelBatch = new ModelBatch();
+
+    private TestShader testShader = new TestShader();
+	private ModelBatch modelBatch;
     private ModelBatch shadowBatch = new ModelBatch(new DepthShaderProvider());
 	public boolean loading;
 	public AssetManager assets = new AssetManager();
@@ -57,16 +56,18 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	
 	public IsometricScreen(GhostStory game) {
 		super(game);
-		
-		setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        setupLights();
 		setupGameModels();
-		setupLights();
+
+        setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		loadCharacter(".ghost_story/character.json");
         ghost.setTexture(character.texture != null ? "models/" + character.texture : "models/ghost_texture_blue.png");
 
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 		Gdx.input.setInputProcessor(this);
+        modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 	}
 	
 	@Override
@@ -78,22 +79,23 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	public void render(float delta) {
 		super.render(delta);
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+//Gdx.gl20.
+//        Array<PointLight> plights = environment.pointLights;
+//        for (PointLight pl : plights) {
+//            System.out.println(pl.position);
+////            pl.set(new Color(1f, 1f, 1f, 1f), camera.position.x, camera.position.y, camera.position.z, 1);
+////            pl.set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1);
+////            pl.set(new Color(1f, 1f, 1f, 1f), pl.position.mul(camera.projection), 1);
+//        }
 		camera.update();
 
 		if (doneLoading()) {
-            shadowLight.begin(Vector3.Zero, camera.direction);
-            shadowBatch.begin(shadowLight.getCamera());
-            renderShadows(game_models, environment);
-//            shadowBatch.render(instance);
-            shadowBatch.end();
-            shadowLight.end();
-
-			modelBatch.begin(camera);
-			renderModels(game_models, environment);
-			modelBatch.end();
+            updateModels();
+//            renderShadows();
+            renderModels();
 		}
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -123,6 +125,9 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		return false;
 	}
 
+    /*
+     * Might be the issue w/ movement here. Maybe trigger should happen on touchdown?
+     */
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if (justDragged == false) {
@@ -153,7 +158,13 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 			pickRay = camera.getPickRay(last.x, last.y);
 			Intersector.intersectRayPlane(pickRay, xzPlane, delta);	
 			delta.sub(curr);
-			camera.position.add(delta.x, delta.y, delta.z);
+
+            Array<PointLight> plights = environment.pointLights;
+            for (PointLight pl : plights) {
+//                pl.set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1);
+//                pl.position.sub(delta.x, delta.y, delta.z);
+            }
+            camera.position.add(delta.x, delta.y, delta.z);
 		}
 		last.set(screenX, screenY, 0);
 		justDragged = true;
@@ -232,14 +243,14 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
     }
 	   
     private void setupLights() {
-	    environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1f));
-	    environment.add(new PointLight().set(new Color(1f,0f,0f, 1f), 4,2,4, 1));
-	    environment.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6,2,0f, 1));
+	    environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1));
+	    environment.add(new PointLight().set(new Color(1f,0f,0f, 1f),  4, 1, 4, 1));
+	    environment.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6, 1, 0, 1));
 //	    environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .4f, .4f, .4f, 1f));
-	    environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
+//	    environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
 //        environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-        environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 30f, 30f, 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-        environment.shadowMap = shadowLight;
+//        environment.add((shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+//        environment.shadowMap = shadowLight;
     }
     
     /*
@@ -250,22 +261,33 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		Json json = new Json();
 		character = json.fromJson(PlayerCharacter.class, file.readString().toString());
     }
+
+    private void updateModels() {
+        for (GameModel game_model : game_models) {
+            game_model.update();
+        }
+    }
     /*
      * Renders the GameModels.
      */
-    private void renderModels(Array<GameModel> game_models, Environment environment) {
+    private void renderModels() {
+        modelBatch.begin(camera);
+
 		for (GameModel game_model : game_models) {
-//			game_model.update();
 			modelBatch.render(game_model.model, environment);
 		}
+        modelBatch.end();
     }
     /*
      * Renders the GameModels shadows.
      */
-    private void renderShadows(Array<GameModel> game_models, Environment environment) {
+    private void renderShadows() {
+        shadowLight.begin(Vector3.Zero, camera.direction);
+        shadowBatch.begin(shadowLight.getCamera());
 		for (GameModel game_model : game_models) {
-			game_model.update();
 			shadowBatch.render(game_model.model, environment);
 		}
+        shadowBatch.end();
+        shadowLight.end();
     }
 }
