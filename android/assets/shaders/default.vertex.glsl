@@ -289,7 +289,9 @@ void main() {
 			
 		#ifdef specularFlag
 			v_lightSpecular = vec3(0.0);
-			vec3 viewVec = normalize(u_cameraPosition.xyz - pos.xyz);
+			// vec3 viewVec = normalize(u_cameraPosition.xyz - pos.xyz);
+			// this is maybe fixing the specular thing
+			vec3 viewVec = normalize(pos.xyz);
 		#endif // specularFlag
 			
 		#if defined(numDirectionalLights) && (numDirectionalLights > 0) && defined(normalFlag)

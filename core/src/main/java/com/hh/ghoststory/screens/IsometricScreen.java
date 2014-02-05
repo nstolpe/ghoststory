@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -42,6 +43,8 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	private boolean justDragged = false;
 	private Ghost ghost;
 
+//    protected PerspectiveCamera camera = new PerspectiveCamera(100, 10, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
+
     private TestShader testShader = new TestShader();
 	private ModelBatch modelBatch;
     private ModelBatch shadowBatch = new ModelBatch(new DepthShaderProvider());
@@ -53,7 +56,9 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	
 	private PlayerCharacter character;
     private DirectionalShadowLight shadowLight;
-	
+
+    private boolean shadows = false;
+
 	public IsometricScreen(GhostStory game) {
 		super(game);
 
@@ -91,7 +96,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 
 		if (doneLoading()) {
             updateModels();
-//            renderShadows();
+            if (this.shadows) renderShadows();
             renderModels();
 		}
 	}
@@ -162,7 +167,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
             Array<PointLight> plights = environment.pointLights;
             for (PointLight pl : plights) {
 //                pl.set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1);
-//                pl.position.sub(delta.x, delta.y, delta.z);
+//                pl.position.add(delta.x, delta.y, delta.z);
             }
             camera.position.add(delta.x, delta.y, delta.z);
 		}
@@ -196,9 +201,10 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	private void setupCamera(int width, int height) {
 		camera.setToOrtho(false, 10, 10 * ((float) height / (float) width));
 		camera.position.set(5, 5, 5);
-		camera.direction.set(-1, -1, -1);
+//		camera.direction.set(-1, -1, -1);
+		camera.lookAt(0,0,0);
 		camera.near = 1;
-		camera.far = 100;
+		camera.far = 300;
 	}
 	
 	/*
@@ -232,7 +238,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
     private boolean doneLoading() {
     	if (loading && assets.update() != true) {
     		return false;
-    	} else if (loading && assets.update()){
+    	} else if (loading && assets.update()) {
         	for (GameModel game_model : game_models) {
         		game_model.setModelResource(assets.get(game_model.model_resource, Model.class));
         	}
@@ -246,11 +252,14 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	    environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1));
 	    environment.add(new PointLight().set(new Color(1f,0f,0f, 1f),  4, 1, 4, 1));
 	    environment.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6, 1, 0, 1));
-//	    environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .4f, .4f, .4f, 1f));
-//	    environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
-//        environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-//        environment.add((shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-//        environment.shadowMap = shadowLight;
+	    environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
+	    environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
+
+        if (this.shadows) {
+//            environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+            environment.add((shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+            environment.shadowMap = shadowLight;
+        }
     }
     
     /*
