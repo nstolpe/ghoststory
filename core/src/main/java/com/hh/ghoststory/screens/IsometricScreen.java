@@ -19,10 +19,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -58,6 +55,9 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
     private DirectionalShadowLight shadowLight;
 
     private boolean shadows = false;
+
+    private Vector2 touchedAt = new Vector2();
+    private Vector2 draggedTo = new Vector2();
 
 	public IsometricScreen(GhostStory game) {
 		super(game);
@@ -127,6 +127,8 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		justDragged = false;
+        touchedAt.set((float) screenX, (float) screenY);
+//        System.out.println("undragged");
 		return false;
 	}
 
@@ -156,23 +158,28 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	 */
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+//        System.out.println("dragged");
+        draggedTo.set((float) screenX, (float) screenY);
+        System.out.println("Distance: " + draggedTo.dst(touchedAt));
 		Ray pickRay = camera.getPickRay(screenX, screenY);
 		Intersector.intersectRayPlane(pickRay, xzPlane, curr);
- 
-		if(!(last.x == -1 && last.y == -1 && last.z == -1)) {
-			pickRay = camera.getPickRay(last.x, last.y);
-			Intersector.intersectRayPlane(pickRay, xzPlane, delta);	
-			delta.sub(curr);
 
-            Array<PointLight> plights = environment.pointLights;
-            for (PointLight pl : plights) {
-//                pl.set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1);
-//                pl.position.add(delta.x, delta.y, delta.z);
+        if (draggedTo.dst(touchedAt) > 5) {
+            if(!(last.x == -1 && last.y == -1 && last.z == -1)) {
+                pickRay = camera.getPickRay(last.x, last.y);
+                Intersector.intersectRayPlane(pickRay, xzPlane, delta);
+                delta.sub(curr);
+
+                Array<PointLight> plights = environment.pointLights;
+                for (PointLight pl : plights) {
+    //                pl.set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1);
+    //                pl.position.add(delta.x, delta.y, delta.z);
+                }
+                camera.position.add(delta.x, delta.y, delta.z);
             }
-            camera.position.add(delta.x, delta.y, delta.z);
-		}
-		last.set(screenX, screenY, 0);
-		justDragged = true;
+            last.set(screenX, screenY, 0);
+            justDragged = true;
+        }
 		return false;
 	}
 
@@ -201,8 +208,8 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	private void setupCamera(int width, int height) {
 		camera.setToOrtho(false, 10, 10 * ((float) height / (float) width));
 		camera.position.set(5, 5, 5);
-//		camera.direction.set(-1, -1, -1);
-		camera.lookAt(0,0,0);
+		camera.direction.set(-1, -1, -1);
+//		camera.lookAt(0,0,0);
 		camera.near = 1;
 		camera.far = 300;
 	}
