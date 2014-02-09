@@ -208,9 +208,11 @@ public class IsometricScreen extends AbstractScreen {
         final Vector3 curr = new Vector3();
         final Vector2 last = new Vector2(-1, -1);
         final Vector3 delta = new Vector3();
+        private float initialScale = 1.0f;
 
         @Override
         public boolean touchDown(float x, float y, int pointer, int button) {
+            initialScale = camera.zoom;
             return false;
         }
 
@@ -267,6 +269,8 @@ public class IsometricScreen extends AbstractScreen {
 
         @Override
         public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+            float ratio = initialPointer1.dst(initialPointer2) / pointer1.dst(pointer2);
+            camera.zoom = MathUtils.clamp(initialScale * ratio, 0.1f, 1.0f);
             return false;
         }
     }
