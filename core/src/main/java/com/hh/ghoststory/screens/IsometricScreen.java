@@ -30,6 +30,7 @@ import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
+import com.hh.ghoststory.input_processors.IsometricDetector;
 
 public class IsometricScreen extends AbstractScreen {
 	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
@@ -52,6 +53,7 @@ public class IsometricScreen extends AbstractScreen {
     private boolean shadows = false;
 
     private Detector detector;
+    public IsometricDetector isoDetector;
 
 	public IsometricScreen(GhostStory game) {
 		super(game);
@@ -66,7 +68,8 @@ public class IsometricScreen extends AbstractScreen {
 
 		setClear(0.5f, 0.5f, 0.5f, 1f);
         detector = new Detector();
-		Gdx.input.setInputProcessor(new GestureDetector(detector));
+        isoDetector = new IsometricDetector(new Detector(), this);
+		Gdx.input.setInputProcessor(isoDetector);
         modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 	}
 	

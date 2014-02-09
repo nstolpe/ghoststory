@@ -22,7 +22,7 @@ public abstract class AbstractScreen implements Screen {
 	protected final GhostStory game;
 	protected float screenW;
 	protected float screenH;
-	protected OrthographicCamera camera = new OrthographicCamera();
+	public OrthographicCamera camera = new OrthographicCamera();
 	protected float clearRed = 0f;
 	protected float clearBlue = 0f;
 	protected float clearGreen = 0f;
