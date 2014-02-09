@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
@@ -30,17 +31,11 @@ import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
 
-public class IsometricScreen extends AbstractScreen implements InputProcessor {
+public class IsometricScreen extends AbstractScreen {
 	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 	final Vector3 intersection = new Vector3();
-	final Vector3 curr = new Vector3();
-	final Vector3 last = new Vector3(-1, -1, -1);
-	final Vector3 delta = new Vector3();
 
-	private boolean justDragged = false;
 	private Ghost ghost;
-
-//    protected PerspectiveCamera camera = new PerspectiveCamera(100, 10, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
 
     private TestShader testShader = new TestShader();
 	private ModelBatch modelBatch;
@@ -56,8 +51,7 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 
     private boolean shadows = false;
 
-    private Vector2 touchedAt = new Vector2();
-    private Vector2 draggedTo = new Vector2();
+    private Detector detector;
 
 	public IsometricScreen(GhostStory game) {
 		super(game);
@@ -71,7 +65,8 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
         ghost.setTexture(character.texture != null ? "models/" + character.texture : "models/ghost_texture_blue.png");
 
 		setClear(0.5f, 0.5f, 0.5f, 1f);
-		Gdx.input.setInputProcessor(this);
+        detector = new Detector();
+		Gdx.input.setInputProcessor(new GestureDetector(detector));
         modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 	}
 	
@@ -84,14 +79,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	public void render(float delta) {
 		super.render(delta);
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-//Gdx.gl20.
-//        Array<PointLight> plights = environment.pointLights;
-//        for (PointLight pl : plights) {
-//            System.out.println(pl.position);
-////            pl.set(new Color(1f, 1f, 1f, 1f), camera.position.x, camera.position.y, camera.position.z, 1);
-////            pl.set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1);
-////            pl.set(new Color(1f, 1f, 1f, 1f), pl.position.mul(camera.projection), 1);
-//        }
 		camera.update();
 
 		if (doneLoading()) {
@@ -106,95 +93,6 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		super.dispose();
 	}
 
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		justDragged = false;
-        touchedAt.set((float) screenX, (float) screenY);
-//        System.out.println("undragged");
-		return false;
-	}
-
-    /*
-     * Might be the issue w/ movement here. Maybe trigger should happen on touchdown?
-     */
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if (justDragged == false) {
-			Ray pickRay = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
-			Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
-
-			ghost.setStartPosition(ghost.position);
-			ghost.setTargetPosition(intersection.x, 0, intersection.z);
-
-			float rotation = MathUtils.atan2(intersection.x - ghost.position.x, intersection.z - ghost.position.z) * 180 / MathUtils.PI;
-			ghost.setTargetRotation(rotation < 0 ? rotation += 360 : rotation);
-		} else {
-			justDragged = false;
-		}
-		last.set(-1, -1, -1);
-		return false;
-	}
-
-	/*
-	 * Lets the screen be dragged and moved. Taken from libgdx isometric tutorial.
-	 */
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-//        System.out.println("dragged");
-        draggedTo.set((float) screenX, (float) screenY);
-        System.out.println("Distance: " + draggedTo.dst(touchedAt));
-		Ray pickRay = camera.getPickRay(screenX, screenY);
-		Intersector.intersectRayPlane(pickRay, xzPlane, curr);
-
-        if (draggedTo.dst(touchedAt) > 5) {
-            if(!(last.x == -1 && last.y == -1 && last.z == -1)) {
-                pickRay = camera.getPickRay(last.x, last.y);
-                Intersector.intersectRayPlane(pickRay, xzPlane, delta);
-                delta.sub(curr);
-
-                Array<PointLight> plights = environment.pointLights;
-                for (PointLight pl : plights) {
-    //                pl.set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1);
-    //                pl.position.add(delta.x, delta.y, delta.z);
-                }
-                camera.position.add(delta.x, delta.y, delta.z);
-            }
-            last.set(screenX, screenY, 0);
-            justDragged = true;
-        }
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
 	/*
 	 * Resizes the camera viewport to reflect the new size. Could do a lot more (like show more of the world at larger sizes).
 	 * 
@@ -206,10 +104,9 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 	}
 	
 	private void setupCamera(int width, int height) {
-		camera.setToOrtho(false, 10, 10 * ((float) height / (float) width));
-		camera.position.set(5, 5, 5);
+		camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
+		camera.position.set(100, 100, 100);
 		camera.direction.set(-1, -1, -1);
-//		camera.lookAt(0,0,0);
 		camera.near = 1;
 		camera.far = 300;
 	}
@@ -305,5 +202,72 @@ public class IsometricScreen extends AbstractScreen implements InputProcessor {
 		}
         shadowBatch.end();
         shadowLight.end();
+    }
+
+    private class Detector implements GestureDetector.GestureListener {
+        final Vector3 curr = new Vector3();
+        final Vector2 last = new Vector2(-1, -1);
+        final Vector3 delta = new Vector3();
+
+        @Override
+        public boolean touchDown(float x, float y, int pointer, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean tap(float x, float y, int count, int button) {
+            Ray pickRay = camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+            Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
+
+            ghost.setStartPosition(ghost.position);
+            ghost.setTargetPosition(intersection.x, 0, intersection.z);
+
+            float rotation = MathUtils.atan2(intersection.x - ghost.position.x, intersection.z - ghost.position.z) * 180 / MathUtils.PI;
+            ghost.setTargetRotation(rotation < 0 ? rotation += 360 : rotation);
+            return false;
+        }
+
+        @Override
+        public boolean longPress(float x, float y) {
+            return true;
+        }
+
+        @Override
+        public boolean fling(float velocityX, float velocityY, int button) {
+            return false;
+        }
+
+        @Override
+        public boolean pan(float x, float y, float deltaX, float deltaY) {
+            Ray pickRay = camera.getPickRay(x, y);
+            Intersector.intersectRayPlane(pickRay, xzPlane, curr);
+
+            if(!(last.x == -1 && last.y == -1)) {
+                pickRay = camera.getPickRay(last.x, last.y);
+                Intersector.intersectRayPlane(pickRay, xzPlane, delta);
+                delta.sub(curr);
+                camera.position.add(delta.x, delta.y, delta.z);
+            }
+
+            last.set(x, y);
+
+            return false;
+        }
+
+        @Override
+        public boolean panStop(float x, float y, int pointer, int button) {
+            last.set(-1, -1);
+            return false;
+        }
+
+        @Override
+        public boolean zoom(float initialDistance, float distance) {
+            return false;
+        }
+
+        @Override
+        public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+            return false;
+        }
     }
 }
