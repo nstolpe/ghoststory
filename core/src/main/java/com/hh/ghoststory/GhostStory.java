@@ -1,13 +1,11 @@
 package com.hh.ghoststory;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.hh.ghoststory.screens.CreateScreen;
-import com.hh.ghoststory.screens.IsometricScreen;
+import com.hh.ghoststory.screens.GameScreen;
 import com.hh.ghoststory.screens.MainScreen;
 
 public class GhostStory extends Game {
@@ -26,8 +24,8 @@ public class GhostStory extends Game {
     public MainScreen getMainScreen() {
     	return new MainScreen(this);
     }
-    public IsometricScreen getIsometricScreen() {
-    	return new IsometricScreen(this);
+    public GameScreen getIsometricScreen() {
+    	return new GameScreen(this);
     }
     public CreateScreen getCreateScreen() {
     	return new CreateScreen(this);

@@ -67,49 +67,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="default.fragment.glsl" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/android/assets/shaders/default.fragment.glsl">
+      <file leaf-file-name="GameScreen.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="40" column="35" selection-start="737" selection-end="737" vertical-scroll-proportion="0.0" vertical-offset="79" max-vertical-offset="2805">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="default.vertex.glsl" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/android/assets/shaders/default.vertex.glsl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="306" column="13" selection-start="7963" selection-end="7963" vertical-scroll-proportion="-20.518518" vertical-offset="4036" max-vertical-offset="4965">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IsometricScreen.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/IsometricScreen.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="47" selection-start="2712" selection-end="2712" vertical-scroll-proportion="0.76642334" vertical-offset="645" max-vertical-offset="4290">
+            <state line="45" column="20" selection-start="1800" selection-end="1800" vertical-scroll-proportion="0.5276382" vertical-offset="360" max-vertical-offset="3015">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1922#1933#0" expanded="true" />
+                <element signature="e#1554#1565#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AbstractScreen.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/AbstractScreen.java">
+      <file leaf-file-name="GameInputDetector.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="36" selection-start="760" selection-end="774" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1440">
-              <folding />
+            <state line="21" column="0" selection-start="656" selection-end="656" vertical-scroll-proportion="0.0" vertical-offset="65" max-vertical-offset="1035">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IsometricDetector.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/IsometricDetector.java">
+      <file leaf-file-name="GameInputListener.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputListener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="80" selection-start="353" selection-end="353" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1005">
+            <state line="18" column="47" selection-start="662" selection-end="662" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1395">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -120,37 +104,10 @@
       <file leaf-file-name="GestureDetector.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/input/GestureDetector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="126" column="19" selection-start="4749" selection-end="4749" vertical-scroll-proportion="-7.185185" vertical-offset="1441" max-vertical-offset="6495">
+            <state line="284" column="28" selection-start="9670" selection-end="9670" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="6495">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Ghost.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/game_models/Ghost.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="109" column="70" selection-start="3589" selection-end="3589" vertical-scroll-proportion="0.0" vertical-offset="1115" max-vertical-offset="2490">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ModelBatch.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/ModelBatch.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="36" selection-start="2479" selection-end="2479" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3840">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestShader.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/TestShader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="33" column="18" selection-start="1326" selection-end="1326" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1065">
-              <folding />
             </state>
           </provider>
         </entry>
@@ -179,7 +136,10 @@
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input/IsometricGestureDetector.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/AbstractScreen.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/IsometricDetector.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/IsometricScreen.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputListener.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java" />
       </list>
     </option>
   </component>
@@ -760,12 +720,12 @@
         <state line="21" column="28" selection-start="939" selection-end="939" vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="450" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/IsometricScreen.java">
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="116" column="43" selection-start="3467" selection-end="3467" vertical-scroll-proportion="0.0" vertical-offset="1740" max-vertical-offset="4200">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1922#1933#0" expanded="true" />
+            <element signature="e#1554#1565#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1032,15 +992,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/input/GestureDetector.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="126" column="19" selection-start="4749" selection-end="4749" vertical-scroll-proportion="-7.185185" vertical-offset="1441" max-vertical-offset="6495">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/AbstractScreen.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="36" selection-start="760" selection-end="774" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1440">
@@ -1048,21 +999,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/IsometricDetector.java">
+    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/input/GestureDetector.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="80" selection-start="353" selection-end="353" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1005">
+        <state line="284" column="28" selection-start="9670" selection-end="9670" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="6495">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/IsometricScreen.java">
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="47" selection-start="2712" selection-end="2712" vertical-scroll-proportion="0.76642334" vertical-offset="645" max-vertical-offset="4290">
+        <state line="21" column="0" selection-start="656" selection-end="656" vertical-scroll-proportion="0.0" vertical-offset="65" max-vertical-offset="1035">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1922#1933#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="47" selection-start="662" selection-end="662" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1395">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="20" selection-start="1800" selection-end="1800" vertical-scroll-proportion="0.5276382" vertical-offset="360" max-vertical-offset="3015">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1554#1565#0" expanded="true" />
           </folding>
         </state>
       </provider>
