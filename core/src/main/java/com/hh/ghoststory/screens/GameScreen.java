@@ -146,7 +146,7 @@ public class GameScreen extends AbstractScreen {
 	    environment.add(new PointLight().set(new Color(1f,0f,0f, 1f),  4, 1, 4, 1));
 	    environment.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6, 1, 0, 1));
 	    environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
-	    environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
+//	    environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
 
         if (this.shadows) {
 //            environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));

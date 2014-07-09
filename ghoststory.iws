@@ -21,7 +21,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
+    <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true" converted="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
         <option name="NOTIFY_UNCAUGHT" value="true" />
@@ -57,9 +57,8 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <breakpoint_rules />
-    <ui_properties />
+    <breakpoint_rules converted="true" />
+    <ui_properties converted="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
@@ -67,12 +66,42 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="default.fragment.glsl" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/android/assets/shaders/default.fragment.glsl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="79" max-vertical-offset="2805">
+              <caret line="40" column="35" selection-start-line="40" selection-start-column="35" selection-end-line="40" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="default.vertex.glsl" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/android/assets/shaders/default.vertex.glsl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="4740" max-vertical-offset="4965">
+              <caret line="316" column="16" selection-start-line="316" selection-start-column="16" selection-end-line="316" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="900">
+              <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="GameScreen.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="20" selection-start="1800" selection-end="1800" vertical-scroll-proportion="0.5276382" vertical-offset="360" max-vertical-offset="3015">
+            <state vertical-scroll-proportion="-1.1356784" vertical-offset="858" max-vertical-offset="2580">
+              <caret line="35" column="65" selection-start-line="35" selection-start-column="65" selection-end-line="35" selection-end-column="65" />
               <folding>
-                <element signature="imports" expanded="true" />
                 <element signature="e#1554#1565#0" expanded="true" />
               </folding>
             </state>
@@ -82,10 +111,9 @@
       <file leaf-file-name="GameInputDetector.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="0" selection-start="656" selection-end="656" vertical-scroll-proportion="0.0" vertical-offset="65" max-vertical-offset="1035">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1035">
+              <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -93,10 +121,9 @@
       <file leaf-file-name="GameInputListener.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputListener.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="47" selection-start="662" selection-end="662" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1395">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="1410">
+              <caret line="63" column="68" selection-start-line="63" selection-start-column="68" selection-end-line="63" selection-end-column="68" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -104,10 +131,9 @@
       <file leaf-file-name="GestureDetector.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/input/GestureDetector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="284" column="28" selection-start="9670" selection-end="9670" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="6495">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0" vertical-offset="4260" max-vertical-offset="6870">
+              <caret line="284" column="28" selection-start-line="284" selection-start-column="28" selection-end-line="284" selection-end-column="28" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -132,14 +158,15 @@
         <option value="$PROJECT_DIR$/android/assets/shaders/test.vertex.glsl" />
         <option value="$PROJECT_DIR$/android/assets/shaders/default.fragment.glsl" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/AbstractScreen.java" />
-        <option value="$PROJECT_DIR$/android/assets/shaders/default.vertex.glsl" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input/IsometricGestureDetector.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/AbstractScreen.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/IsometricDetector.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/IsometricScreen.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputListener.java" />
+        <option value="$PROJECT_DIR$/android/assets/shaders/default.vertex.glsl" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
       </list>
     </option>
   </component>
@@ -149,7 +176,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="90" />
-    <option name="width" value="1830" />
+    <option name="width" value="1788" />
     <option name="height" value="1045" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -171,7 +198,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -183,7 +210,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -200,7 +226,7 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -210,11 +236,11 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -224,27 +250,27 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -254,167 +280,36 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="screens" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="input_processors" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="shaders" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ghoststory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value=".ghost_story" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -447,6 +342,15 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.Run Desktop">
+    <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workDir" value="file://$PROJECT_DIR$" />
+      <setting name="debug" value="false" />
+      <method />
+    </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
       <module name="" />
       <option name="TESTING_TYPE" value="0" />
@@ -465,6 +369,7 @@
       <option name="NETWORK_LATENCY" value="none" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -473,6 +378,19 @@
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -500,19 +418,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -568,6 +473,7 @@
       <option name="NETWORK_LATENCY" value="none" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
     <configuration default="false" name="Run Android" type="AndroidRunConfigurationType" factoryName="Android Application">
@@ -587,6 +493,7 @@
       <option name="NETWORK_LATENCY" value="none" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
       <RunnerSettings RunnerId="AndroidDebugRunner" />
       <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
       <method />
@@ -627,22 +534,8 @@
   <component name="StructureViewFactory">
     <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
   </component>
-  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
-    <option name="USER" value="" />
-    <option name="PASSWORD" value="" />
-    <option name="mySSHConnectionTimeout" value="30000" />
-    <option name="mySSHReadTimeout" value="30000" />
-    <option name="LAST_MERGED_REVISION" />
-    <option name="MERGE_DRY_RUN" value="false" />
-    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
-    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
-    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
-    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
-    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
-    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
-    <option name="FORCE_UPDATE" value="false" />
-    <option name="IGNORE_EXTERNALS" value="false" />
-    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  <component name="SvnConfiguration" myUseAcceleration="nothing">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -653,7 +546,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="90" y="0" width="1830" height="1045" extended-state="4" />
+    <frame x="90" y="0" width="1788" height="1045" extended-state="4" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -661,30 +554,33 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32947367" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24972618" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2475356" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32947367" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24551569" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32947367" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
-    <option name="RECENTLY_FILTERED_USERS">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
       <collection />
     </option>
   </component>
@@ -707,59 +603,44 @@
   <component name="editorHistoryManager">
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/DirectionalLight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="28" selection-start="1772" selection-end="1772" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="1050" />
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/DirectionalShadowLight.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="101" selection-start="1972" selection-end="1991" vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="1905" />
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/ShadowMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="28" selection-start="939" selection-end="939" vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="450" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="116" column="43" selection-start="3467" selection-end="3467" vertical-scroll-proportion="0.0" vertical-offset="1740" max-vertical-offset="4200">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1554#1565#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="1050">
+          <caret line="50" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/DirectionalLight.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="28" selection-start="1772" selection-end="1772" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="1050" />
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/DirectionalShadowLight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="101" selection-start="1972" selection-end="1991" vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="1905" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="660" max-vertical-offset="1905">
+          <caret line="44" column="101" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/ShadowMap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="28" selection-start="939" selection-end="939" vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="450" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="450">
+          <caret line="21" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/InputProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="49" selection-start="1654" selection-end="1654" vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="1215" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="1215">
+          <caret line="36" column="49" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/AbstractScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="67" selection-start="945" selection-end="945" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1635">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1635">
+          <caret line="24" column="67" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ghoststory.ipr">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1725" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1725">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/assets/icons/128.png">
@@ -769,268 +650,314 @@
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/Attributes.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="13" selection-start="906" selection-end="906" vertical-scroll-proportion="-2.3606558" vertical-offset="1530" max-vertical-offset="2820" />
+        <state vertical-scroll-proportion="-2.3606558" vertical-offset="1530" max-vertical-offset="2820">
+          <caret line="23" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/Camera.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="76" column="16" selection-start="3218" selection-end="3218" vertical-scroll-proportion="0.3327869" vertical-offset="592" max-vertical-offset="3825" />
+        <state vertical-scroll-proportion="0.3327869" vertical-offset="592" max-vertical-offset="3825">
+          <caret line="76" column="16" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/Environment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="23" selection-start="1822" selection-end="1822" vertical-scroll-proportion="0.6393443" vertical-offset="0" max-vertical-offset="615" />
+        <state vertical-scroll-proportion="0.6393443" vertical-offset="0" max-vertical-offset="615">
+          <caret line="47" column="23" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/BaseLight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="22" selection-start="873" selection-end="873" vertical-scroll-proportion="0.14754099" vertical-offset="0" max-vertical-offset="610" />
+        <state vertical-scroll-proportion="0.14754099" vertical-offset="0" max-vertical-offset="610">
+          <caret line="20" column="22" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/ShadowMap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="28" selection-start="939" selection-end="939" vertical-scroll-proportion="0.097508125" vertical-offset="0" max-vertical-offset="923" />
+        <state vertical-scroll-proportion="0.097508125" vertical-offset="0" max-vertical-offset="923">
+          <caret line="21" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/DirectionalShadowLight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="101" selection-start="1972" selection-end="1991" vertical-scroll-proportion="-0.26923078" vertical-offset="500" max-vertical-offset="1410" />
+        <state vertical-scroll-proportion="-0.26923078" vertical-offset="500" max-vertical-offset="1410">
+          <caret line="44" column="101" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/assets/.ghost_story/character.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="2" selection-start="2" selection-end="2" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="90" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="90">
+          <caret line="0" column="2" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/actors/Attributes.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="28" selection-start="357" selection-end="357" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="390">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="390">
+          <caret line="15" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/assets/models/tile.g3dj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="26" selection-start="804" selection-end="804" vertical-scroll-proportion="0.0" vertical-offset="196" max-vertical-offset="915" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="196" max-vertical-offset="915">
+          <caret line="26" column="26" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/actors/PlayerCharacter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="38" selection-start="372" selection-end="372" vertical-scroll-proportion="0.38265306" vertical-offset="0" max-vertical-offset="588">
-          <folding />
+        <state vertical-scroll-proportion="0.38265306" vertical-offset="0" max-vertical-offset="588">
+          <caret line="15" column="38" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/shaders/DefaultShader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="94" column="84" selection-start="4928" selection-end="4928" vertical-scroll-proportion="0.2347826" vertical-offset="630" max-vertical-offset="9855" />
+        <state vertical-scroll-proportion="0.2347826" vertical-offset="630" max-vertical-offset="9855">
+          <caret line="94" column="84" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/utils/DefaultShaderProvider.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="11" selection-start="1673" selection-end="1673" vertical-scroll-proportion="0.46721312" vertical-offset="0" max-vertical-offset="610" />
+        <state vertical-scroll-proportion="0.46721312" vertical-offset="0" max-vertical-offset="610">
+          <caret line="39" column="11" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/game_models/core/DynamicModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="43" selection-start="133" selection-end="142" vertical-scroll-proportion="0.09836066" vertical-offset="0" max-vertical-offset="610">
-          <folding />
+        <state vertical-scroll-proportion="0.09836066" vertical-offset="0" max-vertical-offset="610">
+          <caret line="4" column="43" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/ModelInstance.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="384" column="24" selection-start="16351" selection-end="16351" vertical-scroll-proportion="0.36348408" vertical-offset="5333" max-vertical-offset="6960">
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.36348408" vertical-offset="5333" max-vertical-offset="6960">
+          <caret line="384" column="24" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/Model.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="75" column="13" selection-start="3938" selection-end="3938" vertical-scroll-proportion="0.33333334" vertical-offset="116" max-vertical-offset="5865" />
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="116" max-vertical-offset="5865">
+          <caret line="75" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/game_models/core/GameModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="24" selection-start="365" selection-end="378" vertical-scroll-proportion="0.24590164" vertical-offset="0" max-vertical-offset="630">
-          <folding />
+        <state vertical-scroll-proportion="0.24590164" vertical-offset="0" max-vertical-offset="630">
+          <caret line="13" column="24" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/PointLight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="22" selection-start="1648" selection-end="1648" vertical-scroll-proportion="0.3327869" vertical-offset="262" max-vertical-offset="900">
-          <folding />
+        <state vertical-scroll-proportion="0.3327869" vertical-offset="262" max-vertical-offset="900">
+          <caret line="46" column="22" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/PerspectiveCamera.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="11" selection-start="1405" selection-end="1405" vertical-scroll-proportion="0.3327869" vertical-offset="127" max-vertical-offset="855">
-          <folding />
+        <state vertical-scroll-proportion="0.3327869" vertical-offset="127" max-vertical-offset="855">
+          <caret line="37" column="11" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/assets/models/ghost.g3dj">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="104" selection-start="2080" selection-end="2080" vertical-scroll-proportion="-25.754099" vertical-offset="16115" max-vertical-offset="16995">
-          <folding />
+        <state vertical-scroll-proportion="-25.754099" vertical-offset="16115" max-vertical-offset="16995">
+          <caret line="27" column="104" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/assets/shaders/test.vertex.glsl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="29" selection-start="222" selection-end="222" vertical-scroll-proportion="0.24590164" vertical-offset="0" max-vertical-offset="610">
-          <folding />
+        <state vertical-scroll-proportion="0.24590164" vertical-offset="0" max-vertical-offset="610">
+          <caret line="10" column="29" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/android/assets/shaders/test.fragment.glsl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="1" selection-start="199" selection-end="199" vertical-scroll-proportion="0.22131148" vertical-offset="0" max-vertical-offset="610">
-          <folding />
+        <state vertical-scroll-proportion="0.22131148" vertical-offset="0" max-vertical-offset="610">
+          <caret line="9" column="1" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/attributes/ColorAttribute.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="11" selection-start="3634" selection-end="3634" vertical-scroll-proportion="0.40983605" vertical-offset="860" max-vertical-offset="1470">
-          <folding />
+        <state vertical-scroll-proportion="0.40983605" vertical-offset="860" max-vertical-offset="1470">
+          <caret line="90" column="11" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/environment/DirectionalLight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="28" selection-start="1772" selection-end="1772" vertical-scroll-proportion="0.5081967" vertical-offset="215" max-vertical-offset="825">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/android/assets/shaders/default.fragment.glsl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="35" selection-start="737" selection-end="737" vertical-scroll-proportion="0.0" vertical-offset="79" max-vertical-offset="2805">
-          <folding />
+        <state vertical-scroll-proportion="0.5081967" vertical-offset="215" max-vertical-offset="825">
+          <caret line="50" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/math/Vector3.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="11" selection-start="2376" selection-end="2376" vertical-scroll-proportion="0.3327869" vertical-offset="487" max-vertical-offset="8640">
-          <folding />
+        <state vertical-scroll-proportion="0.3327869" vertical-offset="487" max-vertical-offset="8640">
+          <caret line="62" column="11" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/math/Vector2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="187" column="17" selection-start="4680" selection-end="4680" vertical-scroll-proportion="0.3327869" vertical-offset="2362" max-vertical-offset="5445">
-          <folding />
+        <state vertical-scroll-proportion="0.3327869" vertical-offset="2362" max-vertical-offset="5445">
+          <caret line="187" column="17" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/GhostStory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="73" selection-start="474" selection-end="474" vertical-scroll-proportion="0.17857143" vertical-offset="0" max-vertical-offset="990">
-          <folding />
+        <state vertical-scroll-proportion="0.17857143" vertical-offset="0" max-vertical-offset="990">
+          <caret line="15" column="73" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/InputProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="17" selection-start="1299" selection-end="1299" vertical-scroll-proportion="-0.22959183" vertical-offset="315" max-vertical-offset="1005">
-          <folding />
+        <state vertical-scroll-proportion="-0.22959183" vertical-offset="315" max-vertical-offset="1005">
+          <caret line="26" column="17" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/Screen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="7" selection-start="912" selection-end="912" vertical-scroll-proportion="0.15306123" vertical-offset="0" max-vertical-offset="600">
-          <folding />
+        <state vertical-scroll-proportion="0.15306123" vertical-offset="0" max-vertical-offset="600">
+          <caret line="20" column="7" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/g3d/ModelBatch.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="36" selection-start="2479" selection-end="2479" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3840">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/android/assets/shaders/default.vertex.glsl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="306" column="13" selection-start="7963" selection-end="7963" vertical-scroll-proportion="-20.518518" vertical-offset="4036" max-vertical-offset="4965">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3840">
+          <caret line="49" column="36" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/game_models/Ghost.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="109" column="70" selection-start="3589" selection-end="3589" vertical-scroll-proportion="0.0" vertical-offset="1115" max-vertical-offset="2490">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1115" max-vertical-offset="2490">
+          <caret line="109" column="70" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/graphics/OrthographicCamera.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="16" selection-start="3013" selection-end="3013" vertical-scroll-proportion="0.3327869" vertical-offset="742" max-vertical-offset="1530">
-          <folding />
+        <state vertical-scroll-proportion="0.3327869" vertical-offset="742" max-vertical-offset="1530">
+          <caret line="80" column="16" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/InputAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="0" selection-start="986" selection-end="1613" vertical-scroll-proportion="0.05102041" vertical-offset="90" max-vertical-offset="720">
-          <folding />
+        <state vertical-scroll-proportion="0.05102041" vertical-offset="90" max-vertical-offset="720">
+          <caret line="22" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/TestShader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="18" selection-start="1326" selection-end="1326" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1065">
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1065">
+          <caret line="33" column="18" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/AbstractScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="36" selection-start="760" selection-end="774" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1440">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1440">
+          <caret line="20" column="36" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1035">
+          <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="1410">
+          <caret line="63" column="68" selection-start-line="63" selection-start-column="68" selection-end-line="63" selection-end-column="68" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-24/filestore/com.badlogicgames.gdx/gdx/0.9.9/source/d20e52bfcfdeb3eed082668e9feca2e178e7ff7e/gdx-0.9.9-sources.jar!/com/badlogic/gdx/input/GestureDetector.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="284" column="28" selection-start="9670" selection-end="9670" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="6495">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="4260" max-vertical-offset="6870">
+          <caret line="284" column="28" selection-start-line="284" selection-start-column="28" selection-end-line="284" selection-end-column="28" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java">
+    <entry file="file://$PROJECT_DIR$/android/assets/shaders/default.fragment.glsl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="0" selection-start="656" selection-end="656" vertical-scroll-proportion="0.0" vertical-offset="65" max-vertical-offset="1035">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="79" max-vertical-offset="2805">
+          <caret line="40" column="35" selection-start-line="40" selection-start-column="35" selection-end-line="40" selection-end-column="35" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputListener.java">
+    <entry file="file://$PROJECT_DIR$/android/assets/shaders/default.vertex.glsl">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="47" selection-start="662" selection-end="662" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1395">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="4042" max-vertical-offset="4965">
+          <caret line="316" column="16" selection-start-line="316" selection-start-column="16" selection-end-line="316" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/ic_launcher-web.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/libs/armeabi/libgdx.so">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="25275">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/android/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1545">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="900">
+          <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="20" selection-start="1800" selection-end="1800" vertical-scroll-proportion="0.5276382" vertical-offset="360" max-vertical-offset="3015">
+        <state vertical-scroll-proportion="-1.1356784" vertical-offset="858" max-vertical-offset="2580">
+          <caret line="35" column="65" selection-start-line="35" selection-start-column="65" selection-end-line="35" selection-end-column="65" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="e#1554#1565#0" expanded="true" />
           </folding>
         </state>

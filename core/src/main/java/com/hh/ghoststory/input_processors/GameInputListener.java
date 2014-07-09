@@ -61,6 +61,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
             Intersector.intersectRayPlane(pickRay, xzPlane, delta);
             delta.sub(curr);
             screen.camera.position.add(delta.x, delta.y, delta.z);
+            System.out.println("X: " + screen.camera.position.x + " Z: " + screen.camera.position.z);
         }
 
         last.set(x, y);
