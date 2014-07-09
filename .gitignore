@@ -62,7 +62,10 @@ old_school_rpg-html/gwt-unitCache/*
 
 # IntelliJ IDEA
 .idea/
-*iml
+*.iml
+*.ipr
+*.iws
+
 ghoststory_android/gen/com/hh/ghoststory/Manifest.java
 
 # Game generated files
