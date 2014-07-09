@@ -99,10 +99,17 @@
       <file leaf-file-name="GameScreen.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.1356784" vertical-offset="858" max-vertical-offset="2580">
-              <caret line="35" column="65" selection-start-line="35" selection-start-column="65" selection-end-line="35" selection-end-column="65" />
+            <state vertical-scroll-proportion="0.8336414" vertical-offset="2444" max-vertical-offset="2985">
+              <caret line="193" column="0" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
               <folding>
-                <element signature="e#1554#1565#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#1663#1674#0" expanded="true" />
+                <element signature="e#2344#2345#0" expanded="true" />
+                <element signature="e#2363#2364#0" expanded="true" />
+                <element signature="e#2670#2671#0" expanded="true" />
+                <element signature="e#2692#2693#0" expanded="true" />
+                <element signature="e#2954#2955#0" expanded="true" />
+                <element signature="e#2987#2988#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -165,8 +172,8 @@
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputDetector.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/input_processors/GameInputListener.java" />
         <option value="$PROJECT_DIR$/android/assets/shaders/default.vertex.glsl" />
-        <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java" />
       </list>
     </option>
   </component>
@@ -955,10 +962,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/com/hh/ghoststory/screens/GameScreen.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.1356784" vertical-offset="858" max-vertical-offset="2580">
-          <caret line="35" column="65" selection-start-line="35" selection-start-column="65" selection-end-line="35" selection-end-column="65" />
+        <state vertical-scroll-proportion="0.8336414" vertical-offset="2444" max-vertical-offset="2985">
+          <caret line="193" column="0" selection-start-line="193" selection-start-column="0" selection-end-line="193" selection-end-column="0" />
           <folding>
-            <element signature="e#1554#1565#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#1663#1674#0" expanded="true" />
+            <element signature="e#2344#2345#0" expanded="true" />
+            <element signature="e#2363#2364#0" expanded="true" />
+            <element signature="e#2670#2671#0" expanded="true" />
+            <element signature="e#2692#2693#0" expanded="true" />
+            <element signature="e#2954#2955#0" expanded="true" />
+            <element signature="e#2987#2988#0" expanded="true" />
           </folding>
         </state>
       </provider>
