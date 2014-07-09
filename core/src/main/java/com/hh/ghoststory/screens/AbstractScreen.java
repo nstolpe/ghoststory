@@ -27,17 +27,17 @@ public abstract class AbstractScreen implements Screen {
 	protected float clearBlue = 0f;
 	protected float clearGreen = 0f;
 	protected float clearAlpha = 1f;
-	
+
 	public static int SCREEN_MAIN = 0;
 	public static int SCREEN_TURN = 1;
 	public static int SCREEN_CHARACTER = 2;
 	public static int SCREEN_ISOMETRIC = 3;
-	
+
 	protected BitmapFont font = new BitmapFont(
 			Gdx.files.internal("fonts/crimson.fnt"),
 			Gdx.files.internal("fonts/crimson.png"),
 			false
-		);
+	);
 
 	public AbstractScreen(GhostStory game) {
 		this.game = game;
@@ -74,30 +74,31 @@ public abstract class AbstractScreen implements Screen {
 	@Override
 	public void dispose() {
 	}
-	
+
 	protected void setClear(float red, float green, float blue, float alpha) {
 		clearRed = red;
 		clearGreen = green;
 		clearBlue = blue;
 		clearAlpha = alpha;
 	}
+
 	/*
 	 * Class to create buttons on the main screen. A factory may be better, or use libGDX skin. Or move
 	 * to own class.
 	 */
 	class MainScreenButton {
-        NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
-        NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
-        TextButtonStyle style = new TextButtonStyle();
-        TextButton button;
-        
-        public MainScreenButton(String label) {
-            style.up = new NinePatchDrawable(up);
-            style.down = new NinePatchDrawable(down);
-            style.font = font;
-            style.fontColor = new Color(1f, 1f, 1f, 1f);
-            
-            button = new TextButton(label, style);
-        }
+		NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
+		NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
+		TextButtonStyle style = new TextButtonStyle();
+		TextButton button;
+
+		public MainScreenButton(String label) {
+			style.up = new NinePatchDrawable(up);
+			style.down = new NinePatchDrawable(down);
+			style.font = font;
+			style.fontColor = new Color(1f, 1f, 1f, 1f);
+
+			button = new TextButton(label, style);
+		}
 	}
 }

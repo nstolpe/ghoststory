@@ -12,13 +12,13 @@ public class Tile extends StaticModel {
 		model_resource = "models/tile.g3dj";
 		position.set(position);
 	}
-	
+
 	public Tile(int x, int y, int z) {
 		model_resource = "models/tile.g3dj";
-		position.set(x,y,z);
-		verticalAxis = new Vector3(0,1,0);
+		position.set(x, y, z);
+		verticalAxis = new Vector3(0, 1, 0);
 	}
-	
+
 	@Override
 	public void update() {
 		setRotation();

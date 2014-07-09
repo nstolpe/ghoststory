@@ -25,15 +25,15 @@ public class Ghost extends DynamicModel {
 	private static final int CLOCKWISE = 1;
 	private static final int COUNTER_CLOCKWISE = 2;
 	private float speed = 2;
-    private String texture;
-	
+	private String texture;
+
 	public Ghost() {
 		model_resource = "models/ghost.g3dj";
-        setPosition(new Vector3(0, 0, 0));
-        rotationDirection = NONE;
-        startPosition.set(position);
+		setPosition(new Vector3(0, 0, 0));
+		rotationDirection = NONE;
+		startPosition.set(position);
 	}
-	
+
 	/*
 	 * Sets position and target position. Use for teleport, setting original position.
 	 */
@@ -41,24 +41,26 @@ public class Ghost extends DynamicModel {
 		this.position.set(position);
 		this.setTargetPosition(position);
 	}
-	
+
 	public void setRotation(float rotation) {
 		this.rotation = rotation;
 		this.targetRotation = rotation;
 	}
+
 	/*
 	 * Returns a copy so nothing happens to the position vector.
 	 */
 	public Vector3 getPosition() {
 		return position.cpy();
 	}
-	
+
 	public void update() {
 		setRotation();
 		setTranslation();
 		model.transform.setToTranslation(position);
 		model.transform.rotate(verticalAxis, rotation);
 	}
+
 	@Override
 	public void setTranslation() {
 		// Only move if a targetPosition hasn't been reached or exceeded and it's not rotating.
@@ -66,13 +68,14 @@ public class Ghost extends DynamicModel {
 			if (position.dst(startPosition) >= targetPosition.dst(startPosition)) {
 				position.set(targetPosition);
 			} else {
-				position.lerp(targetPosition, Gdx.graphics.getDeltaTime()*(speed/targetPosition.dst(position)));
+				position.lerp(targetPosition, Gdx.graphics.getDeltaTime() * (speed / targetPosition.dst(position)));
 			}
 		}
 	}
+
 	@Override
 	public void setRotation() {
-		if (rotation != targetRotation) {	
+		if (rotation != targetRotation) {
 			if (rotationDirection == NONE) {
 				setRotationDirection();
 			} else if (rotationDirection == CLOCKWISE) {
@@ -82,6 +85,7 @@ public class Ghost extends DynamicModel {
 			}
 		}
 	}
+
 	/*
 	 * Advances the rotation towards targetRotation. Performs a check to see if the new rotation will have passed target
 	 * rotation and sets targetRotation to rotation while also resetting rotationDirection if it would pass.
@@ -94,10 +98,11 @@ public class Ghost extends DynamicModel {
 			rotationDirection = NONE;
 		}
 	}
-    /*
-     * Advances the rotation towards targetRotation. Performs a check to see if the new rotation will have passed target
-     * rotation and sets targetRotation to rotation while also resetting rotationDirection if it would pass.
-     */
+
+	/*
+	 * Advances the rotation towards targetRotation. Performs a check to see if the new rotation will have passed target
+	 * rotation and sets targetRotation to rotation while also resetting rotationDirection if it would pass.
+	 */
 	private void rotateCounterClockwise() {
 		rotation -= Gdx.graphics.getDeltaTime() * 100.0f;
 		if (rotation <= targetRotation) {
@@ -106,10 +111,11 @@ public class Ghost extends DynamicModel {
 			rotationDirection = NONE;
 		}
 	}
-    /*
-     * Determines whether the target rotation can be reached most quickly by turning clockwise or counterclockwise and
-     * sets the direction to it. Best explained with a graphic.
-     */
+
+	/*
+	 * Determines whether the target rotation can be reached most quickly by turning clockwise or counterclockwise and
+	 * sets the direction to it. Best explained with a graphic.
+	 */
 	private void setRotationDirection() {
 		if (targetRotation > rotation && targetRotation - rotation < 180) {
 			rotationDirection = CLOCKWISE;
@@ -123,7 +129,7 @@ public class Ghost extends DynamicModel {
 			rotationDirection = CLOCKWISE;
 		}
 	}
-	
+
 	public void setTargetPosition(Vector3 point) {
 		targetPosition.set(point);
 	}
@@ -131,41 +137,44 @@ public class Ghost extends DynamicModel {
 	public void setTargetPosition(float x, float y, float z) {
 		targetPosition.set(x, y, z);
 	}
-	
+
 	public void setStartPosition(Vector3 point) {
 		startPosition.set(point);
 	}
-	
+
 	public void setStartPosition(float x, float y, float z) {
 		startPosition.set(x, y, z);
 	}
-	
+
 	public void setTargetRotation(float angle) {
 		resetRotation();
 		this.targetRotation = angle;
 	}
-	
+
 	private void resetRotation() {
 		if (rotation > 360) rotation -= 360;
 		rotationDirection = NONE;
 	}
-    @Override
-    public void setModelResource(AssetManager assets) {
-        super.setModelResource(assets);
-        updateTexture();
-    }
-    @Override
-    public void setModelResource(Model model_asset) {
-        super.setModelResource(model_asset);
-        updateTexture();
-    }
 
-    private void updateTexture() {
-        Texture tex = new Texture(Gdx.files.internal(texture), true);
-        tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
-        model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex));
-    }
-    public void setTexture(String texture) {
-        this.texture = texture;
-    }
+	@Override
+	public void setModelResource(AssetManager assets) {
+		super.setModelResource(assets);
+		updateTexture();
+	}
+
+	@Override
+	public void setModelResource(Model model_asset) {
+		super.setModelResource(model_asset);
+		updateTexture();
+	}
+
+	private void updateTexture() {
+		Texture tex = new Texture(Gdx.files.internal(texture), true);
+		tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
+		model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex));
+	}
+
+	public void setTexture(String texture) {
+		this.texture = texture;
+	}
 }

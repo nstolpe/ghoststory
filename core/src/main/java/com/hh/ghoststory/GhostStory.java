@@ -17,25 +17,32 @@ public class GhostStory extends Game {
 //		setScreen(getMainScreen());
 		setScreen(getIsometricScreen());
 	}
-	
-	/***************************************************************************
-     *  Screen methods                                                         *
-     **************************************************************************/   
-    public MainScreen getMainScreen() {
-    	return new MainScreen(this);
-    }
-    public GameScreen getIsometricScreen() {
-    	return new GameScreen(this);
-    }
-    public CreateScreen getCreateScreen() {
-    	return new CreateScreen(this);
-    }
-	/***************************************************************************
-	* Overriden methods                                                        *
-	***************************************************************************/	
-	
+
+	/**
+	 * ************************************************************************
+	 * Screen methods                                                         *
+	 * ************************************************************************
+	 */
+	public MainScreen getMainScreen() {
+		return new MainScreen(this);
+	}
+
+	public GameScreen getIsometricScreen() {
+		return new GameScreen(this);
+	}
+
+	public CreateScreen getCreateScreen() {
+		return new CreateScreen(this);
+	}
+
+	/**
+	 * ************************************************************************
+	 * Overriden methods                                                        *
+	 * *************************************************************************
+	 */
+
 	@Override
-	public void render() {	
+	public void render() {
 		super.render();
 	}
 
@@ -58,7 +65,7 @@ public class GhostStory extends Game {
 	public void resume() {
 		super.resume();
 	}
-	
+
 	@Override
 	public void setScreen(Screen screen) {
 		super.setScreen(screen);

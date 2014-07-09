@@ -56,12 +56,12 @@ public class GameScreen extends AbstractScreen {
 		Gdx.input.setInputProcessor(new GameInputDetector(new GameInputListener(this)));
 		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 	}
-	
+
 	@Override
 	public void show() {
 		super.show();
 	}
-	
+
 	@Override
 	public void render(float delta) {
 		super.render(delta);
@@ -89,7 +89,7 @@ public class GameScreen extends AbstractScreen {
 	public void resize(int width, int height) {
 		setupCamera(width, height);
 	}
-	
+
 	private void setupCamera(int width, int height) {
 		camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
 		camera.position.set(100, 100, 100);
@@ -97,22 +97,22 @@ public class GameScreen extends AbstractScreen {
 		camera.near = 1;
 		camera.far = 300;
 	}
-	
+
 	/*
 	 * Instantiate the game models.
 	 */
 	private void setupGameModels() {
 		ghost = new Ghost();
 		game_models.add(ghost);
-		
-		for(int z = 0; z < 10; z++) {
-			for(int x = 0; x < 10; x++) {
-				game_models.add(new Tile(x,0,z));
+
+		for (int z = 0; z < 10; z++) {
+			for (int x = 0; x < 10; x++) {
+				game_models.add(new Tile(x, 0, z));
 			}
 		}
 		loadGameModelAssets();
 	}
-	
+
 	/*
 	 * Load the GameModel assets
 	 */
@@ -122,7 +122,7 @@ public class GameScreen extends AbstractScreen {
 		}
 		loading = true;
 	}
-	
+
 	/*
 	 * Check if assets have all been loaded. Run in a loop.
 	 */
@@ -138,11 +138,11 @@ public class GameScreen extends AbstractScreen {
 		}
 		return true;
 	}
-	   
+
 	private void setupLights() {
 		environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1));
-		environment.add(new PointLight().set(new Color(1f,0f,0f, 1f),  4, 1, 4, 1));
-		environment.add(new PointLight().set(new Color(0f,0f,1f, 1f), 6, 1, 0, 1));
+		environment.add(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1));
+		environment.add(new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1));
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
 //		environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
 
@@ -152,7 +152,7 @@ public class GameScreen extends AbstractScreen {
 			environment.shadowMap = shadowLight;
 		}
 	}
-	
+
 	/*
 	 * Loads the character from the character json.
 	 */
@@ -167,6 +167,7 @@ public class GameScreen extends AbstractScreen {
 			game_model.update();
 		}
 	}
+
 	/*
 	 * Renders the GameModels.
 	 */
@@ -178,6 +179,7 @@ public class GameScreen extends AbstractScreen {
 		}
 		modelBatch.end();
 	}
+
 	/*
 	 * Renders the GameModels shadows.
 	 */

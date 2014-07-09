@@ -8,11 +8,11 @@ package com.hh.ghoststory.actors;
  * To change this template use File | Settings | File Templates.
  */
 public class PlayerCharacter {
-    public String name;
-    public String texture;
-    public Attributes attributes;
+	public String name;
+	public String texture;
+	public Attributes attributes;
 
-    public PlayerCharacter() {
-        attributes = new Attributes();
-    }
+	public PlayerCharacter() {
+		attributes = new Attributes();
+	}
 }

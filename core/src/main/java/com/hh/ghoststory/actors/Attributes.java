@@ -8,13 +8,13 @@ package com.hh.ghoststory.actors;
  * To change this template use File | Settings | File Templates.
  */
 public class Attributes {
-    public int stamina;
-    public int strength;
-    public int reason;
-    public int will;
-    public int agility;
-    public int intelligence;
+	public int stamina;
+	public int strength;
+	public int reason;
+	public int will;
+	public int agility;
+	public int intelligence;
 
-    public Attributes() {
-    }
+	public Attributes() {
+	}
 }
