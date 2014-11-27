@@ -5,7 +5,7 @@ buildscript {
 
 allprojects {
     apply plugin: "idea"
-##
+
     version = "0.2"
     ext.appName = "ghoststory"
     ext.gdxVersion = "1.1.0" // Use "1.0-SNAPSHOT" for nightly build
