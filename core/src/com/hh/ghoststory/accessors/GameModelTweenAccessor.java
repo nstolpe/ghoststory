@@ -26,7 +26,7 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 return 2;
             case POSITION_XYZ:
                 returnValues[0] = target.position.x;
-                returnValues[1] = target.position.y;
+                returnValues[1] = 0;
                 returnValues[2] = target.position.z;
                 return 3;
             default:
@@ -40,22 +40,15 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
         switch (tweenType) {
             case POSITION_X:
                 target.model.transform.setToTranslation(newValues[0], target.position.y, target.position.z);
-//                target.position.x = newValues[0];
                 break;
             case POSITION_Y:
                 target.model.transform.setToTranslation(target.position.x, newValues[0], target.position.z);
-//                target.position.y = newValues[0];
                 break;
             case POSITION_XY:
                 target.model.transform.setToTranslation(newValues[0], newValues[1], target.position.z);
-//                target.position.x = newValues[0];
-//                target.position.y = newValues[1];
                 break;
             case POSITION_XYZ:
-                target.model.transform.setToTranslation(newValues[0], newValues[1], newValues[2]);
-//                target.position.x = newValues[0];
-//                target.position.y = newValues[1];
-//                target.position.z = newValues[2];
+                target.model.transform.setToTranslation(newValues[0], 0, newValues[2]);
                 break;
             default:
                 assert false;

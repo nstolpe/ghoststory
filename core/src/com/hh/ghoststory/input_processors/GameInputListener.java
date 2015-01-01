@@ -40,14 +40,13 @@ public class GameInputListener implements GestureDetector.GestureListener {
 		screen.ghost.setTargetPosition(intersection.x, 0, intersection.z);
 
 		screen.ghostManager.killTarget(screen.ghost);
-
-		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, 10)
-				.target(Gdx.input.getX(), Gdx.input.getY())
+		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, 1)
+				.target(intersection.x, intersection.y, intersection.z)
 				.ease(TweenEquations.easeNone)
 				.start(screen.ghostManager);
 
-		float rotation = MathUtils.atan2(intersection.x - screen.ghost.position.x, intersection.z - screen.ghost.position.z) * 180 / MathUtils.PI;
-		screen.ghost.setTargetRotation(rotation < 0 ? rotation += 360 : rotation);
+//		float rotation = MathUtils.atan2(intersection.x - screen.ghost.position.x, intersection.z - screen.ghost.position.z) * 180 / MathUtils.PI;
+//		screen.ghost.setTargetRotation(rotation < 0 ? rotation += 360 : rotation);
 		return false;
 	}
 

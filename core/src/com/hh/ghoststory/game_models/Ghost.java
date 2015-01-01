@@ -56,7 +56,7 @@ public class Ghost extends DynamicModel {
 	}
 
 	public void update() {
-		setRotation();
+//		setRotation();
 		setTranslation();
 //		model.transform.setToTranslation(position);
 //		model.transform.rotate(verticalAxis, rotation);
@@ -139,6 +139,9 @@ public class Ghost extends DynamicModel {
 		targetPosition.set(x, y, z);
 	}
 
+	public Vector3 getTargetposition() {
+		return this.targetPosition;
+	}
 	public void setStartPosition(Vector3 point) {
 		startPosition.set(point);
 	}
