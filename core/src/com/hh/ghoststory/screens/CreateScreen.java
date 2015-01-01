@@ -128,7 +128,7 @@ public class CreateScreen extends AbstractScreen {
 		ghost = new Ghost();
 
 		game_models.add(ghost);
-		ghost.setPosition(new Vector3(0, 0, 0));
+//		ghost.setPosition(new Vector3(0, 0, 0));
 		ghost.verticalAxis = new Vector3(0, 1, 0);
 		ghost.setRotation(0f);
 

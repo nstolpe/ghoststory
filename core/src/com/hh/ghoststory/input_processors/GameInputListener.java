@@ -20,6 +20,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
 	public GameScreen screen;
 	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 	final Vector3 intersection = new Vector3();
+	private Vector3 position = new Vector3();
 
 	public GameInputListener(GameScreen screen) {
 		this.screen = screen;
@@ -36,11 +37,12 @@ public class GameInputListener implements GestureDetector.GestureListener {
 		Ray pickRay = screen.camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
 		Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
 
-//		screen.ghost.setStartPosition(screen.ghost.position);
-		screen.ghost.setTargetPosition(intersection.x, 0, intersection.z);
+		position = screen.ghost.model.transform.getTranslation(position);
+		System.out.println(position.x + " " + position.y + " " + position.z);
+		float duration = intersection.dst(position) / screen.ghost.speed;
 
 		screen.ghostManager.killTarget(screen.ghost);
-		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, 1)
+		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
 				.target(intersection.x, intersection.y, intersection.z)
 				.ease(TweenEquations.easeNone)
 				.start(screen.ghostManager);

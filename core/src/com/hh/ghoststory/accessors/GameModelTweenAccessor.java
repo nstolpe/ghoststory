@@ -17,32 +17,27 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
     private Vector3 trans = new Vector3();
 
     public int getValues(DynamicModel target, int tweenType, float[] returnValues) {
+        trans = target.model.transform.getTranslation(trans);
         switch (tweenType) {
             case POSITION_X:
-                trans = target.model.transform.getTranslation(trans);
                 returnValues[0] = trans.x;
                 return 1;
             case POSITION_Y:
-                trans = target.model.transform.getTranslation(trans);
                 returnValues[0] = trans.y;
                 return 1;
             case POSITION_XY:
-                trans = target.model.transform.getTranslation(trans);
                 returnValues[0] = trans.x;
                 returnValues[1] = trans.y;
                 return 2;
             case POSITION_YZ:
-                trans = target.model.transform.getTranslation(trans);
                 returnValues[0] = trans.y;
                 returnValues[1] = trans.z;
                 return 2;
             case POSITION_ZX:
-                trans = target.model.transform.getTranslation(trans);
                 returnValues[0] = trans.z;
                 returnValues[1] = trans.x;
                 return 2;
             case POSITION_XYZ:
-                trans = target.model.transform.getTranslation(trans);
                 returnValues[0] = trans.x;
                 returnValues[1] = trans.y;
                 returnValues[2] = trans.z;
