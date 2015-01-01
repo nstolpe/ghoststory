@@ -34,8 +34,8 @@ public class Ghost extends DynamicModel {
 	}
 
 	public void setRotation(float rotation) {
-		this.rotation = rotation;
-		this.targetRotation = rotation;
+//		this.rotation = rotation;
+//		this.targetRotation = rotation;
 	}
 
 	public void update() {
@@ -43,15 +43,15 @@ public class Ghost extends DynamicModel {
 
 	@Override
 	public void setRotation() {
-		if (rotation != targetRotation) {
-			if (rotationDirection == NONE) {
-				setRotationDirection();
-			} else if (rotationDirection == CLOCKWISE) {
-				rotateClockwise();
-			} else if (rotationDirection == COUNTER_CLOCKWISE) {
-				rotateCounterClockwise();
-			}
-		}
+//		if (rotation != targetRotation) {
+//			if (rotationDirection == NONE) {
+//				setRotationDirection();
+//			} else if (rotationDirection == CLOCKWISE) {
+//				rotateClockwise();
+//			} else if (rotationDirection == COUNTER_CLOCKWISE) {
+//				rotateCounterClockwise();
+//			}
+//		}
 	}
 
 	/*

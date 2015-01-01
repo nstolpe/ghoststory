@@ -21,7 +21,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
 	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 	final Vector3 intersection = new Vector3();
 	private Vector3 position = new Vector3();
-
+	private Quaternion currentRotation = new Quaternion();
 	public GameInputListener(GameScreen screen) {
 		this.screen = screen;
 	}
@@ -38,16 +38,21 @@ public class GameInputListener implements GestureDetector.GestureListener {
 		Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
 
 		position = screen.ghost.model.transform.getTranslation(position);
-		System.out.println(position.x + " " + position.y + " " + position.z);
-		float duration = intersection.dst(position) / screen.ghost.speed;
 
+		float duration = intersection.dst(position) / screen.ghost.speed;
+		currentRotation = screen.ghost.model.transform.getRotation(currentRotation);
+		float newRotation = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
+//		newRotation = newRotation < 0 ? newRotation + 360 : newRotation;
 		screen.ghostManager.killTarget(screen.ghost);
-		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
-				.target(intersection.x, intersection.y, intersection.z)
+		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, screen.ghost.speed)
+				.target(newRotation)
 				.ease(TweenEquations.easeNone)
 				.start(screen.ghostManager);
+//		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
+//				.target(intersection.x, intersection.y, intersection.z)
+//				.ease(TweenEquations.easeNone)
+//				.start(screen.ghostManager);
 
-//		float rotation = MathUtils.atan2(intersection.x - screen.ghost.position.x, intersection.z - screen.ghost.position.z) * 180 / MathUtils.PI;
 //		screen.ghost.setTargetRotation(rotation < 0 ? rotation += 360 : rotation);
 		return false;
 	}
@@ -72,7 +77,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
 			Intersector.intersectRayPlane(pickRay, xzPlane, delta);
 			delta.sub(curr);
 			screen.camera.position.add(delta.x, delta.y, delta.z);
-			System.out.println("X: " + screen.camera.position.x + " Z: " + screen.camera.position.z);
+//			System.out.println("X: " + screen.camera.position.x + " Z: " + screen.camera.position.z);
 		}
 
 		last.set(x, y);

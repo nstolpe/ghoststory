@@ -1,6 +1,7 @@
 package com.hh.ghoststory.accessors;
 
 import aurelienribon.tweenengine.TweenAccessor;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.hh.ghoststory.game_models.core.DynamicModel;
 
@@ -14,7 +15,9 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
     public static final int POSITION_YZ = 4;
     public static final int POSITION_ZX = 5;
     public static final int POSITION_XYZ = 6;
+    public static final int ROTATION = 7;
     private Vector3 trans = new Vector3();
+    private Quaternion currentRotation = new Quaternion();
 
     public int getValues(DynamicModel target, int tweenType, float[] returnValues) {
         trans = target.model.transform.getTranslation(trans);
@@ -42,6 +45,11 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 returnValues[1] = trans.y;
                 returnValues[2] = trans.z;
                 return 3;
+            case ROTATION:
+                currentRotation = target.model.transform.getRotation(currentRotation);
+                returnValues[0] = currentRotation.getAngle();
+                System.out.println(returnValues[0]);
+                return 1;
             default:
                 assert false;
                 return -1;
@@ -69,6 +77,10 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 break;
             case POSITION_XYZ:
                 target.model.transform.setToTranslation(newValues[0], newValues[1], newValues[2]);
+                break;
+            case ROTATION:
+                target.model.transform.setToRotation(Vector3.Y, newValues[0]);
+//                System.out.println(newValues[0]);
                 break;
             default:
                 assert false;
