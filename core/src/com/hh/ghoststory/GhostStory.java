@@ -15,7 +15,7 @@ public class GhostStory extends Game {
 		file.file().getParentFile().mkdirs();
 		file.writeString("{}", false);
 //		setScreen(getMainScreen());
-		setScreen(getIsometricScreen());
+		setScreen(getGameScreen());
 	}
 
 	/**
@@ -27,7 +27,7 @@ public class GhostStory extends Game {
 		return new MainScreen(this);
 	}
 
-	public GameScreen getIsometricScreen() {
+	public GameScreen getGameScreen() {
 		return new GameScreen(this);
 	}
 

@@ -1,9 +1,12 @@
 package com.hh.ghoststory.input_processors;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenEquations;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
+import com.hh.ghoststory.accessors.GameModelTweenAccessor;
 import com.hh.ghoststory.screens.GameScreen;
 
 /**
@@ -35,6 +38,13 @@ public class GameInputListener implements GestureDetector.GestureListener {
 
 		screen.ghost.setStartPosition(screen.ghost.position);
 		screen.ghost.setTargetPosition(intersection.x, 0, intersection.z);
+
+		screen.ghostManager.killTarget(screen.ghost);
+
+		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, 10)
+				.target(Gdx.input.getX(), Gdx.input.getY())
+				.ease(TweenEquations.easeNone)
+				.start(screen.ghostManager);
 
 		float rotation = MathUtils.atan2(intersection.x - screen.ghost.position.x, intersection.z - screen.ghost.position.z) * 180 / MathUtils.PI;
 		screen.ghost.setTargetRotation(rotation < 0 ? rotation += 360 : rotation);

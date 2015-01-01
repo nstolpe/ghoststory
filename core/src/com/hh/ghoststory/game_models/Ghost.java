@@ -1,5 +1,6 @@
 package com.hh.ghoststory.game_models;
 
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -57,8 +58,8 @@ public class Ghost extends DynamicModel {
 	public void update() {
 		setRotation();
 		setTranslation();
-		model.transform.setToTranslation(position);
-		model.transform.rotate(verticalAxis, rotation);
+//		model.transform.setToTranslation(position);
+//		model.transform.rotate(verticalAxis, rotation);
 	}
 
 	@Override

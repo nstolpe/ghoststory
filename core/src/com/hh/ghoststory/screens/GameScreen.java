@@ -1,5 +1,7 @@
 package com.hh.ghoststory.screens;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.TestShader;
+import com.hh.ghoststory.accessors.GameModelTweenAccessor;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
@@ -38,6 +41,7 @@ public class GameScreen extends AbstractScreen {
 	public AssetManager assets = new AssetManager();
 	public Array<GameModel> game_models = new Array<GameModel>();
 	public Environment environment = new Environment();
+	public TweenManager ghostManager;
 
 
 	public GameScreen(GhostStory game) {
@@ -55,6 +59,8 @@ public class GameScreen extends AbstractScreen {
 
 		Gdx.input.setInputProcessor(new GameInputDetector(new GameInputListener(this)));
 		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
+		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
+		ghostManager = new TweenManager();
 	}
 
 	@Override
@@ -65,6 +71,7 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
+		this.ghostManager.update(Gdx.graphics.getDeltaTime());
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		camera.update();
 
