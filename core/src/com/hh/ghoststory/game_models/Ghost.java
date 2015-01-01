@@ -66,11 +66,11 @@ public class Ghost extends DynamicModel {
 	public void setTranslation() {
 		// Only move if a targetPosition hasn't been reached or exceeded and it's not rotating.
 		if (!position.epsilonEquals(targetPosition, 0f) && rotationDirection == NONE) {
-			if (position.dst(startPosition) >= targetPosition.dst(startPosition)) {
-				position.set(targetPosition);
-			} else {
+//			if (position.dst(startPosition) >= targetPosition.dst(startPosition)) {
+//				position.set(targetPosition);
+//			} else {
 				position.lerp(targetPosition, Gdx.graphics.getDeltaTime() * (speed / targetPosition.dst(position)));
-			}
+//			}
 		}
 	}
 

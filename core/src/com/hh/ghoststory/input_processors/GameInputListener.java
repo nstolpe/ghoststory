@@ -36,7 +36,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
 		Ray pickRay = screen.camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
 		Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
 
-		screen.ghost.setStartPosition(screen.ghost.position);
+//		screen.ghost.setStartPosition(screen.ghost.position);
 		screen.ghost.setTargetPosition(intersection.x, 0, intersection.z);
 
 		screen.ghostManager.killTarget(screen.ghost);
