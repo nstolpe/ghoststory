@@ -42,9 +42,16 @@ public class GameInputListener implements GestureDetector.GestureListener {
 		float duration = intersection.dst(position) / screen.ghost.speed;
 		currentRotation = screen.ghost.model.transform.getRotation(currentRotation);
 		float newRotation = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
+
+		Vector3 axisVec = new Vector3();
+		int angle = (int) (screen.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
+//		angle = angle < 0 ? angle + 360 : angle; //convert <0 values
+
 //		newRotation = newRotation < 0 ? newRotation + 360 : newRotation;
+		System.out.println("Old: " + currentRotation.getAngleAround(0, 1, 0) + " New: " + newRotation + " Diff: " + Math.abs(currentRotation.getAngleAround(0, 1, 0) - newRotation) + " other: " + angle);
+
 		screen.ghostManager.killTarget(screen.ghost);
-		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, screen.ghost.speed)
+		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 100)
 				.target(newRotation)
 				.ease(TweenEquations.easeNone)
 				.start(screen.ghostManager);
