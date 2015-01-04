@@ -1,13 +1,14 @@
 package com.hh.ghoststory.input_processors;
 
-import aurelienribon.tweenengine.Tween;
-import aurelienribon.tweenengine.TweenEquations;
+import aurelienribon.tweenengine.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.hh.ghoststory.accessors.GameModelTweenAccessor;
 import com.hh.ghoststory.screens.GameScreen;
+
+import java.util.HashMap;
 
 /**
  * Created by nils on 2/9/14.
@@ -39,31 +40,66 @@ public class GameInputListener implements GestureDetector.GestureListener {
 
 		position = screen.ghost.model.transform.getTranslation(position);
 
-		float duration = intersection.dst(position) / screen.ghost.speed;
 		currentRotation = screen.ghost.model.transform.getRotation(currentRotation);
+		final float duration = intersection.dst(position) / screen.ghost.speed;
 		float newRotation = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
-
+		// lines below also in getValues of the GhostModelTweenAccessor, maybe move them
 		Vector3 axisVec = new Vector3();
 		int angle = (int) (screen.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
-//		angle = angle < 0 ? angle + 360 : angle; //convert <0 values
 
-//		newRotation = newRotation < 0 ? newRotation + 360 : newRotation;
-		System.out.println("Old: " + currentRotation.getAngleAround(0, 1, 0) + " New: " + newRotation + " Diff: " + Math.abs(currentRotation.getAngleAround(0, 1, 0) - newRotation) + " other: " + angle);
+		float rotDuration = Math.abs(angle - newRotation) / 200;
 
-		screen.ghostManager.killTarget(screen.ghost);
-		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 100)
+		TweenCallback foo = new TweenCallback() {
+//			public void TweenCallback(float duration) {
+//				this.duration = duration;
+//			}
+
+			@Override
+			public void onEvent(int i, BaseTween<?> baseTween) {
+				Object duration = baseTween.getUserData();
+//				float duration;
+//				duration = (float) userData.get("duration");
+				System.out.println(duration);
+				Vector3 axisVec = new Vector3();
+				int angle = (int) (screen.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
+				Tween.set(screen.ghost, GameModelTweenAccessor.ROTATION).target(angle);
+				Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, (Float) baseTween.getUserData())
+						.target(intersection.x, intersection.y, intersection.z)
+						.ease(TweenEquations.easeNone)
+						.start(screen.ghostManager);
+			}
+		};
+
+		HashMap userData = new HashMap();
+		userData.put("duration", duration);
+//		screen.ghostManager.killTarget(screen.ghost);
+		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
 				.target(newRotation)
 				.ease(TweenEquations.easeNone)
+				.setUserData(duration)
+//				.setCallback(foo)
 				.start(screen.ghostManager);
-//		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
-//				.target(intersection.x, intersection.y, intersection.z)
-//				.ease(TweenEquations.easeNone)
+
+		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
+				.target(intersection.x, intersection.y, intersection.z)
+				.ease(TweenEquations.easeNone)
+				.start(screen.ghostManager);
+//		Timeline.createSequence()
+//				.push(Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, duration).target(newRotation))
+//				.push(Tween.set(screen.ghost, GameModelTweenAccessor.ROTATION).target(newRotation))
+//				.push(Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).target(intersection.x, intersection.y, intersection.z))
+//				.push(Tween.set(screen.ghost, GameModelTweenAccessor.POSITION_XYZ).target(intersection.x, intersection.y, intersection.z))
 //				.start(screen.ghostManager);
 
-//		screen.ghost.setTargetRotation(rotation < 0 ? rotation += 360 : rotation);
 		return false;
 	}
 
+	public void move(float duration) {
+		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
+				.target(intersection.x, intersection.y, intersection.z)
+				.ease(TweenEquations.easeNone)
+				.start(screen.ghostManager);
+	}
 	@Override
 	public boolean longPress(float x, float y) {
 		return true;
