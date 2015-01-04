@@ -41,7 +41,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
 		position = screen.ghost.model.transform.getTranslation(position);
 
 		currentRotation = screen.ghost.model.transform.getRotation(currentRotation);
-		final float duration = intersection.dst(position) / screen.ghost.speed;
+		float duration = intersection.dst(position) / screen.ghost.speed;
 		float newRotation = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
 		// lines below also in getValues of the GhostModelTweenAccessor, maybe move them
 		Vector3 axisVec = new Vector3();
@@ -50,15 +50,9 @@ public class GameInputListener implements GestureDetector.GestureListener {
 		float rotDuration = Math.abs(angle - newRotation) / 200;
 
 		TweenCallback foo = new TweenCallback() {
-//			public void TweenCallback(float duration) {
-//				this.duration = duration;
-//			}
-
 			@Override
 			public void onEvent(int i, BaseTween<?> baseTween) {
 				Object duration = baseTween.getUserData();
-//				float duration;
-//				duration = (float) userData.get("duration");
 				System.out.println(duration);
 				Vector3 axisVec = new Vector3();
 				int angle = (int) (screen.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
@@ -70,25 +64,61 @@ public class GameInputListener implements GestureDetector.GestureListener {
 			}
 		};
 
+		TweenCallback updatePosition = new TweenCallback() {
+			@Override
+			public void onEvent(int i, BaseTween<?> baseTween) {
+				screen.ghost.currentPosition.set((Vector3) baseTween.getUserData());
+				System.out.println("here");
+			}
+		};
+
 		HashMap userData = new HashMap();
 		userData.put("duration", duration);
-//		screen.ghostManager.killTarget(screen.ghost);
-		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
-				.target(newRotation)
-				.ease(TweenEquations.easeNone)
-				.setUserData(duration)
-//				.setCallback(foo)
+		screen.ghostManager.killTarget(screen.ghost);
+
+//		Tween.to(screen.ghost, GameModelTweenAccessor.ALL, duration)
+//				.target(newRotation, intersection.x, intersection.y, intersection.z)
+//				.ease(TweenEquations.easeNone)
+//				.start(screen.ghostManager);
+
+//		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
+//				.target(newRotation)
+//				.ease(TweenEquations.easeNone)
+//				.setUserData(duration)
+////				.setCallback(foo)
+//				.start(screen.ghostManager);
+
+//		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
+//				.target(intersection.x, intersection.y, intersection.z)
+//				.ease(TweenEquations.easeNone)
+//				.setUserData(intersection)
+//				.setCallback(updatePosition)
+//				.start(screen.ghostManager);
+
+		Timeline.createSequence()
+				.push(Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
+						.target(newRotation)
+						.ease(TweenEquations.easeNone))
+//				.push(Tween.set(screen.ghost, GameModelTweenAccessor.POSITION_XYZ)
+//						.target(screen.ghost.currentPosition.x, screen.ghost.currentPosition.y, screen.ghost.currentPosition.z))
+				.push(Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).
+						target(intersection.x, intersection.y, intersection.z)
+						.ease(TweenEquations.easeNone)
+//						.setCallback(updatePosition)
+						/*.setUserData(intersection)*/)
 				.start(screen.ghostManager);
 
-		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
-				.target(intersection.x, intersection.y, intersection.z)
-				.ease(TweenEquations.easeNone)
-				.start(screen.ghostManager);
 //		Timeline.createSequence()
-//				.push(Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, duration).target(newRotation))
-//				.push(Tween.set(screen.ghost, GameModelTweenAccessor.ROTATION).target(newRotation))
-//				.push(Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).target(intersection.x, intersection.y, intersection.z))
-//				.push(Tween.set(screen.ghost, GameModelTweenAccessor.POSITION_XYZ).target(intersection.x, intersection.y, intersection.z))
+//				.push(Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
+//						.target(newRotation)
+//						.ease(TweenEquations.easeNone))
+//				.push(Tween.set(screen.ghost, GameModelTweenAccessor.POSITION_XYZ)
+//						.target(screen.ghost.currentPosition.x, screen.ghost.currentPosition.y, screen.ghost.currentPosition.z))
+//				.push(Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).
+//						target(intersection.x, intersection.y, intersection.z)
+//						.ease(TweenEquations.easeNone)
+//						.setCallback(updatePosition)
+//						.setUserData(intersection))
 //				.start(screen.ghostManager);
 
 		return false;

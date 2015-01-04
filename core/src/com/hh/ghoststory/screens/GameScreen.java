@@ -60,6 +60,7 @@ public class GameScreen extends AbstractScreen {
 		Gdx.input.setInputProcessor(new GameInputDetector(new GameInputListener(this)));
 		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
+		Tween.setCombinedAttributesLimit(4);
 		ghostManager = new TweenManager();
 	}
 

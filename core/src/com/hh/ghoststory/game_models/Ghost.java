@@ -28,6 +28,9 @@ public class Ghost extends DynamicModel {
 	public float speed = 2;
 	private String texture;
 
+	public Vector3 currentPosition = new Vector3();
+	public float currentAngle = 0;
+
 	public Ghost() {
 		model_resource = "models/ghost.g3dj";
 		rotationDirection = NONE;
