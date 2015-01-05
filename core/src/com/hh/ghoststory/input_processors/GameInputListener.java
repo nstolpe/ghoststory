@@ -35,6 +35,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
 
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
+		System.out.println("tapped");
 		Ray pickRay = screen.camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
 		Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
 
@@ -47,39 +48,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
 		Vector3 axisVec = new Vector3();
 		int angle = (int) (screen.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
 
-		float rotDuration = Math.abs(angle - newRotation) / 200;
-
-		TweenCallback foo = new TweenCallback() {
-			@Override
-			public void onEvent(int i, BaseTween<?> baseTween) {
-				Object duration = baseTween.getUserData();
-				System.out.println(duration);
-				Vector3 axisVec = new Vector3();
-				int angle = (int) (screen.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
-				Tween.set(screen.ghost, GameModelTweenAccessor.ROTATION).target(angle);
-				Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, (Float) baseTween.getUserData())
-						.target(intersection.x, intersection.y, intersection.z)
-						.ease(TweenEquations.easeNone)
-						.start(screen.ghostManager);
-			}
-		};
-
-		TweenCallback updatePosition = new TweenCallback() {
-			@Override
-			public void onEvent(int i, BaseTween<?> baseTween) {
-				screen.ghost.currentPosition.set((Vector3) baseTween.getUserData());
-				System.out.println("here");
-			}
-		};
-
-		HashMap userData = new HashMap();
-		userData.put("duration", duration);
 		screen.ghostManager.killTarget(screen.ghost);
-
-//		Tween.to(screen.ghost, GameModelTweenAccessor.ALL, duration)
-//				.target(newRotation, intersection.x, intersection.y, intersection.z)
-//				.ease(TweenEquations.easeNone)
-//				.start(screen.ghostManager);
 
 //		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
 //				.target(newRotation)
@@ -99,37 +68,14 @@ public class GameInputListener implements GestureDetector.GestureListener {
 				.push(Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
 						.target(newRotation)
 						.ease(TweenEquations.easeNone))
-//				.push(Tween.set(screen.ghost, GameModelTweenAccessor.POSITION_XYZ)
-//						.target(screen.ghost.currentPosition.x, screen.ghost.currentPosition.y, screen.ghost.currentPosition.z))
 				.push(Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).
 						target(intersection.x, intersection.y, intersection.z)
-						.ease(TweenEquations.easeNone)
-//						.setCallback(updatePosition)
-						/*.setUserData(intersection)*/)
+						.ease(TweenEquations.easeNone))
 				.start(screen.ghostManager);
-
-//		Timeline.createSequence()
-//				.push(Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
-//						.target(newRotation)
-//						.ease(TweenEquations.easeNone))
-//				.push(Tween.set(screen.ghost, GameModelTweenAccessor.POSITION_XYZ)
-//						.target(screen.ghost.currentPosition.x, screen.ghost.currentPosition.y, screen.ghost.currentPosition.z))
-//				.push(Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).
-//						target(intersection.x, intersection.y, intersection.z)
-//						.ease(TweenEquations.easeNone)
-//						.setCallback(updatePosition)
-//						.setUserData(intersection))
-//				.start(screen.ghostManager);
 
 		return false;
 	}
 
-	public void move(float duration) {
-		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
-				.target(intersection.x, intersection.y, intersection.z)
-				.ease(TweenEquations.easeNone)
-				.start(screen.ghostManager);
-	}
 	@Override
 	public boolean longPress(float x, float y) {
 		return true;
