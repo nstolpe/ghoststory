@@ -50,20 +50,6 @@ public class GameInputListener implements GestureDetector.GestureListener {
 
 		screen.ghostManager.killTarget(screen.ghost);
 
-//		Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
-//				.target(newRotation)
-//				.ease(TweenEquations.easeNone)
-//				.setUserData(duration)
-////				.setCallback(foo)
-//				.start(screen.ghostManager);
-
-//		Tween.to(screen.ghost, GameModelTweenAccessor.POSITION_XYZ, duration)
-//				.target(intersection.x, intersection.y, intersection.z)
-//				.ease(TweenEquations.easeNone)
-//				.setUserData(intersection)
-//				.setCallback(updatePosition)
-//				.start(screen.ghostManager);
-
 		Timeline.createSequence()
 				.push(Tween.to(screen.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
 						.target(newRotation)

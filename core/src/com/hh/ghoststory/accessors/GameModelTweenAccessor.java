@@ -52,7 +52,6 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
             // returns the current angle
             case ROTATION:
                 axisVec = new Vector3();
-//                float angle = (target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
                 angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
                 returnValues[0] = angle;
                 System.out.println("Get Rotation: " + returnValues[0]);
