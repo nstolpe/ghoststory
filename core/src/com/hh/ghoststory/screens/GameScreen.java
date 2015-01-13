@@ -89,7 +89,7 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	/*
-	 * Resizes the camera viewport to reflect the new size. Could do a lot more (like show more of the world at larger sizes).
+	 * Resizes the camera viewport to reflect the new size. Could maybe set a default zoom or layout for different sized screens.
 	 * 
 	 * @see com.hh.ghoststory.screens.AbstractScreen#resize(int, int)
 	 */
@@ -171,9 +171,8 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void updateModels() {
-		for (GameModel game_model : game_models) {
+		for (GameModel game_model : game_models)
 			game_model.update();
-		}
 	}
 
 	/*
@@ -182,9 +181,9 @@ public class GameScreen extends AbstractScreen {
 	private void renderModels() {
 		modelBatch.begin(camera);
 
-		for (GameModel game_model : game_models) {
+		for (GameModel game_model : game_models)
 			modelBatch.render(game_model.model, environment);
-		}
+
 		modelBatch.end();
 	}
 
@@ -194,9 +193,10 @@ public class GameScreen extends AbstractScreen {
 	private void renderShadows() {
 		shadowLight.begin(Vector3.Zero, camera.direction);
 		shadowBatch.begin(shadowLight.getCamera());
-		for (GameModel game_model : game_models) {
+
+		for (GameModel game_model : game_models)
 			shadowBatch.render(game_model.model, environment);
-		}
+
 		shadowBatch.end();
 		shadowLight.end();
 	}

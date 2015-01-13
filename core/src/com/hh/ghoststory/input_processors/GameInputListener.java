@@ -23,6 +23,7 @@ public class GameInputListener implements GestureDetector.GestureListener {
 	final Vector3 intersection = new Vector3();
 	private Vector3 position = new Vector3();
 	private Quaternion currentRotation = new Quaternion();
+
 	public GameInputListener(GameScreen screen) {
 		this.screen = screen;
 	}
