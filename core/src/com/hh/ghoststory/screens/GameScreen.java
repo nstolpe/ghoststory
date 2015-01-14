@@ -1,8 +1,11 @@
 package com.hh.ghoststory.screens;
 
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenEquations;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
@@ -16,7 +19,9 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
@@ -30,7 +35,7 @@ import com.hh.ghoststory.input_processors.GameInputDetector;
 import com.hh.ghoststory.input_processors.GameInputListener;
 
 public class GameScreen extends AbstractScreen {
-	private InputMultiplexer multiplexer;
+	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private TestShader testShader = new TestShader();
 	private ModelBatch modelBatch;
 	private ModelBatch shadowBatch = new ModelBatch(new DepthShaderProvider());
@@ -44,6 +49,16 @@ public class GameScreen extends AbstractScreen {
 	public Array<GameModel> game_models = new Array<GameModel>();
 	public Environment environment = new Environment();
 	public TweenManager ghostManager;
+
+	// inner class variables
+	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
+	final Vector3 intersection = new Vector3();
+	private Vector3 position = new Vector3();
+	private Quaternion currentRotation = new Quaternion();
+	private float initialScale = 1.0f;
+	final Vector3 curr = new Vector3();
+	final Vector2 last = new Vector2(-1, -1);
+	final Vector3 delta = new Vector3();
 
 
 	public GameScreen(GhostStory game) {
@@ -59,18 +74,120 @@ public class GameScreen extends AbstractScreen {
 
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 
+		this.setupInputProcessors();
 
-		multiplexer = new InputMultiplexer();
-		// https://github.com/libgdx/libgdx/wiki/Event-handling
-		// https://github.com/libgdx/libgdx/wiki/Gesture-detection
-		// http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/input/GestureDetector.html
-		Gdx.input.setInputProcessor(new GameInputDetector(new GameInputListener(this)));
 		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
 		Tween.setCombinedAttributesLimit(4);
 		ghostManager = new TweenManager();
 	}
 
+	private void setupInputProcessors() {
+		this.multiplexer.addProcessor(this.getDefaultInputAdapter());
+		this.multiplexer.addProcessor(this.getDefaultGestureDetector());
+		Gdx.input.setInputProcessor(multiplexer);
+	}
+
+	private InputAdapter getDefaultInputAdapter() {
+		return new InputAdapter() {
+			@Override
+			public boolean scrolled(int amount) {
+				//Zoom out
+				if (amount > 0 && GameScreen.this.camera.zoom < 1)
+					GameScreen.this.camera.zoom += 0.1f;
+
+				//Zoom in
+				if (amount < 0 && GameScreen.this.camera.zoom > 0.1)
+					GameScreen.this.camera.zoom -= 0.1f;
+
+				return false;
+			}
+		};
+	}
+
+	private GestureDetector getDefaultGestureDetector() {
+		return new GestureDetector(new GestureDetector.GestureListener() {
+
+			@Override
+			public boolean touchDown(float x, float y, int pointer, int button) {
+				initialScale = GameScreen.this.camera.zoom;
+				return false;
+			}
+
+			@Override
+			public boolean tap(float x, float y, int count, int button) {
+				Ray pickRay = GameScreen.this.camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+				Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
+
+				position = GameScreen.this.ghost.model.transform.getTranslation(position);
+
+				currentRotation = GameScreen.this.ghost.model.transform.getRotation(currentRotation);
+				float duration = intersection.dst(position) / GameScreen.this.ghost.speed;
+				float newRotation = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
+				// lines below also in getValues of the GhostModelTweenAccessor, maybe move them
+				Vector3 axisVec = new Vector3();
+				int angle = (int) (GameScreen.this.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
+
+				GameScreen.this.ghostManager.killTarget(GameScreen.this.ghost);
+
+				Timeline.createSequence()
+						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
+								.target(newRotation)
+								.ease(TweenEquations.easeNone))
+						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).
+								target(intersection.x, intersection.y, intersection.z)
+								.ease(TweenEquations.easeNone))
+						.start(GameScreen.this.ghostManager);
+
+				return false;
+			}
+
+			@Override
+			public boolean longPress(float x, float y) {
+				return false;
+			}
+
+			@Override
+			public boolean fling(float velocityX, float velocityY, int button) {
+				return false;
+			}
+
+			@Override
+			public boolean pan(float x, float y, float deltaX, float deltaY) {
+				Ray pickRay = GameScreen.this.camera.getPickRay(x, y);
+				Intersector.intersectRayPlane(pickRay, xzPlane, curr);
+
+				if (!(last.x == -1 && last.y == -1)) {
+					pickRay = GameScreen.this.camera.getPickRay(last.x, last.y);
+					Intersector.intersectRayPlane(pickRay, xzPlane, delta);
+					delta.sub(curr);
+					GameScreen.this.camera.position.add(delta.x, delta.y, delta.z);
+				}
+
+				last.set(x, y);
+
+				return false;
+			}
+
+			@Override
+			public boolean panStop(float x, float y, int pointer, int button) {
+				last.set(-1, -1);
+				return false;
+			}
+
+			@Override
+			public boolean zoom(float initialDistance, float distance) {
+				return false;
+			}
+
+			@Override
+			public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+				float ratio = initialPointer1.dst(initialPointer2) / pointer1.dst(pointer2);
+				GameScreen.this.camera.zoom = MathUtils.clamp(initialScale * ratio, 0.1f, 1.0f);
+				return false;
+			}
+		});
+	}
 	@Override
 	public void show() {
 		super.show();
