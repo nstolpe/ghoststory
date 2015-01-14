@@ -3,6 +3,7 @@ package com.hh.ghoststory.screens;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -29,6 +30,7 @@ import com.hh.ghoststory.input_processors.GameInputDetector;
 import com.hh.ghoststory.input_processors.GameInputListener;
 
 public class GameScreen extends AbstractScreen {
+	private InputMultiplexer multiplexer;
 	private TestShader testShader = new TestShader();
 	private ModelBatch modelBatch;
 	private ModelBatch shadowBatch = new ModelBatch(new DepthShaderProvider());
@@ -57,6 +59,11 @@ public class GameScreen extends AbstractScreen {
 
 		setClear(0.5f, 0.5f, 0.5f, 1f);
 
+
+		multiplexer = new InputMultiplexer();
+		// https://github.com/libgdx/libgdx/wiki/Event-handling
+		// https://github.com/libgdx/libgdx/wiki/Gesture-detection
+		// http://libgdx.badlogicgames.com/nightlies/docs/api/com/badlogic/gdx/input/GestureDetector.html
 		Gdx.input.setInputProcessor(new GameInputDetector(new GameInputListener(this)));
 		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
