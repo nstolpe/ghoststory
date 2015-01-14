@@ -31,8 +31,6 @@ import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
-import com.hh.ghoststory.input_processors.GameInputDetector;
-import com.hh.ghoststory.input_processors.GameInputListener;
 
 public class GameScreen extends AbstractScreen {
 	private InputMultiplexer multiplexer = new InputMultiplexer();
@@ -50,44 +48,187 @@ public class GameScreen extends AbstractScreen {
 	public Environment environment = new Environment();
 	public TweenManager ghostManager;
 
-	// inner class variables
-	final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
-	final Vector3 intersection = new Vector3();
-	private Vector3 position = new Vector3();
-	private Quaternion currentRotation = new Quaternion();
-	private float initialScale = 1.0f;
-	final Vector3 curr = new Vector3();
-	final Vector2 last = new Vector2(-1, -1);
-	final Vector3 delta = new Vector3();
-
-
 	public GameScreen(GhostStory game) {
 		super(game);
-
-		setupLights();
-		setupGameModels();
-
-		setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-		loadCharacter(".ghost_story/character.json");
-		ghost.setTexture(character.texture != null ? "models/" + character.texture : "models/ghost_texture_blue.png");
-
-		setClear(0.5f, 0.5f, 0.5f, 1f);
-
+		this.setupLights();
+		this.setupGameModels();
+		this.setupCamera();
 		this.setupInputProcessors();
+		this.setClear(0.5f, 0.5f, 0.5f, 1f);
+		this.setupModelBatch();
+		this.setupTweenEngine();
 
-		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
-		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
-		Tween.setCombinedAttributesLimit(4);
-		ghostManager = new TweenManager();
+		this.loadCharacter(".ghost_story/character.json");
+		this.ghost.setTexture(this.character.texture != null ? "models/" + this.character.texture : "models/ghost_texture_blue.png");
 	}
 
+	@Override
+	public void show() {
+		super.show();
+	}
+
+	@Override
+	public void render(float delta) {
+		super.render(delta);
+		this.ghostManager.update(Gdx.graphics.getDeltaTime());
+		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+		this.camera.update();
+
+		if (doneLoading()) {
+			this.updateModels();
+			if (this.shadows) this.renderShadows();
+			this.renderModels();
+		}
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
+
+	/*
+	 * Resizes the camera viewport to reflect the new size. Could maybe set a default zoom or layout for different sized screens.
+	 * 
+	 * @see com.hh.ghoststory.screens.AbstractScreen#resize(int, int)
+	 */
+	@Override
+	public void resize(int width, int height) {
+		this.setupCamera(width, height);
+	}
+
+	private void setupCamera() {
+		this.setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
+	private void setupCamera(int width, int height) {
+		this.camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
+		this.camera.position.set(100, 100, 100);
+		this.camera.direction.set(-1, -1, -1);
+		this.camera.near = 1;
+		this.camera.far = 300;
+	}
+
+	/*
+	 * Instantiate the game models.
+	 */
+	private void setupGameModels() {
+		this.ghost = new Ghost();
+		this.game_models.add(this.ghost);
+
+		for (int z = 0; z < 10; z++) {
+			for (int x = 0; x < 10; x++) {
+				this.game_models.add(new Tile(x, 0, z));
+			}
+		}
+		loadGameModelAssets();
+	}
+
+	/*
+	 * Load the GameModel assets
+	 */
+	private void loadGameModelAssets() {
+		for (GameModel game_model : this.game_models)
+			this.assets.load(game_model.model_resource, Model.class);
+		this.loading = true;
+	}
+
+	/*
+	 * Check if assets have all been loaded. Run in a loop.
+	 */
+	private boolean doneLoading() {
+		if (this.loading && !this.assets.update()) {
+			return false;
+		} else if (this.loading && this.assets.update()) {
+			for (GameModel game_model : this.game_models) {
+				game_model.setModelResource(this.assets.get(game_model.model_resource, Model.class));
+			}
+			this.loading = false;
+			return false;
+		}
+		return true;
+	}
+
+	private void setupLights() {
+		this.environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1));
+		this.environment.add(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1));
+		this.environment.add(new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1));
+		this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
+		this.environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
+
+		if (this.shadows) {
+//			environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+			this.environment.add((this.shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+			this.environment.shadowMap = this.shadowLight;
+		}
+	}
+
+	/*
+	 * Loads the character from the character json.
+	 */
+	private void loadCharacter(String file_path) {
+		FileHandle file = Gdx.files.local(file_path);
+		Json json = new Json();
+		this.character = json.fromJson(PlayerCharacter.class, file.readString());
+	}
+
+	private void updateModels() {
+		for (GameModel game_model : this.game_models)
+			game_model.update();
+	}
+
+	/*
+	 * Renders the GameModels.
+	 */
+	private void renderModels() {
+		this.modelBatch.begin(this.camera);
+
+		for (GameModel game_model : this.game_models)
+			this.modelBatch.render(game_model.model, this.environment);
+
+		this.modelBatch.end();
+	}
+
+	/*
+	 * Renders the GameModels shadows.
+	 */
+	private void renderShadows() {
+		this.shadowLight.begin(Vector3.Zero, this.camera.direction);
+		this.shadowBatch.begin(this.shadowLight.getCamera());
+
+		for (GameModel game_model : this.game_models)
+			this.shadowBatch.render(game_model.model, this.environment);
+
+		this.shadowBatch.end();
+		this.shadowLight.end();
+	}
+
+	/*
+	 * Sets up the ModelBatch
+	 */
+	private void setupModelBatch() {
+		this.modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
+	}
+
+	/*
+	 * Registers the GameModelTweenAccessor and initializes the TweenManager.
+	 */
+	private void setupTweenEngine() {
+		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
+		Tween.setCombinedAttributesLimit(4);
+		this.ghostManager = new TweenManager();
+	}
+	/*
+     * Adds processors to the multiplexer and sets it as Gdx's input processor.
+     */
 	private void setupInputProcessors() {
 		this.multiplexer.addProcessor(this.getDefaultInputAdapter());
 		this.multiplexer.addProcessor(this.getDefaultGestureDetector());
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 
+	/*
+	 * Returns the InputAdapter for this screen. Only handles scroll now.
+	 */
 	private InputAdapter getDefaultInputAdapter() {
 		return new InputAdapter() {
 			@Override
@@ -95,7 +236,6 @@ public class GameScreen extends AbstractScreen {
 				//Zoom out
 				if (amount > 0 && GameScreen.this.camera.zoom < 1)
 					GameScreen.this.camera.zoom += 0.1f;
-
 				//Zoom in
 				if (amount < 0 && GameScreen.this.camera.zoom > 0.1)
 					GameScreen.this.camera.zoom -= 0.1f;
@@ -105,25 +245,37 @@ public class GameScreen extends AbstractScreen {
 		};
 	}
 
+	/*
+	 * Returns the GestureDetector for this screen.
+	 */
 	private GestureDetector getDefaultGestureDetector() {
 		return new GestureDetector(new GestureDetector.GestureListener() {
+			private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
+			private Vector3 intersection = new Vector3();
+			private Vector3 position = new Vector3();
+			private Vector3 curr = new Vector3();
+			private Vector2 last = new Vector2(-1, -1);
+			private Vector3 delta = new Vector3();
+			private Quaternion currentRotation = new Quaternion();
+			private float initialScale = 1.0f;
+			private Ray pickRay;
 
 			@Override
 			public boolean touchDown(float x, float y, int pointer, int button) {
-				initialScale = GameScreen.this.camera.zoom;
+				this.initialScale = GameScreen.this.camera.zoom;
 				return false;
 			}
 
 			@Override
 			public boolean tap(float x, float y, int count, int button) {
-				Ray pickRay = GameScreen.this.camera.getPickRay(Gdx.input.getX(), Gdx.input.getY());
-				Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
+				this.pickRay = this.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+				Intersector.intersectRayPlane(this.pickRay, this.xzPlane, this.intersection);
 
-				position = GameScreen.this.ghost.model.transform.getTranslation(position);
+				this.position = GameScreen.this.ghost.model.transform.getTranslation(this.position);
 
-				currentRotation = GameScreen.this.ghost.model.transform.getRotation(currentRotation);
-				float duration = intersection.dst(position) / GameScreen.this.ghost.speed;
-				float newRotation = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
+				this.currentRotation = GameScreen.this.ghost.model.transform.getRotation(this.currentRotation);
+				float duration = this.intersection.dst(this.position) / GameScreen.this.ghost.speed;
+				float newRotation = MathUtils.atan2(this.intersection.x - this.position.x, this.intersection.z - this.position.z) * 180 / MathUtils.PI;
 				// lines below also in getValues of the GhostModelTweenAccessor, maybe move them
 				Vector3 axisVec = new Vector3();
 				int angle = (int) (GameScreen.this.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
@@ -135,7 +287,7 @@ public class GameScreen extends AbstractScreen {
 								.target(newRotation)
 								.ease(TweenEquations.easeNone))
 						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).
-								target(intersection.x, intersection.y, intersection.z)
+								target(this.intersection.x, this.intersection.y, this.intersection.z)
 								.ease(TweenEquations.easeNone))
 						.start(GameScreen.this.ghostManager);
 
@@ -154,24 +306,24 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean pan(float x, float y, float deltaX, float deltaY) {
-				Ray pickRay = GameScreen.this.camera.getPickRay(x, y);
-				Intersector.intersectRayPlane(pickRay, xzPlane, curr);
+				this.pickRay = this.getPickRay(x, y);
+				Intersector.intersectRayPlane(this.pickRay, xzPlane, curr);
 
-				if (!(last.x == -1 && last.y == -1)) {
-					pickRay = GameScreen.this.camera.getPickRay(last.x, last.y);
-					Intersector.intersectRayPlane(pickRay, xzPlane, delta);
-					delta.sub(curr);
-					GameScreen.this.camera.position.add(delta.x, delta.y, delta.z);
+				if (!(this.last.x == -1 && this.last.y == -1)) {
+					this.pickRay = GameScreen.this.camera.getPickRay(this.last.x, this.last.y);
+					Intersector.intersectRayPlane(this.pickRay, xzPlane, delta);
+					this.delta.sub(this.curr);
+					GameScreen.this.camera.position.add(this.delta.x, this.delta.y, this.delta.z);
 				}
 
-				last.set(x, y);
+				this.last.set(x, y);
 
 				return false;
 			}
 
 			@Override
 			public boolean panStop(float x, float y, int pointer, int button) {
-				last.set(-1, -1);
+				this.last.set(-1, -1);
 				return false;
 			}
 
@@ -183,145 +335,12 @@ public class GameScreen extends AbstractScreen {
 			@Override
 			public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
 				float ratio = initialPointer1.dst(initialPointer2) / pointer1.dst(pointer2);
-				GameScreen.this.camera.zoom = MathUtils.clamp(initialScale * ratio, 0.1f, 1.0f);
+				GameScreen.this.camera.zoom = MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
 				return false;
 			}
+			private Ray getPickRay(float x, float y) {
+				return GameScreen.this.camera.getPickRay(x, y);
+			}
 		});
-	}
-	@Override
-	public void show() {
-		super.show();
-	}
-
-	@Override
-	public void render(float delta) {
-		super.render(delta);
-		this.ghostManager.update(Gdx.graphics.getDeltaTime());
-		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		camera.update();
-
-		if (doneLoading()) {
-			updateModels();
-			if (this.shadows) renderShadows();
-			renderModels();
-		}
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
-	/*
-	 * Resizes the camera viewport to reflect the new size. Could maybe set a default zoom or layout for different sized screens.
-	 * 
-	 * @see com.hh.ghoststory.screens.AbstractScreen#resize(int, int)
-	 */
-	@Override
-	public void resize(int width, int height) {
-		setupCamera(width, height);
-	}
-
-	private void setupCamera(int width, int height) {
-		camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
-		camera.position.set(100, 100, 100);
-		camera.direction.set(-1, -1, -1);
-		camera.near = 1;
-		camera.far = 300;
-	}
-
-	/*
-	 * Instantiate the game models.
-	 */
-	private void setupGameModels() {
-		ghost = new Ghost();
-		game_models.add(ghost);
-
-		for (int z = 0; z < 10; z++) {
-			for (int x = 0; x < 10; x++) {
-				game_models.add(new Tile(x, 0, z));
-			}
-		}
-		loadGameModelAssets();
-	}
-
-	/*
-	 * Load the GameModel assets
-	 */
-	private void loadGameModelAssets() {
-		for (GameModel game_model : game_models) {
-			assets.load(game_model.model_resource, Model.class);
-		}
-		loading = true;
-	}
-
-	/*
-	 * Check if assets have all been loaded. Run in a loop.
-	 */
-	private boolean doneLoading() {
-		if (loading && assets.update() != true) {
-			return false;
-		} else if (loading && assets.update()) {
-			for (GameModel game_model : game_models) {
-				game_model.setModelResource(assets.get(game_model.model_resource, Model.class));
-			}
-			loading = false;
-			return false;
-		}
-		return true;
-	}
-
-	private void setupLights() {
-		environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1));
-		environment.add(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1));
-		environment.add(new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1));
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
-		environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
-
-		if (this.shadows) {
-//			environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-			environment.add((shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-			environment.shadowMap = shadowLight;
-		}
-	}
-
-	/*
-	 * Loads the character from the character json.
-	 */
-	private void loadCharacter(String file_path) {
-		FileHandle file = Gdx.files.local(file_path);
-		Json json = new Json();
-		character = json.fromJson(PlayerCharacter.class, file.readString().toString());
-	}
-
-	private void updateModels() {
-		for (GameModel game_model : game_models)
-			game_model.update();
-	}
-
-	/*
-	 * Renders the GameModels.
-	 */
-	private void renderModels() {
-		modelBatch.begin(camera);
-
-		for (GameModel game_model : game_models)
-			modelBatch.render(game_model.model, environment);
-
-		modelBatch.end();
-	}
-
-	/*
-	 * Renders the GameModels shadows.
-	 */
-	private void renderShadows() {
-		shadowLight.begin(Vector3.Zero, camera.direction);
-		shadowBatch.begin(shadowLight.getCamera());
-
-		for (GameModel game_model : game_models)
-			shadowBatch.render(game_model.model, environment);
-
-		shadowBatch.end();
-		shadowLight.end();
 	}
 }

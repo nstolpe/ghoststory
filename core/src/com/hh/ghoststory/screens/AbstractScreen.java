@@ -55,7 +55,7 @@ public abstract class AbstractScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(clearRed, clearGreen, clearBlue, clearAlpha);
+		Gdx.gl.glClearColor(this.clearRed, this.clearGreen, this.clearBlue, this.clearAlpha);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	}
 
@@ -76,10 +76,10 @@ public abstract class AbstractScreen implements Screen {
 	}
 
 	protected void setClear(float red, float green, float blue, float alpha) {
-		clearRed = red;
-		clearGreen = green;
-		clearBlue = blue;
-		clearAlpha = alpha;
+		this.clearRed = red;
+		this.clearGreen = green;
+		this.clearBlue = blue;
+		this.clearAlpha = alpha;
 	}
 
 	/*
