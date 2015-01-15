@@ -307,7 +307,7 @@ public class GameScreen extends AbstractScreen {
 						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ, translationDuration).
 								target(this.intersection.x, this.intersection.y, this.intersection.z)
 								.ease(TweenEquations.easeNone))
-// Below rotates and translates at the same time. 
+// Below rotates and translates at the same time.
 //						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.ALL, duration).
 //								target(this.intersection.x, this.intersection.y, this.intersection.z, newAngle)
 //								.ease(TweenEquations.easeNone))ne))
