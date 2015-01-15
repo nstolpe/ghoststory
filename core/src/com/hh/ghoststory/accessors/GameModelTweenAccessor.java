@@ -26,48 +26,48 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
 
     public int getValues(DynamicModel target, int tweenType, float[] returnValues) {
 	    if (Arrays.asList(new int[]{ POSITION_X, POSITION_Y, POSITION_Z, POSITION_XY, POSITION_YZ, POSITION_ZX, POSITION_XYZ, ALL }).contains(tweenType))
-		    trans = target.model.transform.getTranslation(trans);
+		    this.trans = target.model.transform.getTranslation(this.trans);
 
         switch (tweenType) {
             case POSITION_X:
-                returnValues[0] = trans.x;
+                returnValues[0] = this.trans.x;
                 return 1;
             case POSITION_Y:
-                returnValues[0] = trans.y;
+                returnValues[0] = this.trans.y;
                 return 1;
             case POSITION_Z:
-                returnValues[0] = trans.z;
+                returnValues[0] = this.trans.z;
                 return 1;
             case POSITION_XY:
-                returnValues[0] = trans.x;
-                returnValues[1] = trans.y;
+                returnValues[0] = this.trans.x;
+                returnValues[1] = this.trans.y;
                 return 2;
             case POSITION_YZ:
-                returnValues[0] = trans.y;
-                returnValues[1] = trans.z;
+                returnValues[0] = this.trans.y;
+                returnValues[1] = this.trans.z;
                 return 2;
             case POSITION_ZX:
-                returnValues[0] = trans.z;
-                returnValues[1] = trans.x;
+                returnValues[0] = this.trans.z;
+                returnValues[1] = this.trans.x;
                 return 2;
             case POSITION_XYZ:
-                returnValues[0] = trans.x;
-                returnValues[1] = trans.y;
-                returnValues[2] = trans.z;
+                returnValues[0] = this.trans.x;
+                returnValues[1] = this.trans.y;
+                returnValues[2] = this.trans.z;
                 return 3;
             // returns the current angle
             case ROTATION:
 //                angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
-	            angle = target.model.transform.getRotation(new Quaternion()).getYaw();
+	            this.angle = target.model.transform.getRotation(new Quaternion()).getYaw();
 //	            angle -= angle > 180 ? 360 : 0;
-                returnValues[0] = angle;
+                returnValues[0] = this.angle;
                 return 1;
 	        case ALL:
-		        angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
-		        returnValues[0] = trans.x;
-		        returnValues[1] = trans.y;
-		        returnValues[2] = trans.z;
-		        returnValues[3] = angle;
+		        this.angle = target.model.transform.getRotation(new Quaternion()).getYaw();
+		        returnValues[0] = this.trans.x;
+		        returnValues[1] = this.trans.y;
+		        returnValues[2] = this.trans.z;
+		        returnValues[3] = this.angle;
 		        return 4;
             default:
                 assert false;
