@@ -11,6 +11,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -47,6 +48,8 @@ public class GameScreen extends AbstractScreen {
 	public Array<GameModel> game_models = new Array<GameModel>();
 	public Environment environment = new Environment();
 	public TweenManager ghostManager;
+
+	public PerspectiveCamera camera;
 
 	public GameScreen(GhostStory game) {
 		super(game);
@@ -101,8 +104,10 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void setupCamera(int width, int height) {
-		this.camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
-		this.camera.position.set(100, 100, 100);
+		this.camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//		this.camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
+//		this.camera.position.set(100, 100, 100);
+		this.camera.position.set(10, 10, 10);
 		this.camera.direction.set(-1, -1, -1);
 		this.camera.near = 1;
 		this.camera.far = 300;
@@ -234,11 +239,15 @@ public class GameScreen extends AbstractScreen {
 			@Override
 			public boolean scrolled(int amount) {
 				//Zoom out
-				if (amount > 0 && GameScreen.this.camera.zoom < 1)
-					GameScreen.this.camera.zoom += 0.1f;
+				if (amount > 0 && GameScreen.this.camera.fieldOfView < 67)
+					GameScreen.this.camera.fieldOfView += 1f;
+//				if (amount > 0 && GameScreen.this.camera.zoom < 1)
+//					GameScreen.this.camera.zoom += 0.1f;
 				//Zoom in
-				if (amount < 0 && GameScreen.this.camera.zoom > 0.1)
-					GameScreen.this.camera.zoom -= 0.1f;
+				if (amount < 0 && GameScreen.this.camera.fieldOfView > 1)
+					GameScreen.this.camera.fieldOfView -= 1f;
+//				if (amount < 0 && GameScreen.this.camera.zoom > 0.1)
+//					GameScreen.this.camera.zoom -= 0.1f;
 
 				return false;
 			}
@@ -256,39 +265,52 @@ public class GameScreen extends AbstractScreen {
 			private Vector3 curr = new Vector3();
 			private Vector2 last = new Vector2(-1, -1);
 			private Vector3 delta = new Vector3();
+			private Vector3 axisVec = new Vector3();
 			private Quaternion currentRotation = new Quaternion();
 			private float initialScale = 1.0f;
 			private Ray pickRay;
 
 			@Override
 			public boolean touchDown(float x, float y, int pointer, int button) {
-				this.initialScale = GameScreen.this.camera.zoom;
+//				this.initialScale = GameScreen.this.camera.zoom;
 				return false;
 			}
 
 			@Override
 			public boolean tap(float x, float y, int count, int button) {
-				this.pickRay = this.getPickRay(Gdx.input.getX(), Gdx.input.getY());
+				this.pickRay = this.getPickRay(x, y);
 				Intersector.intersectRayPlane(this.pickRay, this.xzPlane, this.intersection);
 
 				this.position = GameScreen.this.ghost.model.transform.getTranslation(this.position);
-
 				this.currentRotation = GameScreen.this.ghost.model.transform.getRotation(this.currentRotation);
-				float duration = this.intersection.dst(this.position) / GameScreen.this.ghost.speed;
-				float newRotation = MathUtils.atan2(this.intersection.x - this.position.x, this.intersection.z - this.position.z) * 180 / MathUtils.PI;
+
+				float translationDuration = this.intersection.dst(this.position) / GameScreen.this.ghost.speed;
+				float newAngle = MathUtils.atan2(this.intersection.x - this.position.x, this.intersection.z - this.position.z) * 180 / MathUtils.PI;
 				// lines below also in getValues of the GhostModelTweenAccessor, maybe move them
-				Vector3 axisVec = new Vector3();
-				int angle = (int) (GameScreen.this.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y);
+				float angle = GameScreen.this.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(this.axisVec) * this.axisVec.nor().y;
+				float currentAngle = currentRotation.getYaw();
+				float rotationDuration = Math.abs(angle - newAngle) / 200;
+
+				// Get it to rotate in the direction of the shortest difference
+				if (Math.abs(newAngle - currentAngle) >  180)
+					newAngle += newAngle < currentAngle ? 360 : -360;
+
+				System.out.println("current: " + currentAngle);
+				System.out.println("new: " + newAngle);
 
 				GameScreen.this.ghostManager.killTarget(GameScreen.this.ghost);
 
 				Timeline.createSequence()
-						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.ROTATION, Math.abs(angle - newRotation) / 200)
-								.target(newRotation)
+						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.ROTATION, rotationDuration)
+								.target(newAngle)
 								.ease(TweenEquations.easeNone))
-						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ, duration).
+						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ, translationDuration).
 								target(this.intersection.x, this.intersection.y, this.intersection.z)
 								.ease(TweenEquations.easeNone))
+// Below rotates and translates at the same time. 
+//						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.ALL, duration).
+//								target(this.intersection.x, this.intersection.y, this.intersection.z, newAngle)
+//								.ease(TweenEquations.easeNone))ne))
 						.start(GameScreen.this.ghostManager);
 
 				return false;
@@ -335,7 +357,7 @@ public class GameScreen extends AbstractScreen {
 			@Override
 			public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
 				float ratio = initialPointer1.dst(initialPointer2) / pointer1.dst(pointer2);
-				GameScreen.this.camera.zoom = MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
+//				GameScreen.this.camera.zoom = MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
 				return false;
 			}
 			private Ray getPickRay(float x, float y) {

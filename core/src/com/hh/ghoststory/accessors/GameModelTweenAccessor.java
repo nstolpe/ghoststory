@@ -5,31 +5,38 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.hh.ghoststory.game_models.core.DynamicModel;
 
+import java.util.Arrays;
+
 /**
  * Created by nils on 12/31/14.
  */
 public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
     public static final int POSITION_X = 1;
     public static final int POSITION_Y = 2;
-    public static final int POSITION_XY = 3;
-    public static final int POSITION_YZ = 4;
-    public static final int POSITION_ZX = 5;
-    public static final int POSITION_XYZ = 6;
-    public static final int ROTATION = 7;
-    public static final int ALL = 8;
+    public static final int POSITION_Z = 3;
+    public static final int POSITION_XY = 4;
+    public static final int POSITION_YZ = 5;
+    public static final int POSITION_ZX = 6;
+    public static final int POSITION_XYZ = 7;
+    public static final int ROTATION = 8;
+    public static final int ALL = 9;
     private Vector3 trans = new Vector3();
     private Vector3 axisVec = new Vector3();
-    private Quaternion currentRotation = new Quaternion();
     private float angle;
 
     public int getValues(DynamicModel target, int tweenType, float[] returnValues) {
-        trans = target.model.transform.getTranslation(trans);
+	    if (Arrays.asList(new int[]{ POSITION_X, POSITION_Y, POSITION_Z, POSITION_XY, POSITION_YZ, POSITION_ZX, POSITION_XYZ, ALL }).contains(tweenType))
+		    trans = target.model.transform.getTranslation(trans);
+
         switch (tweenType) {
             case POSITION_X:
                 returnValues[0] = trans.x;
                 return 1;
             case POSITION_Y:
                 returnValues[0] = trans.y;
+                return 1;
+            case POSITION_Z:
+                returnValues[0] = trans.z;
                 return 1;
             case POSITION_XY:
                 returnValues[0] = trans.x;
@@ -47,15 +54,21 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 returnValues[0] = trans.x;
                 returnValues[1] = trans.y;
                 returnValues[2] = trans.z;
-                System.out.println("Get Translation: x: " + returnValues[0] + " y: " + returnValues[1] + " z: " + returnValues[2]);
                 return 3;
             // returns the current angle
             case ROTATION:
-                axisVec = new Vector3();
-                angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
+//                angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
+	            angle = target.model.transform.getRotation(new Quaternion()).getYaw();
+//	            angle -= angle > 180 ? 360 : 0;
                 returnValues[0] = angle;
-                System.out.println("Get Rotation: " + returnValues[0]);
                 return 1;
+	        case ALL:
+		        angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
+		        returnValues[0] = trans.x;
+		        returnValues[1] = trans.y;
+		        returnValues[2] = trans.z;
+		        returnValues[3] = angle;
+		        return 4;
             default:
                 assert false;
                 return -1;
@@ -64,32 +77,39 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
     }
 
     public void setValues(DynamicModel target, int tweenType, float[] newValues) {
-        trans = target.model.transform.getTranslation(trans);
+        this.trans = target.model.transform.getTranslation(this.trans);
         switch (tweenType) {
             case POSITION_X:
-                target.model.transform.setToTranslation(newValues[0], trans.y, trans.z);
+                target.model.transform.setTranslation(newValues[0], this.trans.y, this.trans.z);
                 break;
             case POSITION_Y:
-                target.model.transform.setToTranslation(trans.x, newValues[0], trans.z);
+                target.model.transform.setTranslation(this.trans.x, newValues[0], this.trans.z);
+                break;
+            case POSITION_Z:
+                target.model.transform.setTranslation(this.trans.x, this.trans.y, newValues[0]);
                 break;
             case POSITION_XY:
-                target.model.transform.setToTranslation(newValues[0], newValues[1], trans.z);
+                target.model.transform.setTranslation(newValues[0], newValues[1], this.trans.z);
                 break;
             case POSITION_YZ:
-                target.model.transform.setToTranslation(trans.x, newValues[1], newValues[2]);
+                target.model.transform.setTranslation(this.trans.x, newValues[1], newValues[2]);
                 break;
             case POSITION_ZX:
-                target.model.transform.setToTranslation(newValues[0], trans.y, newValues[2]);
+                target.model.transform.setTranslation(newValues[0], this.trans.y, newValues[2]);
                 break;
             case POSITION_XYZ:
                 target.model.transform.setTranslation(newValues[0], newValues[1], newValues[2]);
-                System.out.println("Set Translation: x: " + newValues[0] + " y: " + newValues[1] + " z: " + newValues[2]);
+//                System.out.println("Set Translation: x: " + newValues[0] + " y: " + newValues[1] + " z: " + newValues[2]);
                 break;
             case ROTATION:
-                Vector3 position = target.model.transform.getTranslation(new Vector3());
-                target.model.transform.setToRotation(Vector3.Y, newValues[0]).setTranslation(position);
+	            Quaternion currentRotation = target.model.transform.getRotation(new Quaternion());
+//                target.model.transform.setToRotation(Vector3.Y, newValues[0]).setTranslation(this.trans);
+	            target.model.transform.setFromEulerAngles(newValues[0], currentRotation.getPitch(), currentRotation.getRoll()).setTranslation(this.trans);
                 System.out.println("Set Rotation: " + newValues[0]);
                 break;
+	        case ALL:
+		        target.model.transform.setToRotation(Vector3.Y, newValues[3]).setTranslation(newValues[0], newValues[1], newValues[2]);
+		        break;
             default:
                 assert false;
                 break;
