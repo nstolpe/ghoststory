@@ -104,7 +104,7 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void setupCamera(int width, int height) {
-		this.camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		this.camera = new PerspectiveCamera(67, width, height);
 //		this.camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
 //		this.camera.position.set(100, 100, 100);
 		this.camera.position.set(10, 10, 10);
