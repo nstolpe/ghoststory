@@ -130,7 +130,7 @@ public class CreateScreen extends AbstractScreen {
 		game_models.add(ghost);
 //		ghost.setPosition(new Vector3(0, 0, 0));
 		ghost.verticalAxis = new Vector3(0, 1, 0);
-		ghost.setRotation(0f);
+//		ghost.setRotation(0f);
 
 		assets.load(ghost.model_resource, Model.class);
 		loading = true;

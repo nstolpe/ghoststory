@@ -59,6 +59,7 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
             case ROTATION:
 //                angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
 	            this.angle = target.model.transform.getRotation(new Quaternion()).getYaw();
+//                target.model.transform.sl
 //	            angle -= angle > 180 ? 360 : 0;
                 returnValues[0] = this.angle;
                 return 1;

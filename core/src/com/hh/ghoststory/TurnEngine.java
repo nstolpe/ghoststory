@@ -4,7 +4,7 @@ package com.hh.ghoststory;
  * Created by nils on 1/16/15.
  */
 public class TurnEngine {
-    private Array<Actor> actors;
+//    private Array<Actor> actors;
 
     // loop through active actors and have them run in update. Determine order by initiative (different class)
     // set current to active, don't update others that aren't.
