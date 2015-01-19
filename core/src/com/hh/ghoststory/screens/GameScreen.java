@@ -289,11 +289,13 @@ public class GameScreen extends AbstractScreen {
 				// lines below also in getValues of the GhostModelTweenAccessor, maybe move them
 				float angle = GameScreen.this.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(this.axisVec) * this.axisVec.nor().y;
 				float currentAngle = currentRotation.getYaw();
-				float rotationDuration = Math.abs(angle - newAngle) / 200;
+//				currentAngle = currentRotation.getAngleAround(0,1,0);
 
 				// Get it to rotate in the direction of the shortest difference
 				if (Math.abs(newAngle - currentAngle) >  180)
 					newAngle += newAngle < currentAngle ? 360 : -360;
+
+				float rotationDuration = Math.abs(angle - newAngle) / 200;
 
 				System.out.println("current: " + currentAngle);
 				System.out.println("new: " + newAngle);

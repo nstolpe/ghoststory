@@ -59,6 +59,7 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
             case ROTATION:
 //                angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
 	            this.angle = target.model.transform.getRotation(new Quaternion()).getYaw();
+//	            this.angle = target.model.transform.getRotation(new Quaternion()).getAngleAround(0,1,0);
 //                target.model.transform.sl
 //	            angle -= angle > 180 ? 360 : 0;
                 returnValues[0] = this.angle;
@@ -104,9 +105,9 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 break;
             case ROTATION:
 	            Quaternion currentRotation = target.model.transform.getRotation(new Quaternion());
-//                target.model.transform.setToRotation(Vector3.Y, newValues[0]).setTranslation(this.trans);
 	            target.model.transform.setFromEulerAngles(newValues[0], currentRotation.getPitch(), currentRotation.getRoll()).setTranslation(this.trans);
                 System.out.println("Set Rotation: " + newValues[0]);
+//                currentRotation.set
                 break;
 	        case ALL:
 		        target.model.transform.setToRotation(Vector3.Y, newValues[3]).setTranslation(newValues[0], newValues[1], newValues[2]);
