@@ -254,6 +254,9 @@ public class GameScreen extends AbstractScreen {
 		};
 	}
 
+	private void tweenFaceAndMoveTo() {
+
+	}
 	/*
 	 * Returns the GestureDetector for this screen.
 	 */
@@ -359,8 +362,10 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+				System.out.println("pinch");
 				float ratio = initialPointer1.dst(initialPointer2) / pointer1.dst(pointer2);
 //				GameScreen.this.camera.zoom = MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
+				GameScreen.this.camera.fieldOfView += MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
 				return false;
 			}
 			private Ray getPickRay(float x, float y) {
