@@ -287,7 +287,7 @@ public class GameScreen extends AbstractScreen {
 				float translationDuration = this.intersection.dst(this.position) / GameScreen.this.ghost.speed;
 				float newAngle = MathUtils.atan2(this.intersection.x - this.position.x, this.intersection.z - this.position.z) * 180 / MathUtils.PI;
 				// lines below also in getValues of the GhostModelTweenAccessor, maybe move them
-				float angle = GameScreen.this.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(this.axisVec) * this.axisVec.nor().y;
+//				float angle = GameScreen.this.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(this.axisVec) * this.axisVec.nor().y;
 				float currentAngle = currentRotation.getYaw();
 //				currentAngle = currentRotation.getAngleAround(0,1,0);
 
@@ -295,7 +295,8 @@ public class GameScreen extends AbstractScreen {
 				if (Math.abs(newAngle - currentAngle) >  180)
 					newAngle += newAngle < currentAngle ? 360 : -360;
 
-				float rotationDuration = Math.abs(angle - newAngle) / 200;
+//				newAngle = (float) foo;
+				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
 
 				System.out.println("current: " + currentAngle);
 				System.out.println("new: " + newAngle);

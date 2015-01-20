@@ -21,7 +21,7 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
     public static final int ROTATION = 8;
     public static final int ALL = 9;
     private Vector3 trans = new Vector3();
-    private Vector3 axisVec = new Vector3();
+    private Vector3 axisVec = new Vector3(0,1,0);
     private float angle;
 
     public int getValues(DynamicModel target, int tweenType, float[] returnValues) {
@@ -57,11 +57,7 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 return 3;
             // returns the current angle
             case ROTATION:
-//                angle = target.model.transform.getRotation(new Quaternion()).getAxisAngle(axisVec) * axisVec.nor().y;
 	            this.angle = target.model.transform.getRotation(new Quaternion()).getYaw();
-//	            this.angle = target.model.transform.getRotation(new Quaternion()).getAngleAround(0,1,0);
-//                target.model.transform.sl
-//	            angle -= angle > 180 ? 360 : 0;
                 returnValues[0] = this.angle;
                 return 1;
 	        case ALL:
@@ -101,13 +97,10 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 break;
             case POSITION_XYZ:
                 target.model.transform.setTranslation(newValues[0], newValues[1], newValues[2]);
-//                System.out.println("Set Translation: x: " + newValues[0] + " y: " + newValues[1] + " z: " + newValues[2]);
                 break;
             case ROTATION:
 	            Quaternion currentRotation = target.model.transform.getRotation(new Quaternion());
 	            target.model.transform.setFromEulerAngles(newValues[0], currentRotation.getPitch(), currentRotation.getRoll()).setTranslation(this.trans);
-                System.out.println("Set Rotation: " + newValues[0]);
-//                currentRotation.set
                 break;
 	        case ALL:
 		        target.model.transform.setToRotation(Vector3.Y, newValues[3]).setTranslation(newValues[0], newValues[1], newValues[2]);
