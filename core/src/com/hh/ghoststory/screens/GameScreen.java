@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenEquations;
 import aurelienribon.tweenengine.TweenManager;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -254,8 +255,19 @@ public class GameScreen extends AbstractScreen {
 		};
 	}
 
-	private void tweenFaceAndMoveTo() {
-
+	private void tweenFaceAndMoveTo(GameModel target, float rotation, float rotDur, float x, float y, float z, float transDur) {
+		Timeline.createSequence()
+				.push(Tween.to(target, GameModelTweenAccessor.ROTATION, rotDur)
+						.target(rotation)
+						.ease(TweenEquations.easeNone))
+				.push(Tween.to(target, GameModelTweenAccessor.POSITION_XYZ, transDur).
+						target(x, y, z)
+						.ease(TweenEquations.easeNone))
+// Below rotates and translates at the same time.
+//						.push(Tween.to(this.ghost, GameModelTweenAccessor.ALL, duration).
+//								target(x, y, z, newAngle)
+//								.ease(TweenEquations.easeNone))ne))
+				.start(ghostManager);
 	}
 	/*
 	 * Returns the GestureDetector for this screen.
@@ -305,19 +317,7 @@ public class GameScreen extends AbstractScreen {
 				System.out.println("new: " + newAngle);
 
 				GameScreen.this.ghostManager.killTarget(GameScreen.this.ghost);
-
-				Timeline.createSequence()
-						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.ROTATION, rotationDuration)
-								.target(newAngle)
-								.ease(TweenEquations.easeNone))
-						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ, translationDuration).
-								target(this.intersection.x, this.intersection.y, this.intersection.z)
-								.ease(TweenEquations.easeNone))
-// Below rotates and translates at the same time.
-//						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.ALL, duration).
-//								target(this.intersection.x, this.intersection.y, this.intersection.z, newAngle)
-//								.ease(TweenEquations.easeNone))ne))
-						.start(GameScreen.this.ghostManager);
+				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost, newAngle, rotationDuration, intersection.x, intersection.y, intersection.z, translationDuration);
 
 				return false;
 			}
