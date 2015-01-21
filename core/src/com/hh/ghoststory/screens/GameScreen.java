@@ -279,7 +279,7 @@ public class GameScreen extends AbstractScreen {
 	private GestureDetector getDefaultGestureDetector() {
 		return new GestureDetector(new GestureDetector.GestureListener() {
 			private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
-			private Vector3 intersection = new Vector3();
+//			private Vector3 intersection = new Vector3();
 			private Vector3 curr = new Vector3();
 			private Vector2 last = new Vector2(-1, -1);
 			private Vector3 delta = new Vector3();
@@ -295,13 +295,15 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean tap(float x, float y, int count, int button) {
-				this.pickRay = GameScreen.this.getPickRay(x, y);
-				Intersector.intersectRayPlane(this.pickRay, this.xzPlane, this.intersection);
+
+				pickRay = GameScreen.this.getPickRay(x, y);
+				Vector3 intersection = getIntersection(pickRay);
+//				Intersector.intersectRayPlane(this.pickRay, this.xzPlane, this.intersection);
 
 				Vector3 position = new Vector3();
 				position = GameScreen.this.ghost.model.transform.getTranslation(position);
-				float translationDuration = this.intersection.dst(position) / GameScreen.this.ghost.speed;
-				float newAngle = MathUtils.atan2(this.intersection.x - position.x, this.intersection.z - position.z) * 180 / MathUtils.PI;
+				float translationDuration = intersection.dst(position) / GameScreen.this.ghost.speed;
+				float newAngle = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
 
 				Quaternion currentRotation = new Quaternion();
 				currentRotation = GameScreen.this.ghost.model.transform.getRotation(currentRotation);
@@ -319,6 +321,11 @@ public class GameScreen extends AbstractScreen {
 				return false;
 			}
 
+			private Vector3 getIntersection(Ray pickRay) {
+				Vector3 intersection = new Vector3();
+				Intersector.intersectRayPlane(pickRay, this.xzPlane, intersection);
+				return intersection;
+			}
 			@Override
 			public boolean longPress(float x, float y) {
 				return false;
