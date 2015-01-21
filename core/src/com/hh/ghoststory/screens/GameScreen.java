@@ -269,6 +269,10 @@ public class GameScreen extends AbstractScreen {
 //								.ease(TweenEquations.easeNone))ne))
 				.start(ghostManager);
 	}
+
+	private Ray getPickRay(float x, float y) {
+		return camera.getPickRay(x, y);
+	}
 	/*
 	 * Returns the GestureDetector for this screen.
 	 */
@@ -276,12 +280,10 @@ public class GameScreen extends AbstractScreen {
 		return new GestureDetector(new GestureDetector.GestureListener() {
 			private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
 			private Vector3 intersection = new Vector3();
-			private Vector3 position = new Vector3();
 			private Vector3 curr = new Vector3();
 			private Vector2 last = new Vector2(-1, -1);
 			private Vector3 delta = new Vector3();
 			private Vector3 axisVec = new Vector3();
-			private Quaternion currentRotation = new Quaternion();
 			private float initialScale = 1.0f;
 			private Ray pickRay;
 
@@ -293,28 +295,23 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean tap(float x, float y, int count, int button) {
-				this.pickRay = this.getPickRay(x, y);
+				this.pickRay = GameScreen.this.getPickRay(x, y);
 				Intersector.intersectRayPlane(this.pickRay, this.xzPlane, this.intersection);
 
-				this.position = GameScreen.this.ghost.model.transform.getTranslation(this.position);
-				this.currentRotation = GameScreen.this.ghost.model.transform.getRotation(this.currentRotation);
+				Vector3 position = new Vector3();
+				position = GameScreen.this.ghost.model.transform.getTranslation(position);
+				float translationDuration = this.intersection.dst(position) / GameScreen.this.ghost.speed;
+				float newAngle = MathUtils.atan2(this.intersection.x - position.x, this.intersection.z - position.z) * 180 / MathUtils.PI;
 
-				float translationDuration = this.intersection.dst(this.position) / GameScreen.this.ghost.speed;
-				float newAngle = MathUtils.atan2(this.intersection.x - this.position.x, this.intersection.z - this.position.z) * 180 / MathUtils.PI;
-				// lines below also in getValues of the GhostModelTweenAccessor, maybe move them
-//				float angle = GameScreen.this.ghost.model.transform.getRotation(new Quaternion()).getAxisAngle(this.axisVec) * this.axisVec.nor().y;
+				Quaternion currentRotation = new Quaternion();
+				currentRotation = GameScreen.this.ghost.model.transform.getRotation(currentRotation);
 				float currentAngle = currentRotation.getYaw();
-//				currentAngle = currentRotation.getAngleAround(0,1,0);
 
 				// Get it to rotate in the direction of the shortest difference
 				if (Math.abs(newAngle - currentAngle) >  180)
 					newAngle += newAngle < currentAngle ? 360 : -360;
 
-//				newAngle = (float) foo;
 				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
-
-				System.out.println("current: " + currentAngle);
-				System.out.println("new: " + newAngle);
 
 				GameScreen.this.ghostManager.killTarget(GameScreen.this.ghost);
 				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost, newAngle, rotationDuration, intersection.x, intersection.y, intersection.z, translationDuration);
@@ -334,7 +331,7 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean pan(float x, float y, float deltaX, float deltaY) {
-				this.pickRay = this.getPickRay(x, y);
+				this.pickRay = GameScreen.this.getPickRay(x, y);
 				Intersector.intersectRayPlane(this.pickRay, xzPlane, curr);
 
 				if (!(this.last.x == -1 && this.last.y == -1)) {
@@ -367,9 +364,6 @@ public class GameScreen extends AbstractScreen {
 //				GameScreen.this.camera.zoom = MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
 				GameScreen.this.camera.fieldOfView += MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
 				return false;
-			}
-			private Ray getPickRay(float x, float y) {
-				return GameScreen.this.camera.getPickRay(x, y);
 			}
 		});
 	}
