@@ -361,15 +361,35 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean zoom(float initialDistance, float distance) {
+				float zoom = distance - initialDistance;
+				float deltaTime = Gdx.graphics.getDeltaTime();
+				float speed = 10 * deltaTime;
+
+				Vector3 camZoom = new Vector3();
+				camZoom.set(GameScreen.this.camera.direction.cpy());
+				camZoom.nor().scl(speed * zoom);
+				if( ((GameScreen.this.camera.position.y > 3f) && (zoom > 0)) || ((GameScreen.this.camera.position.y < 100f) && (zoom < 0)) ) {
+					GameScreen.this.camera.translate(camZoom.x, camZoom.y, camZoom.z);
+				}
+//				float factor = distance / initialDistance;
+//
+//
+//				if (initialDistance > distance && GameScreen.this.camera.fieldOfView < 120f) {
+//					GameScreen.this.camera.fieldOfView += factor;
+//				} else if (initialDistance < distance && GameScreen.this.camera.fieldOfView > 10f) {
+//					GameScreen.this.camera.fieldOfView -= factor;
+//				}
+System.out.println("here");
 				return false;
 			}
 
 			@Override
 			public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-				System.out.println("pinch");
-				float ratio = initialPointer1.dst(initialPointer2) / pointer1.dst(pointer2);
-//				GameScreen.this.camera.zoom = MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
-				GameScreen.this.camera.fieldOfView += MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
+//				System.out.println("pinch");
+//				float ratio = initialPointer1.dst(initialPointer2) / pointer1.dst(pointer2);
+////				GameScreen.this.camera.zoom = MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
+//				GameScreen.this.camera.fieldOfView += MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
+//				GameScreen.this.camera.
 				return false;
 			}
 		});
