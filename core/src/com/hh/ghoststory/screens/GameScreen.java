@@ -363,12 +363,15 @@ public class GameScreen extends AbstractScreen {
 			public boolean zoom(float initialDistance, float distance) {
 				float zoom = distance - initialDistance;
 				float deltaTime = Gdx.graphics.getDeltaTime();
-				float speed = 10 * deltaTime;
-
+//				float speed = 0.1f * deltaTime;
+				// amount fingers moved apart divided by time. should be speed of movement
+				float speed = zoom / deltaTime;
 				Vector3 camZoom = new Vector3();
 				camZoom.set(GameScreen.this.camera.direction.cpy());
-				camZoom.nor().scl(speed * zoom);
-				if( ((GameScreen.this.camera.position.y > 3f) && (zoom > 0)) || ((GameScreen.this.camera.position.y < 100f) && (zoom < 0)) ) {
+				camZoom.nor().scl(speed * deltaTime / 100);
+
+
+				if( ((GameScreen.this.camera.position.y > 3f) && (zoom > 0)) || ((GameScreen.this.camera.position.y < 10f) && (zoom < 0)) ) {
 					GameScreen.this.camera.translate(camZoom.x, camZoom.y, camZoom.z);
 				}
 //				float factor = distance / initialDistance;
@@ -379,7 +382,7 @@ public class GameScreen extends AbstractScreen {
 //				} else if (initialDistance < distance && GameScreen.this.camera.fieldOfView > 10f) {
 //					GameScreen.this.camera.fieldOfView -= factor;
 //				}
-System.out.println("here");
+System.out.println("here " + zoom);
 				return false;
 			}
 
