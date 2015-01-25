@@ -37,7 +37,7 @@ import com.hh.ghoststory.game_models.core.GameModel;
 import com.hh.ghoststory.renderers.ModelBatchRenderer;
 
 public class GameScreen extends AbstractScreen {
-	private final ModelBatchRenderer renderer;
+	private ModelBatchRenderer renderer;
 	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private TestShader testShader = new TestShader();
 	private ModelBatch modelBatch;
@@ -49,7 +49,7 @@ public class GameScreen extends AbstractScreen {
 	public Ghost ghost;
 	public boolean loading;
 	public AssetManager assets = new AssetManager();
-	public Array<GameModel> game_models = new Array<GameModel>();
+	public Array<GameModel> gameModels = new Array<GameModel>();
 	public Environment environment = new Environment();
 	public TweenManager ghostManager;
 
@@ -57,11 +57,12 @@ public class GameScreen extends AbstractScreen {
 
 	public GameScreen(GhostStory game) {
 		super(game);
-		this.renderer = new ModelBatchRenderer();
+		setUpRenderer();
 
 		this.setupLights();
 		this.setupGameModels();
 		this.setupCamera();
+		renderer.setUpPerspectiveCamera();
 		this.setupInputProcessors();
 		this.setClear(0.5f, 0.5f, 0.5f, 1f);
 		this.setupModelBatch();
@@ -74,6 +75,10 @@ public class GameScreen extends AbstractScreen {
 		System.out.println(this.ghost.texture);
 	}
 
+	private void setUpRenderer() {
+		renderer = new ModelBatchRenderer();
+		renderer.setUpDefaultCamera(ModelBatchRenderer.PERSP);
+	}
 	@Override
 	public void show() {
 		super.show();
@@ -88,9 +93,18 @@ public class GameScreen extends AbstractScreen {
 
 		if (doneLoading()) {
 			this.updateModels();
+//			renderer.setRenderables(gameModels);
 			if (this.shadows) this.renderShadows();
-			this.renderModels();
+			renderer.setRenderables(collectModelInstances());
+			renderer.render();
+//			this.renderModels();
 		}
+	}
+
+	private Array<ModelInstance> collectModelInstances() {
+		Array<ModelInstance> modelInstances = new Array<ModelInstance>(gameModels.size);
+		for (GameModel gameModel : gameModels) modelInstances.add(gameModel.model);
+		return modelInstances;
 	}
 
 	@Override
@@ -133,12 +147,12 @@ public class GameScreen extends AbstractScreen {
 	 */
 	private void setupGameModels() {
 		this.ghost = new Ghost();
-		this.game_models.add(this.ghost);
+		this.gameModels.add(this.ghost);
 
 		for (int z = 0; z < 10; z++) {
 			for (int x = 0; x < 20; x++) {
-				this.game_models.add(new Tile(x, 0, z));
-//				this.game_models.add(new Tile());
+				this.gameModels.add(new Tile(x, 0, z));
+//				this.gameModels.add(new Tile());
 			}
 		}
 		for (int z = 0; z < 3; z++) {
@@ -146,24 +160,24 @@ public class GameScreen extends AbstractScreen {
 				Tile tile = new Tile(9.5f,y + 0.5f,z + 5);
 				tile.rotation = 90;
 				tile.verticalAxis = new Vector3(0,0,1);
-				this.game_models.add(tile);
+				this.gameModels.add(tile);
 			}
 		}
 		for (int z = 0; z < 3; z++) {
-			this.game_models.add(new Tile(10,2,z + 5));
+			this.gameModels.add(new Tile(10, 2, z + 5));
 		}
 		for (int y = 0; y < 2; y++) {
 			Tile tile = new Tile(10,y + 0.5f,7.5f);
 			tile.rotation = 90;
 			tile.verticalAxis = new Vector3(1,0,0);
-			this.game_models.add(tile);
+			this.gameModels.add(tile);
 		}
 		for (int z = 0; z < 3; z++) {
 			for (int y = 0; y < 2; y++) {
 				Tile tile = new Tile(10.5f,y + 0.5f,z + 5);
 				tile.rotation = 270;
 				tile.verticalAxis = new Vector3(0,0,1);
-				this.game_models.add(tile);
+				this.gameModels.add(tile);
 			}
 		}
 		loadGameModelAssets();
@@ -173,8 +187,9 @@ public class GameScreen extends AbstractScreen {
 	 * Load the GameModel assets
 	 */
 	private void loadGameModelAssets() {
-		for (GameModel game_model : this.game_models)
-			this.assets.load(game_model.model_resource, Model.class);
+		for (GameModel gameModel : this.gameModels)
+//			this.assets.load(gameModel.model_resource, Model.class);
+			renderer.assetManager.load(gameModel.model_resource, Model.class);
 		this.loading = true;
 	}
 
@@ -182,10 +197,12 @@ public class GameScreen extends AbstractScreen {
 	 * Check if assets have all been loaded. Run in a loop.
 	 */
 	private boolean doneLoading() {
-		if (this.loading && !this.assets.update()) {
+		if (this.loading && !renderer.assetManager.update()) {
+//		if (this.loading && !this.assets.update()) {
 			return false;
-		} else if (this.loading && this.assets.update()) {
-			for (GameModel gameModel : this.game_models) {
+		} else if (this.loading && renderer.assetManager.update()) {
+//		} else if (this.loading && this.assets.update()) {
+			for (GameModel gameModel : this.gameModels) {
 				setModelResource(gameModel);
 				gameModel.setTranslation();
 			}
@@ -199,11 +216,20 @@ public class GameScreen extends AbstractScreen {
 	 * Sets the Model for the GameModel
 	 */
 	private void setModelResource(GameModel gameModel) {
-		gameModel.model = new ModelInstance(assets.get(gameModel.model_resource, Model.class));
+		gameModel.model = new ModelInstance(renderer.assetManager.get(gameModel.model_resource, Model.class));
+//		gameModel.model = new ModelInstance(assets.get(gameModel.model_resource, Model.class));
 
 	}
 
 	private void setupLights() {
+		BaseLight[] lights = {
+				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
+				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
+				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
+				new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f)
+		};
+		renderer.setUpLights(lights);
+
 		this.environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1));
 		this.environment.add(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1));
 		this.environment.add(new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1));
@@ -212,14 +238,6 @@ public class GameScreen extends AbstractScreen {
 
 		this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
 
-		BaseLight[] lights = {
-				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
-				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
-				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
-				new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f)
-		};
-
-		this.renderer.setUpLights(lights);
 
 		if (this.shadows) {
 //			environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
@@ -241,7 +259,7 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void updateModels() {
-		for (GameModel game_model : this.game_models)
+		for (GameModel game_model : this.gameModels)
 			game_model.update();
 	}
 
@@ -251,7 +269,7 @@ public class GameScreen extends AbstractScreen {
 	private void renderModels() {
 		this.modelBatch.begin(this.camera);
 
-		for (GameModel game_model : this.game_models)
+		for (GameModel game_model : this.gameModels)
 			this.modelBatch.render(game_model.model, this.environment);
 
 		this.modelBatch.end();
@@ -264,7 +282,7 @@ public class GameScreen extends AbstractScreen {
 		this.shadowLight.begin(Vector3.Zero, this.camera.direction);
 		this.shadowBatch.begin(this.shadowLight.getCamera());
 
-		for (GameModel game_model : this.game_models)
+		for (GameModel game_model : this.gameModels)
 			this.shadowBatch.render(game_model.model, this.environment);
 
 		this.shadowBatch.end();

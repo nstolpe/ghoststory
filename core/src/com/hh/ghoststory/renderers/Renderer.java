@@ -7,4 +7,5 @@ import com.badlogic.gdx.utils.Array;
  */
 public interface Renderer {
 	void render();
+	void setRenderables(Array renderables);
 }

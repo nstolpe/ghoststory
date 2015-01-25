@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Created by nils on 1/24/15.
  */
-public abstract class AbstractRenderer implements Renderer {
+public abstract class AbstractRenderer implements Renderer, Disposable {
 //	private Array<Camera> cameras;
 	private Environment environment;
 	protected float CLEAR_R = 0f;
