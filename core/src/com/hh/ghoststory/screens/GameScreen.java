@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -124,6 +125,7 @@ public class GameScreen extends AbstractScreen {
 		for (int z = 0; z < 10; z++) {
 			for (int x = 0; x < 10; x++) {
 				this.game_models.add(new Tile(x, 0, z));
+//				this.game_models.add(new Tile());
 			}
 		}
 		loadGameModelAssets();
@@ -145,13 +147,20 @@ public class GameScreen extends AbstractScreen {
 		if (this.loading && !this.assets.update()) {
 			return false;
 		} else if (this.loading && this.assets.update()) {
-			for (GameModel game_model : this.game_models) {
-				game_model.setModelResource(this.assets.get(game_model.model_resource, Model.class));
+			for (GameModel gameModel : this.game_models) {
+				setModelResource(gameModel);
 			}
 			this.loading = false;
 			return false;
 		}
 		return true;
+	}
+
+	/*
+	 * Sets the Model for the GameModel
+	 */
+	private void setModelResource(GameModel gameModel) {
+		gameModel.model = new ModelInstance(assets.get(gameModel.model_resource, Model.class));
 	}
 
 	private void setupLights() {
@@ -362,6 +371,7 @@ public class GameScreen extends AbstractScreen {
 			@Override
 			public boolean zoom(float initialDistance, float distance) {
 				float zoom = distance - initialDistance;
+//				float zoom = initialDistance / distance;
 				float deltaTime = Gdx.graphics.getDeltaTime();
 //				float speed = 0.1f * deltaTime;
 				// amount fingers moved apart divided by time. should be speed of movement
