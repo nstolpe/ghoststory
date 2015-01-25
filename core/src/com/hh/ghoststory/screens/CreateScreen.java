@@ -283,7 +283,7 @@ public class CreateScreen extends AbstractScreen {
 
 			ghost.setTexture("models/ghost_texture_green.png");
 			for (GameModel game_model : game_models) {
-				game_model.setModelResource(assets);
+//				game_model.setModelResource(assets);
 			}
 			ghost.model.userData = "ghost_texture_green.png";
 			loading = false;

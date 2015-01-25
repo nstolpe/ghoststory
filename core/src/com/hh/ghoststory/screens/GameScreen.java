@@ -4,7 +4,6 @@ import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenEquations;
 import aurelienribon.tweenengine.TweenManager;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -14,10 +13,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
@@ -34,8 +34,10 @@ import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
+import com.hh.ghoststory.renderers.ModelBatchRenderer;
 
 public class GameScreen extends AbstractScreen {
+	private final ModelBatchRenderer renderer;
 	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private TestShader testShader = new TestShader();
 	private ModelBatch modelBatch;
@@ -55,6 +57,8 @@ public class GameScreen extends AbstractScreen {
 
 	public GameScreen(GhostStory game) {
 		super(game);
+		this.renderer = new ModelBatchRenderer();
+
 		this.setupLights();
 		this.setupGameModels();
 		this.setupCamera();
@@ -63,8 +67,11 @@ public class GameScreen extends AbstractScreen {
 		this.setupModelBatch();
 		this.setupTweenEngine();
 
+
 		this.loadCharacter(".ghost_story/character.json");
+		System.out.println(this.ghost.texture);
 		this.ghost.setTexture(this.character.texture != null ? "models/" + this.character.texture : "models/ghost_texture_blue.png");
+		System.out.println(this.ghost.texture);
 	}
 
 	@Override
@@ -89,6 +96,11 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void dispose() {
 		super.dispose();
+		modelBatch.dispose();
+		shadowBatch.dispose();
+		shadowLight.dispose();
+		assets.dispose();
+		testShader.dispose();
 	}
 
 	/*
@@ -106,6 +118,7 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void setupCamera(int width, int height) {
+		renderer.setUpPerspectiveCamera(67, width, height);
 		this.camera = new PerspectiveCamera(67, width, height);
 //		this.camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
 //		this.camera.position.set(100, 100, 100);
@@ -123,9 +136,34 @@ public class GameScreen extends AbstractScreen {
 		this.game_models.add(this.ghost);
 
 		for (int z = 0; z < 10; z++) {
-			for (int x = 0; x < 10; x++) {
+			for (int x = 0; x < 20; x++) {
 				this.game_models.add(new Tile(x, 0, z));
 //				this.game_models.add(new Tile());
+			}
+		}
+		for (int z = 0; z < 3; z++) {
+			for (int y = 0; y < 2; y++) {
+				Tile tile = new Tile(9.5f,y + 0.5f,z + 5);
+				tile.rotation = 90;
+				tile.verticalAxis = new Vector3(0,0,1);
+				this.game_models.add(tile);
+			}
+		}
+		for (int z = 0; z < 3; z++) {
+			this.game_models.add(new Tile(10,2,z + 5));
+		}
+		for (int y = 0; y < 2; y++) {
+			Tile tile = new Tile(10,y + 0.5f,7.5f);
+			tile.rotation = 90;
+			tile.verticalAxis = new Vector3(1,0,0);
+			this.game_models.add(tile);
+		}
+		for (int z = 0; z < 3; z++) {
+			for (int y = 0; y < 2; y++) {
+				Tile tile = new Tile(10.5f,y + 0.5f,z + 5);
+				tile.rotation = 270;
+				tile.verticalAxis = new Vector3(0,0,1);
+				this.game_models.add(tile);
 			}
 		}
 		loadGameModelAssets();
@@ -149,6 +187,7 @@ public class GameScreen extends AbstractScreen {
 		} else if (this.loading && this.assets.update()) {
 			for (GameModel gameModel : this.game_models) {
 				setModelResource(gameModel);
+				gameModel.setTranslation();
 			}
 			this.loading = false;
 			return false;
@@ -161,18 +200,33 @@ public class GameScreen extends AbstractScreen {
 	 */
 	private void setModelResource(GameModel gameModel) {
 		gameModel.model = new ModelInstance(assets.get(gameModel.model_resource, Model.class));
+
 	}
 
 	private void setupLights() {
 		this.environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1));
 		this.environment.add(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1));
 		this.environment.add(new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1));
-		this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
+//		this.environment.add(new DirectionalLight().set(0.1f, 0.1f, 0.1f, -1f, -.8f, -.2f));
 		this.environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
+
+		this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
+
+		BaseLight[] lights = {
+				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
+				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
+				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
+				new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f)
+		};
+
+		this.renderer.setUpLights(lights);
 
 		if (this.shadows) {
 //			environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-			this.environment.add((this.shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+			shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f);
+			shadowLight.set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f);
+//			this.environment.add((this.shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
+			this.environment.add((this.shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.4f, 0.4f, 0.4f, 1f, -.8f, -.2f));
 			this.environment.shadowMap = this.shadowLight;
 		}
 	}

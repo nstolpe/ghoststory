@@ -16,7 +16,7 @@ public class Tile extends StaticModel {
 		position.set(position);
 	}
 
-	public Tile(int x, int y, int z) {
+	public Tile(float x, float y, float z) {
 		model_resource = "models/tile.g3dj";
 		position.set(x, y, z);
 //		this.model.transform.setToTranslation(x,y,z);
@@ -29,5 +29,8 @@ public class Tile extends StaticModel {
 		setTranslation();
 		model.transform.setToTranslation(position);
 		model.transform.rotate(verticalAxis, rotation);
+	}
+	public void setTranslation() {
+		model.transform.setToTranslation(position);
 	}
 }

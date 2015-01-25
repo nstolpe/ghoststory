@@ -17,7 +17,7 @@ import java.util.HashMap;
  */
 public class Ghost extends DynamicModel {
 	public float speed = 2;
-	private String texture;
+	public String texture = "models/ghost_texture_blue.png";
 
 	public Ghost() {
 		model_resource = "models/ghost.g3dj";
@@ -26,19 +26,22 @@ public class Ghost extends DynamicModel {
 	public void update() {
 	}
 
-	@Override
-	public void setModelResource(AssetManager assets) {
-		super.setModelResource(assets);
-		updateTexture();
-	}
+//	@Override
+//	public void setModelResource(AssetManager assets) {
+//		super.setModelResource(assets);
+//		updateTexture();
+//	}
 
-	@Override
-	public void setModelResource(Model model_asset) {
-		super.setModelResource(model_asset);
-		updateTexture();
-	}
+//	@Override
+//	public void setModelResource(Model model_asset) {
+//		super.setModelResource(model_asset);
+//		updateTexture();
+//	}
 
-	private void updateTexture() {
+	/*
+	 * This or something like it needs to be added later. But should be in parent class.
+	 */
+	public void setTexture() {
 		Texture tex = new Texture(Gdx.files.internal(texture), true);
 		tex.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
 		model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex));
