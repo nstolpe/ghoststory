@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
+import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.input.GestureDetector;
@@ -29,6 +30,7 @@ import com.hh.ghoststory.game_models.core.GameModel;
 import com.hh.ghoststory.renderers.ModelBatchRenderer;
 
 import javax.swing.*;
+import java.util.Random;
 
 public class GameScreen extends AbstractScreen {
 	private ModelBatchRenderer renderer;
@@ -311,7 +313,11 @@ public class GameScreen extends AbstractScreen {
 						GameScreen.this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						break;
 					case Input.Keys.L:
-						GameScreen.this.fooLight.set(new Color(1f,1f,0f,1f),6,1,6,1);
+						Random generator = new Random();
+						float red = generator.nextFloat();
+						float green = generator.nextFloat();
+						float blue = generator.nextFloat();
+						GameScreen.this.fooLight.set(new Color(red,green,blue,1f),6,1,6,1);
 						break;
 				}
 				return false;
