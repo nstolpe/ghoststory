@@ -44,6 +44,24 @@ public class ModelBatchRenderer extends AbstractRenderer {
                 break;
         }
     }
+//    public void setUpDefaultCamera(Camera camera) {
+//        if (camera instanceof PerspectiveCamera) {
+//
+//        }
+//        switch (type) {
+//            case PERSP:
+//                setUpPerspectiveCamera();
+//                setActiveCamera(PERSP);
+//                break;
+//            case ORTHO:
+//                setUpOrthograhcicCamera();
+//                setActiveCamera(ORTHO);
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+
     public void setModelBatch(ModelBatch modelBatch) {
         this.modelBatch = modelBatch;
     }

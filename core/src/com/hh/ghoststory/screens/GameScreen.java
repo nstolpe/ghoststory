@@ -40,7 +40,7 @@ public class GameScreen extends AbstractScreen {
 	private ModelBatchRenderer renderer;
 	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private TestShader testShader = new TestShader();
-	private ModelBatch modelBatch;
+//	private ModelBatch modelBatch;
 	private ModelBatch shadowBatch = new ModelBatch(new DepthShaderProvider());
 	private PlayerCharacter character;
 	private DirectionalShadowLight shadowLight;
@@ -48,7 +48,7 @@ public class GameScreen extends AbstractScreen {
 
 	public Ghost ghost;
 	public boolean loading;
-	public AssetManager assets = new AssetManager();
+//	public AssetManager assets = new AssetManager();
 	public Array<GameModel> gameModels = new Array<GameModel>();
 	public Environment environment = new Environment();
 	public TweenManager ghostManager;
@@ -58,14 +58,14 @@ public class GameScreen extends AbstractScreen {
 	public GameScreen(GhostStory game) {
 		super(game);
 		setUpRenderer();
-
-		this.setupLights();
-		this.setupGameModels();
-		this.setupCamera();
+		setupLights();
+//		renderer.setUpPerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		renderer.setUpPerspectiveCamera();
+		setupGameModels();
+		loadGameModelAssets();
+
 		this.setupInputProcessors();
 		this.setClear(0.5f, 0.5f, 0.5f, 1f);
-		this.setupModelBatch();
 		this.setupTweenEngine();
 
 
@@ -89,18 +89,18 @@ public class GameScreen extends AbstractScreen {
 		super.render(delta);
 		this.ghostManager.update(Gdx.graphics.getDeltaTime());
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		this.camera.update();
 
 		if (doneLoading()) {
 			this.updateModels();
-//			renderer.setRenderables(gameModels);
 			if (this.shadows) this.renderShadows();
 			renderer.setRenderables(collectModelInstances());
 			renderer.render();
-//			this.renderModels();
 		}
 	}
 
+	/*
+	 * Builds an Array<ModelInstance> from the model fields attached to gameModels
+	 */
 	private Array<ModelInstance> collectModelInstances() {
 		Array<ModelInstance> modelInstances = new Array<ModelInstance>(gameModels.size);
 		for (GameModel gameModel : gameModels) modelInstances.add(gameModel.model);
@@ -110,10 +110,8 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void dispose() {
 		super.dispose();
-		modelBatch.dispose();
 		shadowBatch.dispose();
 		shadowLight.dispose();
-		assets.dispose();
 		testShader.dispose();
 	}
 
@@ -124,22 +122,7 @@ public class GameScreen extends AbstractScreen {
 	 */
 	@Override
 	public void resize(int width, int height) {
-		this.setupCamera(width, height);
-	}
-
-	private void setupCamera() {
-		this.setupCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-	}
-
-	private void setupCamera(int width, int height) {
-		renderer.setUpPerspectiveCamera(67, width, height);
-		this.camera = new PerspectiveCamera(67, width, height);
-//		this.camera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
-//		this.camera.position.set(100, 100, 100);
-		this.camera.position.set(10, 10, 10);
-		this.camera.direction.set(-1, -1, -1);
-		this.camera.near = 1;
-		this.camera.far = 300;
+//		renderer.setupCamera(width, height);
 	}
 
 	/*
@@ -180,7 +163,6 @@ public class GameScreen extends AbstractScreen {
 				this.gameModels.add(tile);
 			}
 		}
-		loadGameModelAssets();
 	}
 
 	/*
@@ -230,15 +212,6 @@ public class GameScreen extends AbstractScreen {
 		};
 		renderer.setUpLights(lights);
 
-		this.environment.add(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1));
-		this.environment.add(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1));
-		this.environment.add(new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1));
-//		this.environment.add(new DirectionalLight().set(0.1f, 0.1f, 0.1f, -1f, -.8f, -.2f));
-		this.environment.add(new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
-
-		this.environment.set(new ColorAttribute(ColorAttribute.AmbientLight, .1f, .1f, .1f, .2f));
-
-
 		if (this.shadows) {
 //			environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
 			shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f);
@@ -264,18 +237,6 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	/*
-	 * Renders the GameModels.
-	 */
-	private void renderModels() {
-		this.modelBatch.begin(this.camera);
-
-		for (GameModel game_model : this.gameModels)
-			this.modelBatch.render(game_model.model, this.environment);
-
-		this.modelBatch.end();
-	}
-
-	/*
 	 * Renders the GameModels shadows.
 	 */
 	private void renderShadows() {
@@ -287,13 +248,6 @@ public class GameScreen extends AbstractScreen {
 
 		this.shadowBatch.end();
 		this.shadowLight.end();
-	}
-
-	/*
-	 * Sets up the ModelBatch
-	 */
-	private void setupModelBatch() {
-		this.modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 	}
 
 	/*
@@ -320,14 +274,15 @@ public class GameScreen extends AbstractScreen {
 		return new InputAdapter() {
 			@Override
 			public boolean scrolled(int amount) {
+				PerspectiveCamera camera = (PerspectiveCamera) GameScreen.this.renderer.getActiveCamera();
 				//Zoom out
-				if (amount > 0 && GameScreen.this.camera.fieldOfView < 67)
-					GameScreen.this.camera.fieldOfView += 1f;
+				if (amount > 0 && camera.fieldOfView < 67)
+					camera.fieldOfView += 1f;
 //				if (amount > 0 && GameScreen.this.camera.zoom < 1)
 //					GameScreen.this.camera.zoom += 0.1f;
 				//Zoom in
-				if (amount < 0 && GameScreen.this.camera.fieldOfView > 1)
-					GameScreen.this.camera.fieldOfView -= 1f;
+				if (amount < 0 && camera.fieldOfView > 1)
+					camera.fieldOfView -= 1f;
 //				if (amount < 0 && GameScreen.this.camera.zoom > 0.1)
 //					GameScreen.this.camera.zoom -= 0.1f;
 
@@ -352,7 +307,7 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private Ray getPickRay(float x, float y) {
-		return camera.getPickRay(x, y);
+		return renderer.getActiveCamera().getPickRay(x, y);
 	}
 	/*
 	 * Returns the GestureDetector for this screen.
@@ -419,14 +374,14 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean pan(float x, float y, float deltaX, float deltaY) {
-				this.pickRay = GameScreen.this.getPickRay(x, y);
+				this.pickRay = GameScreen.this.renderer.getActiveCamera().getPickRay(x, y);
 				Intersector.intersectRayPlane(this.pickRay, xzPlane, curr);
 
 				if (!(this.last.x == -1 && this.last.y == -1)) {
-					this.pickRay = GameScreen.this.camera.getPickRay(this.last.x, this.last.y);
+					this.pickRay = GameScreen.this.renderer.getActiveCamera().getPickRay(this.last.x, this.last.y);
 					Intersector.intersectRayPlane(this.pickRay, xzPlane, delta);
 					this.delta.sub(this.curr);
-					GameScreen.this.camera.position.add(this.delta.x, this.delta.y, this.delta.z);
+					GameScreen.this.renderer.getActiveCamera().position.add(this.delta.x, this.delta.y, this.delta.z);
 				}
 
 				this.last.set(x, y);
