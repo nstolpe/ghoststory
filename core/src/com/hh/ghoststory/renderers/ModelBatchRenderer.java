@@ -18,7 +18,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
     public static final int PERSP = 0;
     public static final int ORTHO= 1;
 
-    private Environment environment = new Environment();
+    public Environment environment = new Environment();
     private ModelBatch modelBatch;
     private PerspectiveCamera pCamera;
     private OrthographicCamera oCamera;
@@ -30,9 +30,20 @@ public class ModelBatchRenderer extends AbstractRenderer {
         setModelBatch(new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl")));
     }
 
+    public int getActiveCameraType() {
+        return activeCameraType;
+    }
     public void setCameraViewport(int width, int height) {
         getActiveCamera().viewportWidth = width;
         getActiveCamera().viewportHeight= height;
+
+        if (getActiveCamera() instanceof OrthographicCamera) {
+            oCamera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
+            oCamera.position.set(100, 100, 100);
+            oCamera.direction.set(-1, -1, -1);
+            oCamera.near = 1;
+            oCamera.far = 300;
+        }
     }
 
     public void setUpDefaultCamera(int type) {
@@ -102,9 +113,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 
     @Override
     public void render() {
-        Camera camera = getActiveCamera();
-        camera.update();
-        modelBatch.begin(camera);
+        modelBatch.begin(getActiveCamera());
         for (ModelInstance model : modelInstances)
             modelBatch.render(model, environment);
         modelBatch.end();

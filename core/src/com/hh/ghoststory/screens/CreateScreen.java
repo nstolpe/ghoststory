@@ -65,6 +65,7 @@ public class CreateScreen extends AbstractScreen {
 	private int GHOST_COLOR = 0;
 	private Label pointPool;
 	private String[] attrs = {"STR", "INT", "AGI", "REA", "STA", "WIL"};
+	private Camera camera;
 
 	public CreateScreen(GhostStory game) {
 		super(game);

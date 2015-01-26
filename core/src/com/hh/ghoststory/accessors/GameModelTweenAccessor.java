@@ -94,14 +94,14 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 target.model.transform.setTranslation(newValues[0], newValues[1], this.trans.z);
                 break;
             case POSITION_YZ:
-                target.model.transform.setTranslation(this.trans.x, newValues[1], newValues[1]);
+                target.model.transform.setTranslation(this.trans.x, newValues[0], newValues[1]);
                 break;
             case POSITION_ZX:
-                target.model.transform.setTranslation(newValues[0], this.trans.y, newValues[1]);
+                target.model.transform.setTranslation(newValues[1], this.trans.y, newValues[0]);
                 break;
             case POSITION_XYZ:
-//                target.model.transform.setTranslation(newValues[0], this.trans.y, newValues[2]);
-                target.model.transform.setTranslation(newValues[0], newValues[1], newValues[2]);
+                target.model.transform.setTranslation(newValues[0], this.trans.y, newValues[2]);
+//                target.model.transform.setTranslation(newValues[0], newValues[1], newValues[2]);
                 break;
             case ROTATION:
 	            Quaternion currentRotation = target.model.transform.getRotation(new Quaternion());

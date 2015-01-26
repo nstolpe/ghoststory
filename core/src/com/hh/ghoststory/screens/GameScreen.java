@@ -1,9 +1,7 @@
 package com.hh.ghoststory.screens;
 
 import aurelienribon.tweenengine.*;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
@@ -29,6 +28,8 @@ import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
 import com.hh.ghoststory.renderers.ModelBatchRenderer;
 
+import javax.swing.*;
+
 public class GameScreen extends AbstractScreen {
 	private ModelBatchRenderer renderer;
 	private InputMultiplexer multiplexer = new InputMultiplexer();
@@ -42,12 +43,15 @@ public class GameScreen extends AbstractScreen {
 	public boolean loading;
 	public Array<GameModel> gameModels = new Array<GameModel>();
 	public TweenManager tweenManager = new TweenManager();
+	private AnimationController controller;
 
 	public GameScreen(GhostStory game) {
 		super(game);
 		setUpRenderer();
 		setupLights();
-		renderer.setUpDefaultCamera(ModelBatchRenderer.PERSP);
+		setupShadows();
+		if (shadows) activateShadows();
+		renderer.setUpDefaultCamera(ModelBatchRenderer.ORTHO);
 
 		setupGameModels();
 		loadGameModelAssets();
@@ -57,7 +61,7 @@ public class GameScreen extends AbstractScreen {
 		this.setupTweenEngine();
 
 		this.loadCharacter(".ghost_story/character.json");
-		this.ghost.setTexture(this.character.texture != null ? "models/" + this.character.texture : "models/ghost_texture_blue.png");
+//		this.ghost.setTexture(this.character.texture != null ? "models/" + this.character.texture : "models/ghost_texture_blue.png");
 	}
 
 	private void setUpRenderer() {
@@ -74,11 +78,12 @@ public class GameScreen extends AbstractScreen {
 		super.render(delta);
 		this.tweenManager.update(Gdx.graphics.getDeltaTime());
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
+		renderer.getActiveCamera().update();
 		if (doneLoading()) {
 			this.updateModels();
 			if (this.shadows) this.renderShadows();
 			renderer.setRenderables(collectModelInstances());
+			controller.update(Gdx.graphics.getDeltaTime());
 			renderer.render();
 		}
 	}
@@ -171,7 +176,9 @@ public class GameScreen extends AbstractScreen {
 				setModelResource(gameModel);
 				gameModel.setTranslation();
 			}
-			Tween.call(floatCallback).start(tweenManager);
+//			Tween.call(floatCallback).start(tweenManager);
+			controller = new AnimationController(ghost.model);
+			controller.setAnimation("float", -1);
 			this.loading = false;
 			return false;
 		}
@@ -195,17 +202,23 @@ public class GameScreen extends AbstractScreen {
 				new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f)
 		};
 		renderer.setUpLights(lights);
-
-//		if (this.shadows) {
-////			environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-//			shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f);
-//			shadowLight.set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f);
-////			this.environment.add((this.shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
-//			this.environment.add((this.shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.4f, 0.4f, 0.4f, 1f, -.8f, -.2f));
-//			this.environment.shadowMap = this.shadowLight;
-//		}
 	}
 
+	private void setupShadows() {
+//			environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
+			shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f);
+			shadowLight.set(0.4f, 0.4f, 0.4f, 1f, -.8f, -.2f);
+//			this.environment.add((this.shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
+//		this.renderer.environment.add(shadowLight);
+	}
+
+	private void activateShadows() {
+		System.out.println("activated");
+		this.renderer.environment.shadowMap = this.shadowLight;
+	}
+	private void deactivateShadows() {
+		this.renderer.environment.shadowMap = null;
+	}
 	/*
 	 * Loads the character from the character json.
 	 */
@@ -224,14 +237,15 @@ public class GameScreen extends AbstractScreen {
 	 * Renders the GameModels shadows.
 	 */
 	private void renderShadows() {
-//		this.shadowLight.begin(Vector3.Zero, this.camera.direction);
-//		this.shadowBatch.begin(this.shadowLight.getCamera());
-//
-//		for (GameModel game_model : this.gameModels)
-//			this.shadowBatch.render(game_model.model, this.environment);
-//
-//		this.shadowBatch.end();
-//		this.shadowLight.end();
+		System.out.println("rendering shadows");
+		this.shadowLight.begin(Vector3.Zero, this.renderer.getActiveCamera().direction);
+		this.shadowBatch.begin(this.shadowLight.getCamera());
+
+		for (GameModel game_model : this.gameModels)
+			this.shadowBatch.render(game_model.model, this.renderer.environment);
+
+		this.shadowBatch.end();
+		this.shadowLight.end();
 	}
 
 	/*
@@ -249,10 +263,10 @@ public class GameScreen extends AbstractScreen {
 						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.FLOAT, 1)
 								.target(0.1f)
 								.ease(TweenEquations.easeInSine))
-						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.FLOAT, 1)
-								.target(0)
+					.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.FLOAT, 1)
+							.target(0)
 								.ease(TweenEquations.easeOutSine))
-						.setCallback(floatCallback)
+					.setCallback(floatCallback)
 					.start(tweenManager);
 		}
 	};
@@ -273,6 +287,28 @@ public class GameScreen extends AbstractScreen {
 			@Override
 			public boolean scrolled(int amount) {
 				GameScreen.this.renderer.zoomCamera(amount);
+				return false;
+			}
+			@Override
+			public boolean keyUp (int keycode) {
+				switch(keycode) {
+					case Input.Keys.S:
+						GameScreen.this.shadows = !GameScreen.this.shadows;
+						if (GameScreen.this.shadows)
+							GameScreen.this.activateShadows();
+						else
+							GameScreen.this.deactivateShadows();
+						break;
+					case Input.Keys.C:
+						if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.PERSP) {
+							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.ORTHO);
+						} else if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.ORTHO) {
+							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.PERSP);
+						}
+						GameScreen.this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+						break;
+				}
+				System.out.println("S pressed");
 				return false;
 			}
 		};
@@ -393,12 +429,12 @@ public class GameScreen extends AbstractScreen {
 				// amount fingers moved apart divided by time. should be speed of movement
 				float speed = zoom / deltaTime;
 				Vector3 camZoom = new Vector3();
-				camZoom.set(GameScreen.this.camera.direction.cpy());
+				camZoom.set(GameScreen.this.renderer.getActiveCamera().direction.cpy());
 				camZoom.nor().scl(speed * deltaTime / 100);
 
 
-				if( ((GameScreen.this.camera.position.y > 3f) && (zoom > 0)) || ((GameScreen.this.camera.position.y < 10f) && (zoom < 0)) ) {
-					GameScreen.this.camera.translate(camZoom.x, camZoom.y, camZoom.z);
+				if( ((GameScreen.this.renderer.getActiveCamera().position.y > 3f) && (zoom > 0)) || ((GameScreen.this.renderer.getActiveCamera().position.y < 10f) && (zoom < 0)) ) {
+					GameScreen.this.renderer.getActiveCamera().translate(camZoom.x, camZoom.y, camZoom.z);
 				}
 //				float factor = distance / initialDistance;
 //
