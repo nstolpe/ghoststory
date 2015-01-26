@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.TestShader;
 import com.hh.ghoststory.accessors.GameModelTweenAccessor;
+import com.hh.ghoststory.accessors.PointLightTweenAccessor;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
@@ -47,6 +48,8 @@ public class GameScreen extends AbstractScreen {
 	public TweenManager tweenManager = new TweenManager();
 	private AnimationController controller;
 	private PointLight fooLight;
+	private PointLight barLight;
+	private Color barColor = new Color(0.6f,0.2f,1f,1f);
 
 	public GameScreen(GhostStory game) {
 		super(game);
@@ -179,7 +182,7 @@ public class GameScreen extends AbstractScreen {
 				setModelResource(gameModel);
 				gameModel.setTranslation();
 			}
-//			Tween.call(floatCallback).start(tweenManager);
+			Tween.call(lightCallback).start(tweenManager);
 			controller = new AnimationController(ghost.model);
 			controller.setAnimation("float", -1);
 			this.loading = false;
@@ -199,12 +202,14 @@ public class GameScreen extends AbstractScreen {
 
 	private void setupLights() {
 		fooLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
+		barLight = new PointLight().set(barColor,12,1,10,1);
 		BaseLight[] lights = {
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
 				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
 				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
 				new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f),
-				fooLight
+				fooLight,
+				barLight
 		};
 		renderer.setUpLights(lights);
 	}
@@ -258,20 +263,22 @@ public class GameScreen extends AbstractScreen {
 	 */
 	private void setupTweenEngine() {
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
+		Tween.registerAccessor(PointLight.class, new PointLightTweenAccessor());
 		Tween.setCombinedAttributesLimit(4);
+
 	}
 
-	private final TweenCallback floatCallback = new TweenCallback(){
+	private final TweenCallback lightCallback = new TweenCallback(){
 		@Override
 		public void onEvent(int i, BaseTween<?> baseTween) {
 			Timeline.createSequence()
-						.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.FLOAT, 1)
-								.target(0.1f)
+						.push(Tween.to(GameScreen.this.barLight, PointLightTweenAccessor.POSITION_Z, 1)
+								.target(10)
 								.ease(TweenEquations.easeInSine))
-					.push(Tween.to(GameScreen.this.ghost, GameModelTweenAccessor.FLOAT, 1)
+					.push(Tween.to(GameScreen.this.barLight, PointLightTweenAccessor.POSITION_Z, 1)
 							.target(0)
-								.ease(TweenEquations.easeOutSine))
-					.setCallback(floatCallback)
+								.ease(TweenEquations.easeInSine))
+					.setCallback(lightCallback)
 					.start(tweenManager);
 		}
 	};
