@@ -11,6 +11,7 @@ import java.util.Arrays;
  * Created by nils on 12/31/14.
  */
 public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
+    public static final int FLOAT = 0;
     public static final int POSITION_X = 1;
     public static final int POSITION_Y = 2;
     public static final int POSITION_Z = 3;
@@ -67,6 +68,9 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
 		        returnValues[2] = this.trans.z;
 		        returnValues[3] = this.angle;
 		        return 4;
+            case FLOAT:
+                returnValues[0] = this.trans.y;
+                return 1;
             default:
                 assert false;
                 return -1;
@@ -90,12 +94,13 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
                 target.model.transform.setTranslation(newValues[0], newValues[1], this.trans.z);
                 break;
             case POSITION_YZ:
-                target.model.transform.setTranslation(this.trans.x, newValues[1], newValues[2]);
+                target.model.transform.setTranslation(this.trans.x, newValues[1], newValues[1]);
                 break;
             case POSITION_ZX:
-                target.model.transform.setTranslation(newValues[0], this.trans.y, newValues[2]);
+                target.model.transform.setTranslation(newValues[0], this.trans.y, newValues[1]);
                 break;
             case POSITION_XYZ:
+//                target.model.transform.setTranslation(newValues[0], this.trans.y, newValues[2]);
                 target.model.transform.setTranslation(newValues[0], newValues[1], newValues[2]);
                 break;
             case ROTATION:
@@ -105,6 +110,8 @@ public class GameModelTweenAccessor implements TweenAccessor<DynamicModel> {
 	        case ALL:
 		        target.model.transform.setToRotation(Vector3.Y, newValues[3]).setTranslation(newValues[0], newValues[1], newValues[2]);
 		        break;
+            case FLOAT:
+                target.model.transform.setTranslation(this.trans.x, newValues[0], this.trans.z);
             default:
                 assert false;
                 break;

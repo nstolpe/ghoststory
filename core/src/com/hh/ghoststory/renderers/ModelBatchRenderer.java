@@ -22,7 +22,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
     private ModelBatch modelBatch;
     private PerspectiveCamera pCamera;
     private OrthographicCamera oCamera;
-    private int activeCamera;
+    private int activeCameraType;
     private Array<ModelInstance> modelInstances;
     public AssetManager assetManager = new AssetManager();
 
@@ -30,15 +30,20 @@ public class ModelBatchRenderer extends AbstractRenderer {
         setModelBatch(new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl")));
     }
 
+    public void setCameraViewport(int width, int height) {
+        getActiveCamera().viewportWidth = width;
+        getActiveCamera().viewportHeight= height;
+    }
+
     public void setUpDefaultCamera(int type) {
         switch (type) {
             case PERSP:
                 setUpPerspectiveCamera();
-                setActiveCamera(PERSP);
+                setActiveCameraType(PERSP);
                 break;
             case ORTHO:
-                setUpOrthograhcicCamera();
-                setActiveCamera(ORTHO);
+                setUpOrthographicCamera();
+                setActiveCameraType(ORTHO);
                 break;
             default:
                 break;
@@ -51,17 +56,42 @@ public class ModelBatchRenderer extends AbstractRenderer {
 //        switch (type) {
 //            case PERSP:
 //                setUpPerspectiveCamera();
-//                setActiveCamera(PERSP);
+//                setActiveCameraType(PERSP);
 //                break;
 //            case ORTHO:
-//                setUpOrthograhcicCamera();
-//                setActiveCamera(ORTHO);
+//                setUpOrthographicCamera();
+//                setActiveCameraType(ORTHO);
 //                break;
 //            default:
 //                break;
 //        }
 //    }
 
+    public void zoomCamera(double amount) {
+        if (getActiveCamera() instanceof PerspectiveCamera)
+            zoomPerspective(amount);
+        else if (getActiveCamera() instanceof OrthographicCamera)
+            zoomOrthographic(amount);
+        else
+            return;
+    }
+
+    private void zoomPerspective(double amount) {
+        //Zoom out
+        if (amount > 0 && pCamera.fieldOfView < 67)
+            pCamera.fieldOfView += 1f;
+        //Zoom in
+        if (amount < 0 && pCamera.fieldOfView > 1)
+            pCamera.fieldOfView -= 1f;
+    }
+    private void zoomOrthographic(double amount) {
+        //Zoom out
+        if (amount > 0 && oCamera.zoom < 1)
+            oCamera.zoom += 0.1f;
+        //Zoom in
+        if (amount < 0 && oCamera.zoom > 0.1)
+            oCamera.zoom -= 0.1f;
+    }
     public void setModelBatch(ModelBatch modelBatch) {
         this.modelBatch = modelBatch;
     }
@@ -93,9 +123,10 @@ public class ModelBatchRenderer extends AbstractRenderer {
      * Sets up the perspective camera for entire screen/window.
      * @TODO parameterize more of this.
      */
-        public void setUpPerspectiveCamera() {
+    public void setUpPerspectiveCamera() {
         setUpPerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
+
     /*
      * Sets up the perspective camera.
      * @TODO parameterize more of this.
@@ -109,34 +140,33 @@ public class ModelBatchRenderer extends AbstractRenderer {
     /*
      * @TODO: Make not suck
      */
-    public void setUpOrthograhcicCamera() {
-        setUpOrthograhcicCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    public void setUpOrthographicCamera() {
+        setUpOrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
     /*
      * @TODO: Make not suck
      */
-    public void setUpOrthograhcicCamera(float fieldOfViewY, float viewportWidth, float viewportHeight) {
+    public void setUpOrthographicCamera(float viewportWidth, float viewportHeight) {
         oCamera = new OrthographicCamera();
-        oCamera.setToOrtho(false, 20, 20 * (viewportWidth / viewportHeight));
-//        oCamera.position.set(100, 100, 100);
-        oCamera.position.set(10, 10, 10);
+        oCamera.setToOrtho(false, 20, 20 * (viewportHeight / viewportWidth));
+        oCamera.position.set(100, 100, 100);
         oCamera.direction.set(-1, -1, -1);
         oCamera.near = 1;
         oCamera.far = 300;
     }
 
     /*
-     * Sets the activeCamera field. This camera will be used for all rendering.
+     * Sets the activeCameraType field. This camera will be used for all rendering.
      */
-    public void setActiveCamera(int type) {
-        this.activeCamera = type;
+    public void setActiveCameraType(int type) {
+        this.activeCameraType = type;
     }
     /*
      * Returns the active camera.
      */
     public Camera getActiveCamera() {
         Camera camera = null;
-        switch (activeCamera) {
+        switch (activeCameraType) {
             case PERSP:
                 camera = getPerspectiveCamera();
                 break;
