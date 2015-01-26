@@ -44,6 +44,7 @@ public class GameScreen extends AbstractScreen {
 	public Array<GameModel> gameModels = new Array<GameModel>();
 	public TweenManager tweenManager = new TweenManager();
 	private AnimationController controller;
+	private PointLight fooLight;
 
 	public GameScreen(GhostStory game) {
 		super(game);
@@ -195,11 +196,13 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void setupLights() {
+		fooLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
 		BaseLight[] lights = {
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
 				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
 				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
-				new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f)
+				new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f),
+				fooLight
 		};
 		renderer.setUpLights(lights);
 	}
@@ -307,8 +310,10 @@ public class GameScreen extends AbstractScreen {
 						}
 						GameScreen.this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						break;
+					case Input.Keys.L:
+						GameScreen.this.fooLight.set(new Color(1f,1f,0f,1f),6,1,6,1);
+						break;
 				}
-				System.out.println("S pressed");
 				return false;
 			}
 		};
