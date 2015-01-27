@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.*;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
-import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.input.GestureDetector;
@@ -50,6 +50,7 @@ public class GameScreen extends AbstractScreen {
 	private PointLight fooLight;
 	private PointLight barLight;
 	private Color barColor = new Color(0.6f,0.2f,1f,1f);
+	FPSLogger logger = new FPSLogger();
 
 	public GameScreen(GhostStory game) {
 		super(game);
@@ -92,6 +93,8 @@ public class GameScreen extends AbstractScreen {
 			controller.update(Gdx.graphics.getDeltaTime());
 			renderer.render();
 		}
+//		logger.log();
+
 	}
 
 	/*
@@ -183,6 +186,7 @@ public class GameScreen extends AbstractScreen {
 				gameModel.setTranslation();
 			}
 			Tween.call(lightCallback).start(tweenManager);
+			Tween.call(colorCallback).start(tweenManager);
 			controller = new AnimationController(ghost.model);
 			controller.setAnimation("float", -1);
 			this.loading = false;
@@ -247,7 +251,7 @@ public class GameScreen extends AbstractScreen {
 	 * Renders the GameModels shadows.
 	 */
 	private void renderShadows() {
-		System.out.println("rendering shadows");
+//		System.out.println("rendering shadows");
 		this.shadowLight.begin(Vector3.Zero, this.renderer.getActiveCamera().direction);
 		this.shadowBatch.begin(this.shadowLight.getCamera());
 
@@ -279,6 +283,21 @@ public class GameScreen extends AbstractScreen {
 							.target(0)
 								.ease(TweenEquations.easeInSine))
 					.setCallback(lightCallback)
+					.start(tweenManager);
+		}
+	};
+	private final TweenCallback colorCallback = new TweenCallback(){
+		@Override
+		public void onEvent(int i, BaseTween<?> baseTween) {
+			Random generator = new Random();
+			float red = generator.nextFloat();
+			float green = generator.nextFloat();
+			float blue = generator.nextFloat();
+			Timeline.createSequence()
+					.push(Tween.to(GameScreen.this.fooLight, PointLightTweenAccessor.COLOR, 1)
+							.target(red,green,blue)
+							.ease(TweenEquations.easeNone))
+					.setCallback(colorCallback)
 					.start(tweenManager);
 		}
 	};
@@ -324,7 +343,7 @@ public class GameScreen extends AbstractScreen {
 						float red = generator.nextFloat();
 						float green = generator.nextFloat();
 						float blue = generator.nextFloat();
-						GameScreen.this.fooLight.set(new Color(red,green,blue,1f),6,1,6,1);
+						GameScreen.this.barLight.set(new Color(red,green,blue,1f),12,1,10,1);
 						break;
 				}
 				return false;
@@ -372,7 +391,6 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean tap(float x, float y, int count, int button) {
-
 				pickRay = GameScreen.this.getPickRay(x, y);
 				Vector3 intersection = getIntersection(pickRay);
 //				Intersector.intersectRayPlane(this.pickRay, this.xzPlane, this.intersection);
@@ -407,6 +425,11 @@ public class GameScreen extends AbstractScreen {
 			}
 			@Override
 			public boolean longPress(float x, float y) {
+				GameScreen.this.shadows = !GameScreen.this.shadows;
+				if (GameScreen.this.shadows)
+					GameScreen.this.activateShadows();
+				else
+					GameScreen.this.deactivateShadows();
 				return false;
 			}
 

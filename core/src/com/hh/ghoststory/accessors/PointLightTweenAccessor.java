@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 public class PointLightTweenAccessor implements TweenAccessor<PointLight> {
     public static final int POSITION_Z = 3;
     public static final int POSITION_XYZ = 7;
+    public static final int COLOR = 10;
     @Override
     public int getValues(PointLight pointLight, int tweenType, float[] returnValues) {
         switch (tweenType) {
@@ -21,6 +22,11 @@ public class PointLightTweenAccessor implements TweenAccessor<PointLight> {
             case POSITION_Z:
                 returnValues[0] = pointLight.position.z;
                 return 1;
+            case COLOR:
+                returnValues[0] = pointLight.color.r;
+                returnValues[1] = pointLight.color.g;
+                returnValues[2] = pointLight.color.b;
+                return 3;
             default:
                 assert false;
                 return -1;
@@ -38,6 +44,10 @@ public class PointLightTweenAccessor implements TweenAccessor<PointLight> {
             case POSITION_Z:
                 pointLight.position.z = newValues[0];
                 break;
+            case COLOR:
+                pointLight.color.r = newValues[0];
+                pointLight.color.g = newValues[1];
+                pointLight.color.b = newValues[2];
             default:
                 assert false;
         }
