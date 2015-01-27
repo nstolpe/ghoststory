@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.TestShader;
+import com.hh.ghoststory.tweenAccessors.ColorAccessor;
 import com.hh.ghoststory.tweenAccessors.GameModelTweenAccessor;
 import com.hh.ghoststory.tweenAccessors.PointLightTweenAccessor;
 import com.hh.ghoststory.actors.PlayerCharacter;
@@ -269,6 +270,7 @@ public class GameScreen extends AbstractScreen {
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
 		Tween.registerAccessor(PointLight.class, new PointLightTweenAccessor());
 		Tween.registerAccessor(Vector3.class, new Vector3Accessor());
+		Tween.registerAccessor(Color.class, new ColorAccessor());
 		Tween.setCombinedAttributesLimit(4);
 
 	}
@@ -295,7 +297,7 @@ public class GameScreen extends AbstractScreen {
 			float green = generator.nextFloat();
 			float blue = generator.nextFloat();
 			Timeline.createSequence()
-					.push(Tween.to(GameScreen.this.fooLight, PointLightTweenAccessor.COLOR, 1)
+					.push(Tween.to(GameScreen.this.fooLight.color, ColorAccessor.COLORS, 1)
 							.target(red,green,blue)
 							.ease(TweenEquations.easeNone))
 					.setCallback(colorCallback)
