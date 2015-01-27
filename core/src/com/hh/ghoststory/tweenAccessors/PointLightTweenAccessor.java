@@ -1,7 +1,6 @@
-package com.hh.ghoststory.accessors;
+package com.hh.ghoststory.tweenAccessors;
 
 import aurelienribon.tweenengine.TweenAccessor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 
 /**

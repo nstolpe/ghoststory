@@ -22,15 +22,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.TestShader;
-import com.hh.ghoststory.accessors.GameModelTweenAccessor;
-import com.hh.ghoststory.accessors.PointLightTweenAccessor;
+import com.hh.ghoststory.tweenAccessors.GameModelTweenAccessor;
+import com.hh.ghoststory.tweenAccessors.PointLightTweenAccessor;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
 import com.hh.ghoststory.renderers.ModelBatchRenderer;
+import com.hh.ghoststory.tweenAccessors.Vector3Accessor;
 
-import javax.swing.*;
 import java.util.Random;
 
 public class GameScreen extends AbstractScreen {
@@ -268,6 +268,7 @@ public class GameScreen extends AbstractScreen {
 	private void setupTweenEngine() {
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
 		Tween.registerAccessor(PointLight.class, new PointLightTweenAccessor());
+		Tween.registerAccessor(Vector3.class, new Vector3Accessor());
 		Tween.setCombinedAttributesLimit(4);
 
 	}
@@ -276,10 +277,10 @@ public class GameScreen extends AbstractScreen {
 		@Override
 		public void onEvent(int i, BaseTween<?> baseTween) {
 			Timeline.createSequence()
-						.push(Tween.to(GameScreen.this.barLight, PointLightTweenAccessor.POSITION_Z, 1)
+						.push(Tween.to(GameScreen.this.barLight.position, Vector3Accessor.POSITION_Z, 1)
 								.target(10)
 								.ease(TweenEquations.easeInSine))
-					.push(Tween.to(GameScreen.this.barLight, PointLightTweenAccessor.POSITION_Z, 1)
+					.push(Tween.to(GameScreen.this.barLight.position, Vector3Accessor.POSITION_Z, 1)
 							.target(0)
 								.ease(TweenEquations.easeInSine))
 					.setCallback(lightCallback)
@@ -362,7 +363,7 @@ public class GameScreen extends AbstractScreen {
 // Below rotates and translates at the same time.
 //						.push(Tween.to(this.ghost, GameModelTweenAccessor.ALL, duration).
 //								target(x, y, z, newAngle)
-//								.ease(TweenEquations.easeNone))ne))
+//								.ease(TweenEquations.easeNone))
 				.start(tweenManager);
 	}
 
@@ -418,11 +419,6 @@ public class GameScreen extends AbstractScreen {
 				return false;
 			}
 
-			private Vector3 getIntersection(Ray pickRay) {
-				Vector3 intersection = new Vector3();
-				Intersector.intersectRayPlane(pickRay, this.xzPlane, intersection);
-				return intersection;
-			}
 			@Override
 			public boolean longPress(float x, float y) {
 				GameScreen.this.shadows = !GameScreen.this.shadows;
@@ -497,6 +493,12 @@ System.out.println("here " + zoom);
 //				GameScreen.this.camera.fieldOfView += MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
 //				GameScreen.this.camera.
 				return false;
+			}
+
+			private Vector3 getIntersection(Ray pickRay) {
+				Vector3 intersection = new Vector3();
+				Intersector.intersectRayPlane(pickRay, this.xzPlane, intersection);
+				return intersection;
 			}
 		});
 	}
