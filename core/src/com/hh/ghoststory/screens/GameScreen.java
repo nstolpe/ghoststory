@@ -24,7 +24,6 @@ import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.TestShader;
 import com.hh.ghoststory.tweenAccessors.ColorAccessor;
 import com.hh.ghoststory.tweenAccessors.GameModelTweenAccessor;
-import com.hh.ghoststory.tweenAccessors.PointLightTweenAccessor;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
@@ -268,7 +267,6 @@ public class GameScreen extends AbstractScreen {
 	 */
 	private void setupTweenEngine() {
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
-		Tween.registerAccessor(PointLight.class, new PointLightTweenAccessor());
 		Tween.registerAccessor(Vector3.class, new Vector3Accessor());
 		Tween.registerAccessor(Color.class, new ColorAccessor());
 		Tween.setCombinedAttributesLimit(4);
