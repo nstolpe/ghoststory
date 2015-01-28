@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.TestShader;
 import com.hh.ghoststory.tweenAccessors.ColorAccessor;
+import com.hh.ghoststory.tweenAccessors.Matrix4Accessor;
 import com.hh.ghoststory.tweenAccessors.GameModelTweenAccessor;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
@@ -266,11 +267,11 @@ public class GameScreen extends AbstractScreen {
 	 * Registers the GameModelTweenAccessor and initializes the TweenManager.
 	 */
 	private void setupTweenEngine() {
+		Tween.setCombinedAttributesLimit(4); // ColorAccessor returns 4 values (rgba) in one instance
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
 		Tween.registerAccessor(Vector3.class, new Vector3Accessor());
 		Tween.registerAccessor(Color.class, new ColorAccessor());
-		Tween.setCombinedAttributesLimit(4);
-
+		Tween.registerAccessor(Float.class, new Matrix4Accessor());
 	}
 
 	private final TweenCallback lightCallback = new TweenCallback(){
@@ -353,6 +354,15 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void tweenFaceAndMoveTo(GameModel target, float rotation, float rotDur, float x, float y, float z, float transDur) {
+//		Timeline.createSequence()
+//				.push(Tween.to(target, Matrix4Accessor., rotDur)
+//						.target(rotation)
+//						.ease(TweenEquations.easeNone))
+//				.push(Tween.to(target, GameModelTweenAccessor.POSITION_XYZ, transDur).
+//						target(x, y, z)
+//						.ease(TweenEquations.easeNone))
+//				.start(tweenManager);
+
 		Timeline.createSequence()
 				.push(Tween.to(target, GameModelTweenAccessor.ROTATION, rotDur)
 						.target(rotation)
