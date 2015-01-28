@@ -22,15 +22,12 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.TestShader;
-import com.hh.ghoststory.tweenAccessors.ColorAccessor;
-import com.hh.ghoststory.tweenAccessors.Matrix4Accessor;
-import com.hh.ghoststory.tweenAccessors.GameModelTweenAccessor;
+import com.hh.ghoststory.tweenAccessors.*;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
 import com.hh.ghoststory.renderers.ModelBatchRenderer;
-import com.hh.ghoststory.tweenAccessors.Vector3Accessor;
 
 import java.util.Random;
 
@@ -186,7 +183,7 @@ public class GameScreen extends AbstractScreen {
 				setModelResource(gameModel);
 				gameModel.setTranslation();
 			}
-			Tween.call(lightCallback).start(tweenManager);
+//			Tween.call(lightCallback).start(tweenManager);
 			Tween.call(colorCallback).start(tweenManager);
 			controller = new AnimationController(ghost.model);
 			controller.setAnimation("float", -1);
@@ -271,7 +268,8 @@ public class GameScreen extends AbstractScreen {
 		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
 		Tween.registerAccessor(Vector3.class, new Vector3Accessor());
 		Tween.registerAccessor(Color.class, new ColorAccessor());
-		Tween.registerAccessor(Float.class, new Matrix4Accessor());
+//		Tween.registerAccessor(Matrix4.class, new Matrix4Accessor());
+		Tween.registerAccessor(Quaternion.class, new QuaternionAccessor());
 	}
 
 	private final TweenCallback lightCallback = new TweenCallback(){
@@ -353,21 +351,12 @@ public class GameScreen extends AbstractScreen {
 		};
 	}
 
-	private void tweenFaceAndMoveTo(GameModel target, float rotation, float rotDur, float x, float y, float z, float transDur) {
-//		Timeline.createSequence()
-//				.push(Tween.to(target, Matrix4Accessor., rotDur)
-//						.target(rotation)
-//						.ease(TweenEquations.easeNone))
-//				.push(Tween.to(target, GameModelTweenAccessor.POSITION_XYZ, transDur).
-//						target(x, y, z)
-//						.ease(TweenEquations.easeNone))
-//				.start(tweenManager);
-
+	private void tweenFaceAndMoveTo(GameModel gameModel, float rotation, float rotDur, float x, float y, float z, float transDur) {
 		Timeline.createSequence()
-				.push(Tween.to(target, GameModelTweenAccessor.ROTATION, rotDur)
+				.push(Tween.to(gameModel, GameModelTweenAccessor.ROTATION, rotDur)
 						.target(rotation)
 						.ease(TweenEquations.easeNone))
-				.push(Tween.to(target, GameModelTweenAccessor.POSITION_XYZ, transDur).
+				.push(Tween.to(gameModel, GameModelTweenAccessor.POSITION_XYZ, transDur).
 						target(x, y, z)
 						.ease(TweenEquations.easeNone))
 // Below rotates and translates at the same time.
@@ -377,6 +366,16 @@ public class GameScreen extends AbstractScreen {
 				.start(tweenManager);
 	}
 
+	private void tweenFaceAndMoveTo(Quaternion currentRotation, Quaternion targetRotation, Vector3 currentPosition, Vector3 targetPosition, float rDur, float tDur) {
+		Timeline.createSequence()
+				.push(Tween.to(currentRotation, QuaternionAccessor.ROTATION, rDur)
+						.target(targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w)
+						.ease(TweenEquations.easeNone))
+				.push(Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, tDur).
+						target(targetPosition.x, targetPosition.y, targetPosition.z)
+						.ease(TweenEquations.easeNone))
+				.start(tweenManager);
+	}
 	private Ray getPickRay(float x, float y) {
 		return renderer.getActiveCamera().getPickRay(x, y);
 	}
@@ -411,10 +410,13 @@ public class GameScreen extends AbstractScreen {
 				float translationDuration = intersection.dst(position) / GameScreen.this.ghost.speed;
 				float newAngle = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
 
+
 				Quaternion currentRotation = new Quaternion();
 				currentRotation = GameScreen.this.ghost.model.transform.getRotation(currentRotation);
-				float currentAngle = currentRotation.getYaw();
+//				float currentAngle = currentRotation.getYaw();
+				float currentAngle = currentRotation.getAxisAngle(new Vector3(0,1,0));
 
+				Quaternion nAngle = new Quaternion(new Vector3(0,1,0), newAngle);
 				// Get it to rotate in the direction of the shortest difference
 				if (Math.abs(newAngle - currentAngle) >  180)
 					newAngle += newAngle < currentAngle ? 360 : -360;
@@ -424,8 +426,10 @@ public class GameScreen extends AbstractScreen {
 //				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost, GameModelTweenAccessor.ROTATION);
-				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost, newAngle, rotationDuration, intersection.x, intersection.y, intersection.z, translationDuration);
-
+				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost.position, Vector3Accessor.POSITION_XYZ);
+				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost.rotation, QuaternionAccessor.ROTATION);
+//				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost, newAngle, rotationDuration, intersection.x, intersection.y, intersection.z, translationDuration);
+				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost.rotation, nAngle, GameScreen.this.ghost.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
 				return false;
 			}
 

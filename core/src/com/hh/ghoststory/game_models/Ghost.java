@@ -1,16 +1,10 @@
 package com.hh.ghoststory.game_models;
 
-import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Quaternion;
 import com.hh.ghoststory.game_models.core.DynamicModel;
-
-import java.util.HashMap;
 
 /*
  * The ghost. Also shouldn't stay here forever.
@@ -18,12 +12,17 @@ import java.util.HashMap;
 public class Ghost extends DynamicModel {
 	public float speed = 2;
 	public String texture = "models/ghost_texture_blue.png";
+	public Quaternion rotation = new Quaternion();
 
 	public Ghost() {
 		model_resource = "models/ghost.g3dj";
 	}
 
 	public void update() {
+		model.transform.setFromEulerAngles(rotation.getYaw(), rotation.getPitch(), rotation.getRoll()).setTranslation(position);
+//		model.transform.setToRotation(0, 1, 0, rotation.getAngle()).setTranslation(position);
+//		model.transform.rotate(rotation).setTranslation(position);
+//		model.transform.setToTranslation(position).rotate(rotation);
 	}
 
 //	@Override
