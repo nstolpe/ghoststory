@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.physics.bullet.linearmath.LinearMathJNI;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
@@ -183,7 +184,7 @@ public class GameScreen extends AbstractScreen {
 				setModelResource(gameModel);
 				gameModel.setTranslation();
 			}
-//			Tween.call(lightCallback).start(tweenManager);
+			Tween.call(lightCallback).start(tweenManager);
 			Tween.call(colorCallback).start(tweenManager);
 			controller = new AnimationController(ghost.model);
 			controller.setAnimation("float", -1);
@@ -371,9 +372,9 @@ public class GameScreen extends AbstractScreen {
 				.push(Tween.to(currentRotation, QuaternionAccessor.ROTATION, rDur)
 						.target(targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w)
 						.ease(TweenEquations.easeNone))
-				.push(Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, tDur).
-						target(targetPosition.x, targetPosition.y, targetPosition.z)
-						.ease(TweenEquations.easeNone))
+//				.push(Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, tDur).
+//						target(targetPosition.x, targetPosition.y, targetPosition.z)
+//						.ease(TweenEquations.easeNone))
 				.start(tweenManager);
 	}
 	private Ray getPickRay(float x, float y) {
@@ -410,17 +411,25 @@ public class GameScreen extends AbstractScreen {
 				float translationDuration = intersection.dst(position) / GameScreen.this.ghost.speed;
 				float newAngle = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
 
-
 				Quaternion currentRotation = new Quaternion();
 				currentRotation = GameScreen.this.ghost.model.transform.getRotation(currentRotation);
-//				float currentAngle = currentRotation.getYaw();
-				float currentAngle = currentRotation.getAxisAngle(new Vector3(0,1,0));
+				float currentAngle = currentRotation.getYaw();
+//				float currentAngle = currentRotation.getAxisAngle(new Vector3(0,1,0));
 
-				Quaternion nAngle = new Quaternion(new Vector3(0,1,0), newAngle);
+
 				// Get it to rotate in the direction of the shortest difference
+
+				System.out.println("Start:");
+				System.out.println(currentAngle);
+				System.out.println(newAngle);
+
 				if (Math.abs(newAngle - currentAngle) >  180)
 					newAngle += newAngle < currentAngle ? 360 : -360;
 
+				Quaternion nAngle = new Quaternion(new Vector3(0,1,0), newAngle);
+
+				System.out.println(currentAngle);
+				System.out.println(newAngle + "\n");
 				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
 
 //				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost);
