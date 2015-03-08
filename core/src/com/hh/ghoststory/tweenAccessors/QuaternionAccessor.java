@@ -29,8 +29,8 @@ public class QuaternionAccessor implements TweenAccessor<Quaternion> {
 		switch (tweenType) {
 			case ROTATION:
 //				System.out.println( "newValues: x-" + newValues[0] + " y-" + newValues[1] + " z-" + newValues[2] + " w-" + newValues[3]);
-//				quat.set(newValues[0], newValues[1], newValues[2], newValues[3]).nor();
-				quat.slerp(new Quaternion(newValues[0], newValues[1], newValues[2], newValues[3]), 1).nor();
+				quat.set(newValues[0], newValues[1], newValues[2], newValues[3]);
+//				quat.slerp(new Quaternion(newValues[0], newValues[1], newValues[2], newValues[3]), 1).nor();
 			default:
 				assert false;
 		}

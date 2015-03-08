@@ -423,14 +423,15 @@ public class GameScreen extends AbstractScreen {
 				System.out.println(currentAngle);
 				System.out.println(newAngle);
 
-				if (Math.abs(newAngle - currentAngle) >  180)
-					newAngle += newAngle < currentAngle ? 360 : -360;
+//				if (Math.abs(newAngle - currentAngle) >  180)
+//					newAngle += newAngle < currentAngle ? 360 : -360;
 
 				Quaternion nAngle = new Quaternion(new Vector3(0,1,0), newAngle);
 
 				System.out.println(currentAngle);
 				System.out.println(newAngle + "\n");
-				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
+//				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
+				float rotationDuration = Math.abs(currentRotation.dot(nAngle));
 
 //				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ);
