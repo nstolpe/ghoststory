@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.physics.bullet.linearmath.LinearMathJNI;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
@@ -412,6 +411,7 @@ public class GameScreen extends AbstractScreen {
 				float newAngle = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
 
 				Quaternion currentRotation = new Quaternion();
+				currentRotation = ghost.rotation;
 				currentRotation = GameScreen.this.ghost.model.transform.getRotation(currentRotation);
 				float currentAngle = currentRotation.getYaw();
 //				float currentAngle = currentRotation.getAxisAngle(new Vector3(0,1,0));
@@ -426,20 +426,22 @@ public class GameScreen extends AbstractScreen {
 //				if (Math.abs(newAngle - currentAngle) >  180)
 //					newAngle += newAngle < currentAngle ? 360 : -360;
 
-				Quaternion nAngle = new Quaternion(new Vector3(0,1,0), newAngle);
+				Quaternion newRotation = new Quaternion(new Vector3(0,1,0), newAngle);
+				System.out.println("current: x: " + currentRotation.x + " y: " + currentRotation.y + " z: " + currentRotation.z + " w: " + currentRotation.w);
+				System.out.println("new:     x: " + newRotation.x + " y: " + newRotation.y + " z: " + newRotation.z + " w: " + newRotation.w);
 
 				System.out.println(currentAngle);
 				System.out.println(newAngle + "\n");
 //				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
-				float rotationDuration = Math.abs(currentRotation.dot(nAngle));
-
+				float rotationDuration = Math.abs(currentRotation.dot(newRotation));
+//System.out.println(rotationDuration);
 //				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost, GameModelTweenAccessor.ROTATION);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost.position, Vector3Accessor.POSITION_XYZ);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost.rotation, QuaternionAccessor.ROTATION);
 //				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost, newAngle, rotationDuration, intersection.x, intersection.y, intersection.z, translationDuration);
-				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost.rotation, nAngle, GameScreen.this.ghost.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
+				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost.rotation, newRotation, GameScreen.this.ghost.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
 				return false;
 			}
 
