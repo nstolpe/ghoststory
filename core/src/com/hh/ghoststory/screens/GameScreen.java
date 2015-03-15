@@ -91,7 +91,7 @@ public class GameScreen extends AbstractScreen {
 			controller.update(Gdx.graphics.getDeltaTime());
 			renderer.render();
 		}
-//		logger.log();
+		logger.log();
 
 	}
 
@@ -371,9 +371,9 @@ public class GameScreen extends AbstractScreen {
 				.push(Tween.to(currentRotation, QuaternionAccessor.ROTATION, rDur)
 						.target(targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w)
 						.ease(TweenEquations.easeNone))
-//				.push(Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, tDur).
-//						target(targetPosition.x, targetPosition.y, targetPosition.z)
-//						.ease(TweenEquations.easeNone))
+				.push(Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, tDur).
+						target(targetPosition.x, targetPosition.y, targetPosition.z)
+						.ease(TweenEquations.easeNone))
 				.start(tweenManager);
 	}
 	private Ray getPickRay(float x, float y) {
@@ -403,45 +403,40 @@ public class GameScreen extends AbstractScreen {
 			public boolean tap(float x, float y, int count, int button) {
 				pickRay = GameScreen.this.getPickRay(x, y);
 				Vector3 intersection = getIntersection(pickRay);
-//				Intersector.intersectRayPlane(this.pickRay, this.xzPlane, this.intersection);
 
-				Vector3 position = new Vector3();
-				position = GameScreen.this.ghost.model.transform.getTranslation(position);
+				Vector3 position = GameScreen.this.ghost.position;
+				Quaternion rotation = GameScreen.this.ghost.rotation;
+
 				float translationDuration = intersection.dst(position) / GameScreen.this.ghost.speed;
+
 				float newAngle = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
 
-				Quaternion currentRotation = new Quaternion();
-				currentRotation = ghost.rotation;
-				currentRotation = GameScreen.this.ghost.model.transform.getRotation(currentRotation);
-				float currentAngle = currentRotation.getYaw();
-//				float currentAngle = currentRotation.getAxisAngle(new Vector3(0,1,0));
+				float currentAngle = rotation.getYaw();
+//				float currentAngle = rotation.getAxisAngle(new Vector3(0,1,0));
 
+				// keep the angle between -180 and 180. Why doesn't the quat rotation take care of this?
+				if (Math.abs(newAngle - currentAngle) >  180)
+					newAngle += newAngle < currentAngle ? 360 : -360;
 
-				// Get it to rotate in the direction of the shortest difference
+				Quaternion newRotation = new Quaternion(new Vector3(0,1,0), newAngle).nor();
 
-				System.out.println("Start:");
-				System.out.println(currentAngle);
-				System.out.println(newAngle);
+				// invert he newRotation if the dot product between it and rotation is < 0
+				if (rotation.dot(newRotation) < 0) {
+					newRotation.x = -newRotation.x;
+					newRotation.y = -newRotation.y;
+					newRotation.z = -newRotation.z;
+					newRotation.w = -newRotation.w;
+				}
 
-//				if (Math.abs(newAngle - currentAngle) >  180)
-//					newAngle += newAngle < currentAngle ? 360 : -360;
+				// Figure this out w/ quats, if possible.
+				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
+//				float rotationDuration = Math.abs(rotation.dot(newRotation));
 
-				Quaternion newRotation = new Quaternion(new Vector3(0,1,0), newAngle);
-				System.out.println("current: x: " + currentRotation.x + " y: " + currentRotation.y + " z: " + currentRotation.z + " w: " + currentRotation.w);
-				System.out.println("new:     x: " + newRotation.x + " y: " + newRotation.y + " z: " + newRotation.z + " w: " + newRotation.w);
-
-				System.out.println(currentAngle);
-				System.out.println(newAngle + "\n");
-//				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
-				float rotationDuration = Math.abs(currentRotation.dot(newRotation));
-//System.out.println(rotationDuration);
-//				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost);
-				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost, GameModelTweenAccessor.POSITION_XYZ);
-				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost, GameModelTweenAccessor.ROTATION);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost.position, Vector3Accessor.POSITION_XYZ);
 				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost.rotation, QuaternionAccessor.ROTATION);
-//				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost, newAngle, rotationDuration, intersection.x, intersection.y, intersection.z, translationDuration);
+
 				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost.rotation, newRotation, GameScreen.this.ghost.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
+
 				return false;
 			}
 
@@ -507,7 +502,7 @@ public class GameScreen extends AbstractScreen {
 //				} else if (initialDistance < distance && GameScreen.this.camera.fieldOfView > 10f) {
 //					GameScreen.this.camera.fieldOfView -= factor;
 //				}
-System.out.println("here " + zoom);
+				System.out.println("here " + zoom);
 				return false;
 			}
 

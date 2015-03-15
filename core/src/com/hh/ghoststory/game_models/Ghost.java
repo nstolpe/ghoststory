@@ -19,11 +19,7 @@ public class Ghost extends DynamicModel {
 	}
 
 	public void update() {
-//		model.transform.set(rotation);
-		model.transform.setFromEulerAngles(rotation.getYaw(), rotation.getPitch(), rotation.getRoll()).setTranslation(position);
-//		model.transform.setToRotation(0, 1, 0, rotation.getAngle()).setTranslation(position);
-//		model.transform.rotate(rotation).setTranslation(position);
-//		model.transform.setToTranslation(position).rotate(rotation);
+		model.transform.set(rotation).setTranslation(position);
 	}
 
 //	@Override
