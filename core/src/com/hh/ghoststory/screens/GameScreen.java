@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.CameraManager;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.InputManager;
+import com.hh.ghoststory.InputHandler;
 import com.hh.ghoststory.TestShader;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
@@ -34,7 +34,7 @@ import java.util.Random;
 public class GameScreen extends AbstractScreen {
 	public ModelBatchRenderer renderer;
 
-	private InputManager inputManager;
+	private InputHandler inputHandler;
 	public CameraManager cameraManager;
 	private TestShader testShader = new TestShader();
 	private PlayerCharacter character;
@@ -52,7 +52,7 @@ public class GameScreen extends AbstractScreen {
 	public GameScreen(GhostStory game) {
 		super(game);
 
-		this.inputManager = new InputManager(this);
+		this.inputHandler = new InputHandler(this);
 		this.cameraManager = new CameraManager(this);
 		this.cameraManager.setUpDefaultCamera(CameraManager.ORTHOGRAPHIC);
 //		this.cameraManager.setUpDefaultCamera(CameraManager.PERSPECTIVE);

@@ -23,11 +23,11 @@ import java.util.Random;
  * Then move camera code from ModelBatchRenderer over here. Since camera and input are more closely related than rendering.
  * Look for `screen.renderer` for things that need fixing.
  */
-public class InputManager {
+public class InputHandler {
 	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private GameScreen screen;
 
-	public InputManager(GameScreen screen) {
+	public InputHandler(GameScreen screen) {
 		this.screen = screen;
 		this.multiplexer.addProcessor(getDefaultInputAdapter());
 		this.multiplexer.addProcessor(getDefaultGestureDetector());
