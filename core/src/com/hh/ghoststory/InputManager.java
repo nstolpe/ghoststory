@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
-import com.hh.ghoststory.renderers.ModelBatchRenderer;
 import com.hh.ghoststory.screens.GameScreen;
 import com.hh.ghoststory.tween_accessors.QuaternionAccessor;
 import com.hh.ghoststory.tween_accessors.Vector3Accessor;
@@ -43,7 +42,7 @@ public class InputManager {
 		return new InputAdapter() {
 			@Override
 			public boolean scrolled(int amount) {
-				screen.renderer.zoomCamera(amount);
+				screen.cameraManager.zoomCamera(amount);
 				return false;
 			}
 			@Override
@@ -51,10 +50,10 @@ public class InputManager {
 				switch(keycode) {
 					// Switch the camera between orthographic and perspective when C is pressed.
 					case Input.Keys.C:
-						if (screen.renderer.getActiveCameraType() == ModelBatchRenderer.PERSPECTIVE) {
-							screen.renderer.setActiveCameraType(ModelBatchRenderer.ORTHOGRAPHIC);
-						} else if (screen.renderer.getActiveCameraType() == ModelBatchRenderer.ORTHOGRAPHIC) {
-							screen.renderer.setActiveCameraType(ModelBatchRenderer.PERSPECTIVE);
+						if (screen.cameraManager.getActiveCameraType() == CameraManager.PERSPECTIVE) {
+							screen.cameraManager.setActiveCameraType(CameraManager.ORTHOGRAPHIC);
+						} else if (screen.cameraManager.getActiveCameraType() == CameraManager.ORTHOGRAPHIC) {
+							screen.cameraManager.setActiveCameraType(CameraManager.PERSPECTIVE);
 						}
 						screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						break;
@@ -93,7 +92,7 @@ public class InputManager {
 
 			@Override
 			public boolean tap(float x, float y, int count, int button) {
-				pickRay = screen.renderer.getPickRay(x, y);
+				pickRay = screen.cameraManager.getPickRay(x, y);
 				Vector3 intersection = getIntersection(pickRay);
 
 				Vector3 position = screen.ghost.position;
@@ -144,14 +143,14 @@ public class InputManager {
 
 			@Override
 			public boolean pan(float x, float y, float deltaX, float deltaY) {
-				this.pickRay = screen.renderer.getActiveCamera().getPickRay(x, y);
+				this.pickRay = screen.cameraManager.getActiveCamera().getPickRay(x, y);
 				Intersector.intersectRayPlane(this.pickRay, xzPlane, curr);
 
 				if (!(this.last.x == -1 && this.last.y == -1)) {
-					this.pickRay = screen.renderer.getActiveCamera().getPickRay(this.last.x, this.last.y);
+					this.pickRay = screen.cameraManager.getActiveCamera().getPickRay(this.last.x, this.last.y);
 					Intersector.intersectRayPlane(this.pickRay, xzPlane, delta);
 					this.delta.sub(this.curr);
-					screen.renderer.getActiveCamera().position.add(this.delta.x, this.delta.y, this.delta.z);
+					screen.cameraManager.getActiveCamera().position.add(this.delta.x, this.delta.y, this.delta.z);
 				}
 
 				this.last.set(x, y);
@@ -174,12 +173,12 @@ public class InputManager {
 				// amount fingers moved apart divided by time. should be speed of movement
 				float speed = zoom / deltaTime;
 				Vector3 camZoom = new Vector3();
-				camZoom.set(screen.renderer.getActiveCamera().direction.cpy());
+				camZoom.set(screen.cameraManager.getActiveCamera().direction.cpy());
 				camZoom.nor().scl(speed * deltaTime / 100);
 
 
-				if( ((screen.renderer.getActiveCamera().position.y > 3f) && (zoom > 0)) || ((screen.renderer.getActiveCamera().position.y < 10f) && (zoom < 0)) ) {
-					screen.renderer.getActiveCamera().translate(camZoom.x, camZoom.y, camZoom.z);
+				if( ((screen.cameraManager.getActiveCamera().position.y > 3f) && (zoom > 0)) || ((screen.cameraManager.getActiveCamera().position.y < 10f) && (zoom < 0)) ) {
+					screen.cameraManager.getActiveCamera().translate(camZoom.x, camZoom.y, camZoom.z);
 				}
 //				float factor = distance / initialDistance;
 //

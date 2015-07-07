@@ -1,7 +1,7 @@
 package com.hh.ghoststory.screens;
 
 import aurelienribon.tweenengine.*;
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -11,20 +11,23 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.math.Quaternion;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.hh.ghoststory.CameraManager;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.InputManager;
 import com.hh.ghoststory.TestShader;
-import com.hh.ghoststory.tween_accessors.*;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
 import com.hh.ghoststory.renderers.ModelBatchRenderer;
+import com.hh.ghoststory.tween_accessors.ColorAccessor;
+import com.hh.ghoststory.tween_accessors.GameModelTweenAccessor;
+import com.hh.ghoststory.tween_accessors.QuaternionAccessor;
+import com.hh.ghoststory.tween_accessors.Vector3Accessor;
 
 import java.util.Random;
 
@@ -32,7 +35,7 @@ public class GameScreen extends AbstractScreen {
 	public ModelBatchRenderer renderer;
 
 	private InputManager inputManager;
-//	private InputMultiplexer multiplexer = new InputMultiplexer();
+	public CameraManager cameraManager;
 	private TestShader testShader = new TestShader();
 	private PlayerCharacter character;
 
@@ -48,14 +51,18 @@ public class GameScreen extends AbstractScreen {
 
 	public GameScreen(GhostStory game) {
 		super(game);
-		this.setUpRenderer();
+
+		this.inputManager = new InputManager(this);
+		this.cameraManager = new CameraManager(this);
+		this.cameraManager.setUpDefaultCamera(CameraManager.ORTHOGRAPHIC);
+//		this.cameraManager.setUpDefaultCamera(CameraManager.PERSPECTIVE);
+
+		this.renderer = new ModelBatchRenderer(this);
 		this.setupLights();
-		this.renderer.setUpDefaultCamera(ModelBatchRenderer.ORTHOGRAPHIC);
 
 		this.setupGameModels();
 		this.loadGameModelAssets();
 
-		this.setupInputProcessors();
 		this.setClear(0.5f, 0.5f, 0.5f, 1f);
 		this.setupTweenEngine();
 
@@ -77,7 +84,7 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		this.tweenManager.update(Gdx.graphics.getDeltaTime());
-		this.renderer.getActiveCamera().update();
+		this.cameraManager.getActiveCamera().update();
 
 		if (doneLoading()) {
 			this.updateModels();
@@ -102,12 +109,7 @@ public class GameScreen extends AbstractScreen {
 	 */
 	@Override
 	public void resize(int width, int height) {
-		this.renderer.setCameraViewport(width, height);
-	}
-
-	private void setUpRenderer() {
-		this.renderer = new ModelBatchRenderer();
-		this.renderer.setUpDefaultCamera(ModelBatchRenderer.PERSPECTIVE);
+		this.cameraManager.setCameraViewport(width, height);
 	}
 
 	/*
@@ -270,12 +272,6 @@ public class GameScreen extends AbstractScreen {
 					.start(tweenManager);
 		}
 	};
-	/*
-     * Adds processors to the multiplexer and sets it as Gdx's input processor.
-     */
-	private void setupInputProcessors() {
-		this.inputManager = new InputManager(this);
-	}
 
 	private void tweenFaceAndMoveTo(GameModel gameModel, float rotation, float rotDur, float x, float y, float z, float transDur) {
 		Timeline.createSequence()
