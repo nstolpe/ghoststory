@@ -120,18 +120,21 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	/*
-	 * Instantiate the game models.
+	 * Instantiate the game models. There's some weird building of blocks with panes in there
+	 * could maybe be refactored to use somewhere.
 	 */
 	private void setupGameModels() {
 		this.ghost = new Ghost();
 		this.gameModels.add(this.ghost);
 
+//		10x10 grid on the ground.
 		for (int z = 0; z < 10; z++) {
 			for (int x = 0; x < 20; x++) {
 				this.gameModels.add(new Tile(x, 0, z));
 //				this.gameModels.add(new Tile());
 			}
 		}
+//		builds the far side of the wall thingy, that can't be seen.
 		for (int z = 0; z < 3; z++) {
 			for (int y = 0; y < 2; y++) {
 				Tile tile = new Tile(9.5f,y + 0.5f,z + 5);
@@ -140,15 +143,18 @@ public class GameScreen extends AbstractScreen {
 				this.gameModels.add(tile);
 			}
 		}
+//		top of the little wall thing.
 		for (int z = 0; z < 3; z++) {
 			this.gameModels.add(new Tile(10, 2, z + 5));
 		}
+//		front of the wall thing.
 		for (int y = 0; y < 2; y++) {
 			Tile tile = new Tile(10,y + 0.5f,7.5f);
 			tile.rotation = 90;
 			tile.verticalAxis = new Vector3(1,0,0);
 			this.gameModels.add(tile);
 		}
+//		side of the wall thing, the big part.
 		for (int z = 0; z < 3; z++) {
 			for (int y = 0; y < 2; y++) {
 				Tile tile = new Tile(10.5f,y + 0.5f,z + 5);
@@ -268,9 +274,6 @@ public class GameScreen extends AbstractScreen {
      * Adds processors to the multiplexer and sets it as Gdx's input processor.
      */
 	private void setupInputProcessors() {
-//		this.multiplexer.addProcessor(this.getDefaultInputAdapter());
-//		this.multiplexer.addProcessor(this.getDefaultGestureDetector());
-//		Gdx.input.setInputProcessor(multiplexer);
 		this.inputManager = new InputManager(this);
 	}
 
@@ -309,11 +312,5 @@ public class GameScreen extends AbstractScreen {
 						target(targetPosition.x, targetPosition.y, targetPosition.z)
 						.ease(TweenEquations.easeNone))
 				.start(tweenManager);
-	}
-	/*
-	 * Made public right now because it's used by input manager. Should change.
-	 */
-	public Ray getPickRay(float x, float y) {
-		return renderer.getActiveCamera().getPickRay(x, y);
 	}
 }

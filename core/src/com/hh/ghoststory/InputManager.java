@@ -19,6 +19,10 @@ import java.util.Random;
  * Created by nils on 7/6/15.
  * This class has a lot of functionality moved here from GameScreen. It's also tightly bound to GameScreen and a few objects
  * attached to it. This should all be fixed.
+ *
+ * Maybe make this into a specific type of input manager...for a screen based on a camera maybe? OrthographicGameScreenHandler
+ * Then move camera code from ModelBatchRenderer over here. Since camera and input are more closely related than rendering.
+ * Look for `screen.renderer` for things that need fixing.
  */
 public class InputManager {
 	private InputMultiplexer multiplexer = new InputMultiplexer();
@@ -89,7 +93,7 @@ public class InputManager {
 
 			@Override
 			public boolean tap(float x, float y, int count, int button) {
-				pickRay = screen.getPickRay(x, y);
+				pickRay = screen.renderer.getPickRay(x, y);
 				Vector3 intersection = getIntersection(pickRay);
 
 				Vector3 position = screen.ghost.position;
