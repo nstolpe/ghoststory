@@ -7,20 +7,19 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
-import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.InputManager;
 import com.hh.ghoststory.TestShader;
-import com.hh.ghoststory.tweenAccessors.*;
+import com.hh.ghoststory.tween_accessors.*;
 import com.hh.ghoststory.actors.PlayerCharacter;
 import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.Tile;
@@ -30,8 +29,10 @@ import com.hh.ghoststory.renderers.ModelBatchRenderer;
 import java.util.Random;
 
 public class GameScreen extends AbstractScreen {
-	private ModelBatchRenderer renderer;
-	private InputMultiplexer multiplexer = new InputMultiplexer();
+	public ModelBatchRenderer renderer;
+
+	private InputManager inputManager;
+//	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private TestShader testShader = new TestShader();
 	private PlayerCharacter character;
 
@@ -41,18 +42,18 @@ public class GameScreen extends AbstractScreen {
 	public TweenManager tweenManager = new TweenManager();
 	private AnimationController controller;
 	private PointLight fooLight;
-	private PointLight barLight;
+	public PointLight barLight;
 	private Color barColor = new Color(0.6f,0.2f,1f,1f);
 	FPSLogger logger = new FPSLogger();
 
 	public GameScreen(GhostStory game) {
 		super(game);
-		setUpRenderer();
-		setupLights();
-		renderer.setUpDefaultCamera(ModelBatchRenderer.ORTHOGRAPHIC);
+		this.setUpRenderer();
+		this.setupLights();
+		this.renderer.setUpDefaultCamera(ModelBatchRenderer.ORTHOGRAPHIC);
 
-		setupGameModels();
-		loadGameModelAssets();
+		this.setupGameModels();
+		this.loadGameModelAssets();
 
 		this.setupInputProcessors();
 		this.setClear(0.5f, 0.5f, 0.5f, 1f);
@@ -62,54 +63,60 @@ public class GameScreen extends AbstractScreen {
 //		this.ghost.setTexture(this.character.texture != null ? "models/" + this.character.texture : "models/ghost_texture_blue.png");
 	}
 
-	private void setUpRenderer() {
-		renderer = new ModelBatchRenderer();
-		renderer.setUpDefaultCamera(ModelBatchRenderer.PERSPECTIVE);
-	}
 	@Override
 	public void show() {
 		super.show();
 	}
 
+	/*
+	 * Updates the TweenManager, sets the glClear, updates the camera, then renders.
+	 */
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		this.tweenManager.update(Gdx.graphics.getDeltaTime());
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		renderer.getActiveCamera().update();
+
+		this.tweenManager.update(Gdx.graphics.getDeltaTime());
+		this.renderer.getActiveCamera().update();
+
 		if (doneLoading()) {
 			this.updateModels();
-			renderer.setRenderables(collectModelInstances());
-			controller.update(Gdx.graphics.getDeltaTime());
-			renderer.render();
+			this.renderer.setRenderables(collectModelInstances());
+			this.controller.update(Gdx.graphics.getDeltaTime());
+			this.renderer.render();
 		}
-		logger.log();
+		this.logger.log();
 
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		this.testShader.dispose();
+	}
+
+	/*
+	 * Resizes the camera viewport to reflect the new size. Could maybe set a default zoom or layout for different sized screens.
+	 *
+	 * @see com.hh.ghoststory.screens.AbstractScreen#resize(int, int)
+	 */
+	@Override
+	public void resize(int width, int height) {
+		this.renderer.setCameraViewport(width, height);
+	}
+
+	private void setUpRenderer() {
+		this.renderer = new ModelBatchRenderer();
+		this.renderer.setUpDefaultCamera(ModelBatchRenderer.PERSPECTIVE);
 	}
 
 	/*
 	 * Builds an Array<ModelInstance> from the model fields attached to gameModels
 	 */
 	private Array<ModelInstance> collectModelInstances() {
-		Array<ModelInstance> modelInstances = new Array<ModelInstance>(gameModels.size);
-		for (GameModel gameModel : gameModels) modelInstances.add(gameModel.model);
+		Array<ModelInstance> modelInstances = new Array<ModelInstance>(this.gameModels.size);
+		for (GameModel gameModel : this.gameModels) modelInstances.add(gameModel.model);
 		return modelInstances;
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		testShader.dispose();
-	}
-
-	/*
-	 * Resizes the camera viewport to reflect the new size. Could maybe set a default zoom or layout for different sized screens.
-	 * 
-	 * @see com.hh.ghoststory.screens.AbstractScreen#resize(int, int)
-	 */
-	@Override
-	public void resize(int width, int height) {
-		renderer.setCameraViewport(width, height);
 	}
 
 	/*
@@ -158,7 +165,7 @@ public class GameScreen extends AbstractScreen {
 	private void loadGameModelAssets() {
 		for (GameModel gameModel : this.gameModels)
 //			this.assets.load(gameModel.model_resource, Model.class);
-			renderer.assetManager.load(gameModel.model_resource, Model.class);
+			this.renderer.assetManager.load(gameModel.model_resource, Model.class);
 		this.loading = true;
 	}
 
@@ -175,8 +182,8 @@ public class GameScreen extends AbstractScreen {
 			}
 			Tween.call(lightCallback).start(tweenManager);
 			Tween.call(colorCallback).start(tweenManager);
-			controller = new AnimationController(ghost.model);
-			controller.setAnimation("float", -1);
+			this.controller = new AnimationController(ghost.model);
+			this.controller.setAnimation("float", -1);
 			this.loading = false;
 			return false;
 		}
@@ -202,7 +209,7 @@ public class GameScreen extends AbstractScreen {
 				fooLight,
 				barLight
 		};
-		renderer.setUpLights(lights);
+		this.renderer.setUpLights(lights);
 	}
 
 	private void loadCharacter(String file_path) {
@@ -261,43 +268,10 @@ public class GameScreen extends AbstractScreen {
      * Adds processors to the multiplexer and sets it as Gdx's input processor.
      */
 	private void setupInputProcessors() {
-		this.multiplexer.addProcessor(this.getDefaultInputAdapter());
-		this.multiplexer.addProcessor(this.getDefaultGestureDetector());
-		Gdx.input.setInputProcessor(multiplexer);
-	}
-
-	/*
-	 * Returns the InputAdapter for this screen. Only handles scroll now.
-	 */
-	private InputAdapter getDefaultInputAdapter() {
-		return new InputAdapter() {
-			@Override
-			public boolean scrolled(int amount) {
-				GameScreen.this.renderer.zoomCamera(amount);
-				return false;
-			}
-			@Override
-			public boolean keyUp (int keycode) {
-				switch(keycode) {
-					case Input.Keys.C:
-						if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.PERSPECTIVE) {
-							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.ORTHOGRAPHIC);
-						} else if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.ORTHOGRAPHIC) {
-							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.PERSPECTIVE);
-						}
-						GameScreen.this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-						break;
-					case Input.Keys.L:
-						Random generator = new Random();
-						float red = generator.nextFloat();
-						float green = generator.nextFloat();
-						float blue = generator.nextFloat();
-						GameScreen.this.barLight.set(new Color(red,green,blue,1f),12,1,10,1);
-						break;
-				}
-				return false;
-			}
-		};
+//		this.multiplexer.addProcessor(this.getDefaultInputAdapter());
+//		this.multiplexer.addProcessor(this.getDefaultGestureDetector());
+//		Gdx.input.setInputProcessor(multiplexer);
+		this.inputManager = new InputManager(this);
 	}
 
 	private void tweenFaceAndMoveTo(GameModel gameModel, float rotation, float rotDur, float x, float y, float z, float transDur) {
@@ -315,156 +289,31 @@ public class GameScreen extends AbstractScreen {
 				.start(tweenManager);
 	}
 
-	private void tweenFaceAndMoveTo(Quaternion currentRotation, Quaternion targetRotation, Vector3 currentPosition, Vector3 targetPosition, float rDur, float tDur) {
+	/*
+	 * Creates a tween timeline that will rotate to face a point and then move to it.
+	 * Made public right now because it's used by input manager. Should change.
+	 *
+	 * @param Quaternion currentRotation  The current facing rotation of the object being tweened.
+	 * @param Quaternion targetRotation   The rotation the object should tween towards.
+	 * @param Vector3    currentPosition  The current translation of the object being tweened.
+	 * @param Vector3    targetPosition   The translation the object should tween toward.
+	 * @param float      rd               The duration that the object's rotation should take to complete.
+	 * @param float      td               The duration that the object's translation should take to complete.
+	 */
+	public void tweenFaceAndMoveTo(Quaternion currentRotation, Quaternion targetRotation, Vector3 currentPosition, Vector3 targetPosition, float rd, float td) {
 		Timeline.createSequence()
-				.push(Tween.to(currentRotation, QuaternionAccessor.ROTATION, rDur)
+				.push(Tween.to(currentRotation, QuaternionAccessor.ROTATION, rd)
 						.target(targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w)
 						.ease(TweenEquations.easeNone))
-				.push(Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, tDur).
+				.push(Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, td).
 						target(targetPosition.x, targetPosition.y, targetPosition.z)
 						.ease(TweenEquations.easeNone))
 				.start(tweenManager);
 	}
-	private Ray getPickRay(float x, float y) {
-		return renderer.getActiveCamera().getPickRay(x, y);
-	}
 	/*
-	 * Returns the GestureDetector for this screen.
+	 * Made public right now because it's used by input manager. Should change.
 	 */
-	private GestureDetector getDefaultGestureDetector() {
-		return new GestureDetector(new GestureDetector.GestureListener() {
-			private final Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
-//			private Vector3 intersection = new Vector3();
-			private Vector3 curr = new Vector3();
-			private Vector2 last = new Vector2(-1, -1);
-			private Vector3 delta = new Vector3();
-			private Vector3 axisVec = new Vector3();
-			private float initialScale = 1.0f;
-			private Ray pickRay;
-
-			@Override
-			public boolean touchDown(float x, float y, int pointer, int button) {
-//				this.initialScale = GameScreen.this.camera.zoom;
-				return false;
-			}
-
-			@Override
-			public boolean tap(float x, float y, int count, int button) {
-				pickRay = GameScreen.this.getPickRay(x, y);
-				Vector3 intersection = getIntersection(pickRay);
-
-				Vector3 position = GameScreen.this.ghost.position;
-				Quaternion rotation = GameScreen.this.ghost.rotation;
-
-				float translationDuration = intersection.dst(position) / GameScreen.this.ghost.speed;
-
-				float newAngle = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
-
-				float currentAngle = rotation.getYaw();
-//				float currentAngle = rotation.getAxisAngle(new Vector3(0,1,0));
-
-				// keep the angle between -180 and 180. Why doesn't the quat rotation take care of this?
-				if (Math.abs(newAngle - currentAngle) >  180)
-					newAngle += newAngle < currentAngle ? 360 : -360;
-
-				Quaternion newRotation = new Quaternion(new Vector3(0,1,0), newAngle).nor();
-
-				// invert he newRotation if the dot product between it and rotation is < 0
-				if (rotation.dot(newRotation) < 0) {
-					newRotation.x = -newRotation.x;
-					newRotation.y = -newRotation.y;
-					newRotation.z = -newRotation.z;
-					newRotation.w = -newRotation.w;
-				}
-
-				// Figure this out w/ quats, if possible.
-				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
-//				float rotationDuration = Math.abs(rotation.dot(newRotation));
-
-				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost.position, Vector3Accessor.POSITION_XYZ);
-				GameScreen.this.tweenManager.killTarget(GameScreen.this.ghost.rotation, QuaternionAccessor.ROTATION);
-
-				GameScreen.this.tweenFaceAndMoveTo(GameScreen.this.ghost.rotation, newRotation, GameScreen.this.ghost.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
-
-				return false;
-			}
-
-			@Override
-			public boolean longPress(float x, float y) {
-				return false;
-			}
-
-			@Override
-			public boolean fling(float velocityX, float velocityY, int button) {
-				return false;
-			}
-
-			@Override
-			public boolean pan(float x, float y, float deltaX, float deltaY) {
-				this.pickRay = GameScreen.this.renderer.getActiveCamera().getPickRay(x, y);
-				Intersector.intersectRayPlane(this.pickRay, xzPlane, curr);
-
-				if (!(this.last.x == -1 && this.last.y == -1)) {
-					this.pickRay = GameScreen.this.renderer.getActiveCamera().getPickRay(this.last.x, this.last.y);
-					Intersector.intersectRayPlane(this.pickRay, xzPlane, delta);
-					this.delta.sub(this.curr);
-					GameScreen.this.renderer.getActiveCamera().position.add(this.delta.x, this.delta.y, this.delta.z);
-				}
-
-				this.last.set(x, y);
-
-				return false;
-			}
-
-			@Override
-			public boolean panStop(float x, float y, int pointer, int button) {
-				this.last.set(-1, -1);
-				return false;
-			}
-
-			@Override
-			public boolean zoom(float initialDistance, float distance) {
-				float zoom = distance - initialDistance;
-//				float zoom = initialDistance / distance;
-				float deltaTime = Gdx.graphics.getDeltaTime();
-//				float speed = 0.1f * deltaTime;
-				// amount fingers moved apart divided by time. should be speed of movement
-				float speed = zoom / deltaTime;
-				Vector3 camZoom = new Vector3();
-				camZoom.set(GameScreen.this.renderer.getActiveCamera().direction.cpy());
-				camZoom.nor().scl(speed * deltaTime / 100);
-
-
-				if( ((GameScreen.this.renderer.getActiveCamera().position.y > 3f) && (zoom > 0)) || ((GameScreen.this.renderer.getActiveCamera().position.y < 10f) && (zoom < 0)) ) {
-					GameScreen.this.renderer.getActiveCamera().translate(camZoom.x, camZoom.y, camZoom.z);
-				}
-//				float factor = distance / initialDistance;
-//
-//
-//				if (initialDistance > distance && GameScreen.this.camera.fieldOfView < 120f) {
-//					GameScreen.this.camera.fieldOfView += factor;
-//				} else if (initialDistance < distance && GameScreen.this.camera.fieldOfView > 10f) {
-//					GameScreen.this.camera.fieldOfView -= factor;
-//				}
-				System.out.println("here " + zoom);
-				return false;
-			}
-
-			@Override
-			public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-//				System.out.println("pinch");
-//				float ratio = initialPointer1.dst(initialPointer2) / pointer1.dst(pointer2);
-////				GameScreen.this.camera.zoom = MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
-//				GameScreen.this.camera.fieldOfView += MathUtils.clamp(this.initialScale * ratio, 0.1f, 1.0f);
-//				GameScreen.this.camera.
-				return false;
-			}
-
-			private Vector3 getIntersection(Ray pickRay) {
-				Vector3 intersection = new Vector3();
-				Intersector.intersectRayPlane(pickRay, this.xzPlane, intersection);
-				return intersection;
-			}
-		});
+	public Ray getPickRay(float x, float y) {
+		return renderer.getActiveCamera().getPickRay(x, y);
 	}
 }

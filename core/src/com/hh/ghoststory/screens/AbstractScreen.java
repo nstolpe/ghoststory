@@ -24,8 +24,8 @@ public abstract class AbstractScreen implements Screen {
 	public static int SCREEN_CHARACTER = 2;
 	public static int SCREEN_ISOMETRIC = 3;
 	protected final GhostStory game;
-	protected float screenW;
-	protected float screenH;
+	protected float screenWidth;
+	protected float screenHeight;
 	protected float clearRed = 0f;
 	protected float clearBlue = 0f;
 	protected float clearGreen = 0f;
@@ -38,8 +38,8 @@ public abstract class AbstractScreen implements Screen {
 
 	public AbstractScreen(GhostStory game) {
 		this.game = game;
-		this.screenW = Gdx.graphics.getWidth();
-		this.screenH = Gdx.graphics.getHeight();
+		this.screenWidth = Gdx.graphics.getWidth();
+		this.screenHeight = Gdx.graphics.getHeight();
 	}
 
 	@Override
