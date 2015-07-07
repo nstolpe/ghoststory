@@ -38,7 +38,7 @@ public class GameScreen extends AbstractScreen {
 	private ModelBatch shadowBatch = new ModelBatch(new DepthShaderProvider());
 	private PlayerCharacter character;
 	private DirectionalShadowLight shadowLight;
-	private boolean shadows = false;
+	private boolean shadows = true;
 
 	public Ghost ghost;
 	public boolean loading;
@@ -56,7 +56,7 @@ public class GameScreen extends AbstractScreen {
 		setupLights();
 		setupShadows();
 		if (shadows) activateShadows();
-		renderer.setUpDefaultCamera(ModelBatchRenderer.ORTHO);
+		renderer.setUpDefaultCamera(ModelBatchRenderer.ORTHOGRAPHIC);
 
 		setupGameModels();
 		loadGameModelAssets();
@@ -71,7 +71,7 @@ public class GameScreen extends AbstractScreen {
 
 	private void setUpRenderer() {
 		renderer = new ModelBatchRenderer();
-		renderer.setUpDefaultCamera(ModelBatchRenderer.PERSP);
+		renderer.setUpDefaultCamera(ModelBatchRenderer.PERSPECTIVE);
 	}
 	@Override
 	public void show() {
@@ -331,10 +331,10 @@ public class GameScreen extends AbstractScreen {
 							GameScreen.this.deactivateShadows();
 						break;
 					case Input.Keys.C:
-						if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.PERSP) {
-							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.ORTHO);
-						} else if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.ORTHO) {
-							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.PERSP);
+						if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.PERSPECTIVE) {
+							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.ORTHOGRAPHIC);
+						} else if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.ORTHOGRAPHIC) {
+							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.PERSPECTIVE);
 						}
 						GameScreen.this.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						break;

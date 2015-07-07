@@ -19,6 +19,10 @@ import com.hh.ghoststory.GhostStory;
  * The base class for all game screens.
  */
 public abstract class AbstractScreen implements Screen {
+	public static int SCREEN_MAIN = 0;
+	public static int SCREEN_TURN = 1;
+	public static int SCREEN_CHARACTER = 2;
+	public static int SCREEN_ISOMETRIC = 3;
 	protected final GhostStory game;
 	protected float screenW;
 	protected float screenH;
@@ -26,12 +30,6 @@ public abstract class AbstractScreen implements Screen {
 	protected float clearBlue = 0f;
 	protected float clearGreen = 0f;
 	protected float clearAlpha = 1f;
-
-	public static int SCREEN_MAIN = 0;
-	public static int SCREEN_TURN = 1;
-	public static int SCREEN_CHARACTER = 2;
-	public static int SCREEN_ISOMETRIC = 3;
-
 	protected BitmapFont font = new BitmapFont(
 			Gdx.files.internal("fonts/crimson.fnt"),
 			Gdx.files.internal("fonts/crimson.png"),

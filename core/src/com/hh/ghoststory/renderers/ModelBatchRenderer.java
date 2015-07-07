@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.Array;
  * Created by nils on 1/24/15.
  */
 public class ModelBatchRenderer extends AbstractRenderer {
-    public static final int PERSP = 0;
-    public static final int ORTHO= 1;
+    public static final int PERSPECTIVE = 0;
+    public static final int ORTHOGRAPHIC = 1;
 
     public Environment environment = new Environment();
     private ModelBatch modelBatch;
@@ -48,13 +48,13 @@ public class ModelBatchRenderer extends AbstractRenderer {
 
     public void setUpDefaultCamera(int type) {
         switch (type) {
-            case PERSP:
+            case PERSPECTIVE:
                 setUpPerspectiveCamera();
-                setActiveCameraType(PERSP);
+                setActiveCameraType(PERSPECTIVE);
                 break;
-            case ORTHO:
+            case ORTHOGRAPHIC:
                 setUpOrthographicCamera();
-                setActiveCameraType(ORTHO);
+                setActiveCameraType(ORTHOGRAPHIC);
                 break;
             default:
                 break;
@@ -176,10 +176,10 @@ public class ModelBatchRenderer extends AbstractRenderer {
     public Camera getActiveCamera() {
         Camera camera = null;
         switch (activeCameraType) {
-            case PERSP:
+            case PERSPECTIVE:
                 camera = getPerspectiveCamera();
                 break;
-            case ORTHO:
+            case ORTHOGRAPHIC:
                 camera = getOrthograhcicCamera();
                 break;
             default:
