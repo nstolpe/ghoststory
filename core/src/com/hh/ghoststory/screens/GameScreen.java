@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalShadowLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
@@ -35,10 +33,7 @@ public class GameScreen extends AbstractScreen {
 	private ModelBatchRenderer renderer;
 	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private TestShader testShader = new TestShader();
-	private ModelBatch shadowBatch = new ModelBatch(new DepthShaderProvider());
 	private PlayerCharacter character;
-	private DirectionalShadowLight shadowLight;
-	private boolean shadows = true;
 
 	public Ghost ghost;
 	public boolean loading;
@@ -54,8 +49,6 @@ public class GameScreen extends AbstractScreen {
 		super(game);
 		setUpRenderer();
 		setupLights();
-		setupShadows();
-		if (shadows) activateShadows();
 		renderer.setUpDefaultCamera(ModelBatchRenderer.ORTHOGRAPHIC);
 
 		setupGameModels();
@@ -86,7 +79,6 @@ public class GameScreen extends AbstractScreen {
 		renderer.getActiveCamera().update();
 		if (doneLoading()) {
 			this.updateModels();
-			if (this.shadows) this.renderShadows();
 			renderer.setRenderables(collectModelInstances());
 			controller.update(Gdx.graphics.getDeltaTime());
 			renderer.render();
@@ -107,8 +99,6 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void dispose() {
 		super.dispose();
-		shadowBatch.dispose();
-		shadowLight.dispose();
 		testShader.dispose();
 	}
 
@@ -209,31 +199,12 @@ public class GameScreen extends AbstractScreen {
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
 				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
 				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
-				new DirectionalLight().set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f),
 				fooLight,
 				barLight
 		};
 		renderer.setUpLights(lights);
 	}
 
-	private void setupShadows() {
-//			environment.add((shadowLight = new DirectionalShadowLight(Gdx.graphics.getWidth() * 4, Gdx.graphics.getHeight() * 4, 10f, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()), 1f, 100f)).set(0.8f, 0.8f, 0.8f, -1f, -.8f, -.2f));
-			shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f);
-			shadowLight.set(0.4f, 0.4f, 0.4f, 1f, -.8f, -.2f);
-//			this.environment.add((this.shadowLight = new DirectionalShadowLight(4096, 4096, 30f, 30f, 1f, 100f)).set(0.4f, 0.4f, 0.4f, -1f, -.8f, -.2f));
-//		this.renderer.environment.add(shadowLight);
-	}
-
-	private void activateShadows() {
-		System.out.println("activated");
-		this.renderer.environment.shadowMap = this.shadowLight;
-	}
-	private void deactivateShadows() {
-		this.renderer.environment.shadowMap = null;
-	}
-	/*
-	 * Loads the character from the character json.
-	 */
 	private void loadCharacter(String file_path) {
 		FileHandle file = Gdx.files.local(file_path);
 		Json json = new Json();
@@ -243,21 +214,6 @@ public class GameScreen extends AbstractScreen {
 	private void updateModels() {
 		for (GameModel game_model : this.gameModels)
 			game_model.update();
-	}
-
-	/*
-	 * Renders the GameModels shadows.
-	 */
-	private void renderShadows() {
-//		System.out.println("rendering shadows");
-		this.shadowLight.begin(Vector3.Zero, this.renderer.getActiveCamera().direction);
-		this.shadowBatch.begin(this.shadowLight.getCamera());
-
-		for (GameModel game_model : this.gameModels)
-			this.shadowBatch.render(game_model.model, this.renderer.environment);
-
-		this.shadowBatch.end();
-		this.shadowLight.end();
 	}
 
 	/*
@@ -323,13 +279,6 @@ public class GameScreen extends AbstractScreen {
 			@Override
 			public boolean keyUp (int keycode) {
 				switch(keycode) {
-					case Input.Keys.S:
-						GameScreen.this.shadows = !GameScreen.this.shadows;
-						if (GameScreen.this.shadows)
-							GameScreen.this.activateShadows();
-						else
-							GameScreen.this.deactivateShadows();
-						break;
 					case Input.Keys.C:
 						if (GameScreen.this.renderer.getActiveCameraType() == ModelBatchRenderer.PERSPECTIVE) {
 							GameScreen.this.renderer.setActiveCameraType(ModelBatchRenderer.ORTHOGRAPHIC);
@@ -442,11 +391,6 @@ public class GameScreen extends AbstractScreen {
 
 			@Override
 			public boolean longPress(float x, float y) {
-				GameScreen.this.shadows = !GameScreen.this.shadows;
-				if (GameScreen.this.shadows)
-					GameScreen.this.activateShadows();
-				else
-					GameScreen.this.deactivateShadows();
 				return false;
 			}
 
