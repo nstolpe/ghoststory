@@ -10,7 +10,7 @@ import com.hh.ghoststory.screens.GameScreen;
 /**
  * Created by nils on 7/7/15.
  */
-public class CameraManager {
+public class CameraHandler {
 	public static final int PERSPECTIVE = 0;
 	public static final int ORTHOGRAPHIC = 1;
 	private GameScreen screen;
@@ -19,7 +19,7 @@ public class CameraManager {
 	private OrthographicCamera oCamera;
 	private int activeCameraType;
 
-	public CameraManager(GameScreen screen) {
+	public CameraHandler(GameScreen screen) {
 
 	}
 

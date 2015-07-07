@@ -42,7 +42,7 @@ public class InputHandler {
 		return new InputAdapter() {
 			@Override
 			public boolean scrolled(int amount) {
-				screen.cameraManager.zoomCamera(amount);
+				screen.cameraHandler.zoomCamera(amount);
 				return false;
 			}
 			@Override
@@ -50,10 +50,10 @@ public class InputHandler {
 				switch(keycode) {
 					// Switch the camera between orthographic and perspective when C is pressed.
 					case Input.Keys.C:
-						if (screen.cameraManager.getActiveCameraType() == CameraManager.PERSPECTIVE) {
-							screen.cameraManager.setActiveCameraType(CameraManager.ORTHOGRAPHIC);
-						} else if (screen.cameraManager.getActiveCameraType() == CameraManager.ORTHOGRAPHIC) {
-							screen.cameraManager.setActiveCameraType(CameraManager.PERSPECTIVE);
+						if (screen.cameraHandler.getActiveCameraType() == CameraHandler.PERSPECTIVE) {
+							screen.cameraHandler.setActiveCameraType(CameraHandler.ORTHOGRAPHIC);
+						} else if (screen.cameraHandler.getActiveCameraType() == CameraHandler.ORTHOGRAPHIC) {
+							screen.cameraHandler.setActiveCameraType(CameraHandler.PERSPECTIVE);
 						}
 						screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						break;
@@ -92,7 +92,7 @@ public class InputHandler {
 
 			@Override
 			public boolean tap(float x, float y, int count, int button) {
-				pickRay = screen.cameraManager.getPickRay(x, y);
+				pickRay = screen.cameraHandler.getPickRay(x, y);
 				Vector3 intersection = getIntersection(pickRay);
 
 				Vector3 position = screen.ghost.position;
@@ -143,14 +143,14 @@ public class InputHandler {
 
 			@Override
 			public boolean pan(float x, float y, float deltaX, float deltaY) {
-				this.pickRay = screen.cameraManager.getActiveCamera().getPickRay(x, y);
+				this.pickRay = screen.cameraHandler.getActiveCamera().getPickRay(x, y);
 				Intersector.intersectRayPlane(this.pickRay, xzPlane, curr);
 
 				if (!(this.last.x == -1 && this.last.y == -1)) {
-					this.pickRay = screen.cameraManager.getActiveCamera().getPickRay(this.last.x, this.last.y);
+					this.pickRay = screen.cameraHandler.getActiveCamera().getPickRay(this.last.x, this.last.y);
 					Intersector.intersectRayPlane(this.pickRay, xzPlane, delta);
 					this.delta.sub(this.curr);
-					screen.cameraManager.getActiveCamera().position.add(this.delta.x, this.delta.y, this.delta.z);
+					screen.cameraHandler.getActiveCamera().position.add(this.delta.x, this.delta.y, this.delta.z);
 				}
 
 				this.last.set(x, y);
@@ -173,12 +173,12 @@ public class InputHandler {
 				// amount fingers moved apart divided by time. should be speed of movement
 				float speed = zoom / deltaTime;
 				Vector3 camZoom = new Vector3();
-				camZoom.set(screen.cameraManager.getActiveCamera().direction.cpy());
+				camZoom.set(screen.cameraHandler.getActiveCamera().direction.cpy());
 				camZoom.nor().scl(speed * deltaTime / 100);
 
 
-				if( ((screen.cameraManager.getActiveCamera().position.y > 3f) && (zoom > 0)) || ((screen.cameraManager.getActiveCamera().position.y < 10f) && (zoom < 0)) ) {
-					screen.cameraManager.getActiveCamera().translate(camZoom.x, camZoom.y, camZoom.z);
+				if( ((screen.cameraHandler.getActiveCamera().position.y > 3f) && (zoom > 0)) || ((screen.cameraHandler.getActiveCamera().position.y < 10f) && (zoom < 0)) ) {
+					screen.cameraHandler.getActiveCamera().translate(camZoom.x, camZoom.y, camZoom.z);
 				}
 //				float factor = distance / initialDistance;
 //

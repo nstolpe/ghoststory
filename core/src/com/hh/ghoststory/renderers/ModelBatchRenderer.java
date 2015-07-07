@@ -39,7 +39,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 	 */
 	@Override
 	public void render() {
-		modelBatch.begin(screen.cameraManager.getActiveCamera());
+		modelBatch.begin(screen.cameraHandler.getActiveCamera());
 		for (ModelInstance model : modelInstances)
 			modelBatch.render(model, environment);
 		modelBatch.end();

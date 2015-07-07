@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.hh.ghoststory.CameraManager;
+import com.hh.ghoststory.CameraHandler;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.InputHandler;
 import com.hh.ghoststory.TestShader;
@@ -35,7 +35,7 @@ public class GameScreen extends AbstractScreen {
 	public ModelBatchRenderer renderer;
 
 	private InputHandler inputHandler;
-	public CameraManager cameraManager;
+	public CameraHandler cameraHandler;
 	private TestShader testShader = new TestShader();
 	private PlayerCharacter character;
 
@@ -53,9 +53,9 @@ public class GameScreen extends AbstractScreen {
 		super(game);
 
 		this.inputHandler = new InputHandler(this);
-		this.cameraManager = new CameraManager(this);
-		this.cameraManager.setUpDefaultCamera(CameraManager.ORTHOGRAPHIC);
-//		this.cameraManager.setUpDefaultCamera(CameraManager.PERSPECTIVE);
+		this.cameraHandler = new CameraHandler(this);
+		this.cameraHandler.setUpDefaultCamera(CameraHandler.ORTHOGRAPHIC);
+//		this.cameraHandler.setUpDefaultCamera(CameraHandler.PERSPECTIVE);
 
 		this.renderer = new ModelBatchRenderer(this);
 		this.setupLights();
@@ -84,7 +84,7 @@ public class GameScreen extends AbstractScreen {
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		this.tweenManager.update(Gdx.graphics.getDeltaTime());
-		this.cameraManager.getActiveCamera().update();
+		this.cameraHandler.getActiveCamera().update();
 
 		if (doneLoading()) {
 			this.updateModels();
@@ -109,7 +109,7 @@ public class GameScreen extends AbstractScreen {
 	 */
 	@Override
 	public void resize(int width, int height) {
-		this.cameraManager.setCameraViewport(width, height);
+		this.cameraHandler.setCameraViewport(width, height);
 	}
 
 	/*
