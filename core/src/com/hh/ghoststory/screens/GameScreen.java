@@ -31,7 +31,7 @@ public class GameScreen extends AbstractScreen {
 	private InputHandler inputHandler;
 	public CameraHandler cameraHandler;
 	private TestShader testShader = new TestShader();
-	public HashMap<Class, TweenAccessor> tweenAccessors = new HashMap<Class, TweenAccessor>();
+
 //	private PlayerCharacter character;
 
 	public Character character;
@@ -54,8 +54,7 @@ public class GameScreen extends AbstractScreen {
 		cameraHandler.setUpDefaultCamera(CameraHandler.ORTHOGRAPHIC);
 //		this.cameraHandler.setUpDefaultCamera(CameraHandler.PERSPECTIVE);
 
-		setTweenAccessors();
-		tweenHandler = new TweenHandler(this, 4, tweenAccessors);
+		tweenHandler = new TweenHandler(this, 4, getTweenAccessors());
 
 		renderer = new ModelBatchRenderer(this);
 		setupLights();
@@ -111,10 +110,12 @@ public class GameScreen extends AbstractScreen {
 		this.cameraHandler.setCameraViewport(width, height);
 	}
 
-	public void setTweenAccessors() {
+	public HashMap<Class, TweenAccessor> getTweenAccessors() {
+		HashMap<Class, TweenAccessor> tweenAccessors = new HashMap<Class, TweenAccessor>();
 		tweenAccessors.put(Vector3.class, new Vector3Accessor());
 		tweenAccessors.put(Quaternion.class, new QuaternionAccessor());
 		tweenAccessors.put(Color.class, new ColorAccessor());
+		return tweenAccessors;
 	}
 
 	/*
@@ -177,8 +178,8 @@ public class GameScreen extends AbstractScreen {
 	 */
 	private void loadGameModelAssets() {
 		for (GameModel gameModel : this.gameModels)
-//			this.assets.load(gameModel.model_resource, Model.class);
 			this.renderer.assetManager.load(gameModel.model_resource, Model.class);
+
 		this.loading = true;
 	}
 
@@ -208,8 +209,6 @@ public class GameScreen extends AbstractScreen {
 	 */
 	private void setModelResource(GameModel gameModel) {
 		gameModel.model = new ModelInstance(renderer.assetManager.get(gameModel.model_resource, Model.class));
-//		gameModel.model = new ModelInstance(assets.get(gameModel.model_resource, Model.class));
-
 	}
 
 	private void setupLights() {
@@ -225,14 +224,14 @@ public class GameScreen extends AbstractScreen {
 		this.renderer.setUpLights(lights);
 	}
 
+	private void updateModels() {
+		for (GameModel game_model : this.gameModels)
+			game_model.update();
+	}
+
 	private void loadCharacter(String file_path) {
 //		FileHandle file = Gdx.files.local(file_path);
 //		Json json = new Json();
 //		this.character = json.fromJson(PlayerCharacter.class, file.readString());
-	}
-
-	private void updateModels() {
-		for (GameModel game_model : this.gameModels)
-			game_model.update();
 	}
 }
