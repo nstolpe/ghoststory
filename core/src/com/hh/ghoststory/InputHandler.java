@@ -126,7 +126,7 @@ public class InputHandler {
 				screen.tweenManager.killTarget(screen.character.position, Vector3Accessor.POSITION_XYZ);
 				screen.tweenManager.killTarget(screen.character.rotation, QuaternionAccessor.ROTATION);
 
-				screen.tweenFaceAndMoveTo(screen.character.rotation, newRotation, screen.character.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
+				screen.tweenHandler.tweenFaceAndMoveTo(screen.character.rotation, newRotation, screen.character.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
 
 				return false;
 			}

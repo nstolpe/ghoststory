@@ -1,8 +1,8 @@
 package com.hh.ghoststory.screens;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.TweenAccessor;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,22 +14,16 @@ import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
-import com.hh.ghoststory.CameraHandler;
-import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.InputHandler;
-import com.hh.ghoststory.TestShader;
-import com.hh.ghoststory.actors.PlayerCharacter;
+import com.hh.ghoststory.*;
 import com.hh.ghoststory.game_models.Character;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
 import com.hh.ghoststory.renderers.ModelBatchRenderer;
 import com.hh.ghoststory.tween_accessors.ColorAccessor;
-import com.hh.ghoststory.tween_accessors.GameModelTweenAccessor;
 import com.hh.ghoststory.tween_accessors.QuaternionAccessor;
 import com.hh.ghoststory.tween_accessors.Vector3Accessor;
 
-import java.util.Random;
+import java.util.HashMap;
 
 public class GameScreen extends AbstractScreen {
 	public ModelBatchRenderer renderer;
@@ -37,14 +31,16 @@ public class GameScreen extends AbstractScreen {
 	private InputHandler inputHandler;
 	public CameraHandler cameraHandler;
 	private TestShader testShader = new TestShader();
+	public HashMap<Class, TweenAccessor> tweenAccessors = new HashMap<Class, TweenAccessor>();
 //	private PlayerCharacter character;
 
 	public Character character;
 	public boolean loading;
 	public Array<GameModel> gameModels = new Array<GameModel>();
 	public TweenManager tweenManager = new TweenManager();
+	public TweenHandler tweenHandler;
 	private AnimationController controller;
-	private PointLight fooLight;
+	public PointLight fooLight;
 	public PointLight barLight;
 	private Color barColor = new Color(0.6f,0.2f,1f,1f);
 	FPSLogger logger = new FPSLogger();
@@ -52,19 +48,22 @@ public class GameScreen extends AbstractScreen {
 	public GameScreen(GhostStory game) {
 		super(game);
 
-		this.inputHandler = new InputHandler(this);
-		this.cameraHandler = new CameraHandler(this);
-		this.cameraHandler.setUpDefaultCamera(CameraHandler.ORTHOGRAPHIC);
+		inputHandler = new InputHandler(this);
+
+		cameraHandler = new CameraHandler(this);
+		cameraHandler.setUpDefaultCamera(CameraHandler.ORTHOGRAPHIC);
 //		this.cameraHandler.setUpDefaultCamera(CameraHandler.PERSPECTIVE);
 
-		this.renderer = new ModelBatchRenderer(this);
-		this.setupLights();
+		setTweenAccessors();
+		tweenHandler = new TweenHandler(this, 4, tweenAccessors);
 
-		this.setupGameModels();
-		this.loadGameModelAssets();
+		renderer = new ModelBatchRenderer(this);
+		setupLights();
 
-		this.setClear(0.5f, 0.5f, 0.5f, 1f);
-		this.setupTweenEngine();
+		setupGameModels();
+		loadGameModelAssets();
+
+		setClear(0.5f, 0.5f, 0.5f, 1f);
 
 //		this.loadCharacter(".ghost_story/character.json");
 //		this.ghost.setTexture(this.character.texture != null ? "models/" + this.character.texture : "models/ghost_texture_blue.png");
@@ -83,8 +82,8 @@ public class GameScreen extends AbstractScreen {
 		super.render(delta);
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		this.tweenManager.update(Gdx.graphics.getDeltaTime());
-		this.cameraHandler.getActiveCamera().update();
+		tweenHandler.update();
+		cameraHandler.getActiveCamera().update();
 
 		if (doneLoading()) {
 			this.updateModels();
@@ -110,6 +109,12 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void resize(int width, int height) {
 		this.cameraHandler.setCameraViewport(width, height);
+	}
+
+	public void setTweenAccessors() {
+		tweenAccessors.put(Vector3.class, new Vector3Accessor());
+		tweenAccessors.put(Quaternion.class, new QuaternionAccessor());
+		tweenAccessors.put(Color.class, new ColorAccessor());
 	}
 
 	/*
@@ -188,8 +193,8 @@ public class GameScreen extends AbstractScreen {
 				setModelResource(gameModel);
 				gameModel.setTranslation();
 			}
-			Tween.call(lightCallback).start(tweenManager);
-			Tween.call(colorCallback).start(tweenManager);
+			tweenHandler.startCallbacks();
+
 			this.controller = new AnimationController(character.model);
 			this.controller.setAnimation("float", -1);
 			this.loading = false;
@@ -229,84 +234,5 @@ public class GameScreen extends AbstractScreen {
 	private void updateModels() {
 		for (GameModel game_model : this.gameModels)
 			game_model.update();
-	}
-
-	/*
-	 * Registers the GameModelTweenAccessor and initializes the TweenManager.
-	 */
-	private void setupTweenEngine() {
-		Tween.setCombinedAttributesLimit(4); // ColorAccessor returns 4 values (rgba) in one instance
-		Tween.registerAccessor(Character.class, new GameModelTweenAccessor());
-		Tween.registerAccessor(Vector3.class, new Vector3Accessor());
-		Tween.registerAccessor(Color.class, new ColorAccessor());
-//		Tween.registerAccessor(Matrix4.class, new Matrix4Accessor());
-		Tween.registerAccessor(Quaternion.class, new QuaternionAccessor());
-	}
-
-	private final TweenCallback lightCallback = new TweenCallback(){
-		@Override
-		public void onEvent(int i, BaseTween<?> baseTween) {
-			Timeline.createSequence()
-						.push(Tween.to(GameScreen.this.barLight.position, Vector3Accessor.POSITION_Z, 1)
-								.target(10)
-								.ease(TweenEquations.easeInSine))
-					.push(Tween.to(GameScreen.this.barLight.position, Vector3Accessor.POSITION_Z, 1)
-							.target(0)
-								.ease(TweenEquations.easeInSine))
-					.setCallback(lightCallback)
-					.start(tweenManager);
-		}
-	};
-	private final TweenCallback colorCallback = new TweenCallback(){
-		@Override
-		public void onEvent(int i, BaseTween<?> baseTween) {
-			Random generator = new Random();
-			float red = generator.nextFloat();
-			float green = generator.nextFloat();
-			float blue = generator.nextFloat();
-			Timeline.createSequence()
-					.push(Tween.to(GameScreen.this.fooLight.color, ColorAccessor.COLORS, 1)
-							.target(red,green,blue)
-							.ease(TweenEquations.easeNone))
-					.setCallback(colorCallback)
-					.start(tweenManager);
-		}
-	};
-
-	private void tweenFaceAndMoveTo(GameModel gameModel, float rotation, float rotDur, float x, float y, float z, float transDur) {
-		Timeline.createSequence()
-				.push(Tween.to(gameModel, GameModelTweenAccessor.ROTATION, rotDur)
-						.target(rotation)
-						.ease(TweenEquations.easeNone))
-				.push(Tween.to(gameModel, GameModelTweenAccessor.POSITION_XYZ, transDur).
-						target(x, y, z)
-						.ease(TweenEquations.easeNone))
-// Below rotates and translates at the same time.
-//						.push(Tween.to(this.ghost, GameModelTweenAccessor.ALL, duration).
-//								target(x, y, z, newAngle)
-//								.ease(TweenEquations.easeNone))
-				.start(tweenManager);
-	}
-
-	/*
-	 * Creates a tween timeline that will rotate to face a point and then move to it.
-	 * Made public right now because it's used by input manager. Should change.
-	 *
-	 * @param Quaternion currentRotation  The current facing rotation of the object being tweened.
-	 * @param Quaternion targetRotation   The rotation the object should tween towards.
-	 * @param Vector3    currentPosition  The current translation of the object being tweened.
-	 * @param Vector3    targetPosition   The translation the object should tween toward.
-	 * @param float      rd               The duration that the object's rotation should take to complete.
-	 * @param float      td               The duration that the object's translation should take to complete.
-	 */
-	public void tweenFaceAndMoveTo(Quaternion currentRotation, Quaternion targetRotation, Vector3 currentPosition, Vector3 targetPosition, float rd, float td) {
-		Timeline.createSequence()
-				.push(Tween.to(currentRotation, QuaternionAccessor.ROTATION, rd)
-						.target(targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w)
-						.ease(TweenEquations.easeNone))
-				.push(Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, td).
-						target(targetPosition.x, targetPosition.y, targetPosition.z)
-						.ease(TweenEquations.easeNone))
-				.start(tweenManager);
 	}
 }
