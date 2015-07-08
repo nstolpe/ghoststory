@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.Color;
 
 /**
  * Created by nils on 1/27/15.
+ *
+ * Tweens a color or alpha channel, all color channels, or all color channels and alpha.
+ * The tween engine defaults to tweening 3 values at most, so to use this accessor you need to call
+ * Tween.setCombinedAttributesLimit(4) when setting things up.
  */
 public class ColorAccessor implements TweenAccessor<Color> {
 	public static final int R      = 0;
