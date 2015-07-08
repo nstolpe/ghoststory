@@ -1,40 +1,25 @@
 package com.hh.ghoststory.screens;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -42,11 +27,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
-import com.badlogic.gdx.utils.SnapshotArray;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.actors.PlayerCharacter;
-import com.hh.ghoststory.game_models.Ghost;
 import com.hh.ghoststory.game_models.core.GameModel;
+import com.hh.ghoststory.game_models.Character;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class CreateScreen extends AbstractScreen {
 	protected Table table;
@@ -57,7 +46,7 @@ public class CreateScreen extends AbstractScreen {
 	private MainScreenButton ghostSwitch;
 	private ModelBatch modelBatch = new ModelBatch();
 	public AssetManager assets = new AssetManager();
-	private Ghost ghost;
+	private Character character = new Character();
 	public boolean loading;
 	public Array<GameModel> game_models = new Array<GameModel>();
 	private PerspectiveCamera mcamera = new PerspectiveCamera(75, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -126,14 +115,12 @@ public class CreateScreen extends AbstractScreen {
 		table.add(tableDebugSwitch.button).colspan(9).height(80);
 		setInputListeners();
 
-		ghost = new Ghost();
-
-		game_models.add(ghost);
+		game_models.add(character);
 //		ghost.setPosition(new Vector3(0, 0, 0));
-		ghost.verticalAxis = new Vector3(0, 1, 0);
+		character.verticalAxis = new Vector3(0, 1, 0);
 //		ghost.setRotation(0f);
 
-		assets.load(ghost.model_resource, Model.class);
+		assets.load(character.model_resource, Model.class);
 		loading = true;
 //      mcamera.setToOrtho(false, 10, 10 * ((float) Gdx.graphics.getHeight() / (float) Gdx.graphics.getWidth()));
 //		mcamera.position.set(5, 5, 5);
@@ -197,8 +184,8 @@ public class CreateScreen extends AbstractScreen {
 		Gdx.gl.glViewport(Gdx.graphics.getWidth() / 4, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 		if (doneLoading()) {
 			modelBatch.begin(mcamera);
-			ghost.update();
-			modelBatch.render(ghost.model, environment);
+			character.update();
+			modelBatch.render(character.model, environment);
 			modelBatch.end();
 		}
 	}
@@ -215,20 +202,20 @@ public class CreateScreen extends AbstractScreen {
 			public void clicked(InputEvent event, float x, float y) {
 				Json json = new Json();
 				json.setOutputType(OutputType.json);
-				PlayerCharacter character = new PlayerCharacter();
-				character.attributes.stamina = Integer.parseInt(((TextField) table.findActor("STA")).getText());
-				character.attributes.strength = Integer.parseInt(((TextField) table.findActor("STR")).getText());
-				character.attributes.reason = Integer.parseInt(((TextField) table.findActor("REA")).getText());
-				character.attributes.intelligence = Integer.parseInt(((TextField) table.findActor("INT")).getText());
-				character.attributes.will = Integer.parseInt(((TextField) table.findActor("WIL")).getText());
-				character.attributes.agility = Integer.parseInt(((TextField) table.findActor("AGI")).getText());
-				character.name = ((TextField) table.findActor("Name")).getText();
-				character.texture = (String) ghost.model.userData;
+				PlayerCharacter playerCharacter = new PlayerCharacter();
+				playerCharacter.attributes.stamina = Integer.parseInt(((TextField) table.findActor("STA")).getText());
+				playerCharacter.attributes.strength = Integer.parseInt(((TextField) table.findActor("STR")).getText());
+				playerCharacter.attributes.reason = Integer.parseInt(((TextField) table.findActor("REA")).getText());
+				playerCharacter.attributes.intelligence = Integer.parseInt(((TextField) table.findActor("INT")).getText());
+				playerCharacter.attributes.will = Integer.parseInt(((TextField) table.findActor("WIL")).getText());
+				playerCharacter.attributes.agility = Integer.parseInt(((TextField) table.findActor("AGI")).getText());
+				playerCharacter.name = ((TextField) table.findActor("Name")).getText();
+				playerCharacter.texture = (String) character.model.userData;
 
-				System.out.print(json.prettyPrint(character));
-				FileHandle file = Gdx.files.local(".ghost_story/character.json");
+				System.out.print(json.prettyPrint(playerCharacter));
+				FileHandle file = Gdx.files.local(".ghost_story/playerCharacter.json");
 				System.out.println(file);
-				file.writeString(json.toJson(character), false);
+				file.writeString(json.toJson(playerCharacter), false);
 				game.setScreen(game.getGameScreen());
 				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				dispose();
@@ -264,8 +251,8 @@ public class CreateScreen extends AbstractScreen {
 				// http://www.badlogicgames.com/wordpress/?p=1403
 				Texture tex = new Texture(Gdx.files.internal("models/" + res), true);
 				tex.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.Nearest);
-				ghost.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex));
-				ghost.model.userData = res;
+				character.model.getMaterial("Texture_001").set(new TextureAttribute(TextureAttribute.Diffuse, tex));
+				character.model.userData = res;
 			}
 		};
 		listeners.put("debug_table_switch", debugTableListener);
@@ -282,11 +269,11 @@ public class CreateScreen extends AbstractScreen {
 			return false;
 		} else if (loading && assets.update()) {
 
-			ghost.setTexture("models/ghost_texture_green.png");
+			character.setTexture("models/ghost_texture_green.png");
 			for (GameModel game_model : game_models) {
 //				game_model.setModelResource(assets);
 			}
-			ghost.model.userData = "ghost_texture_green.png";
+			character.model.userData = "ghost_texture_green.png";
 			loading = false;
 			return false;
 		}

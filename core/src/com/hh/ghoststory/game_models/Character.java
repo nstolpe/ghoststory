@@ -9,12 +9,12 @@ import com.hh.ghoststory.game_models.core.DynamicModel;
 /*
  * The ghost. Also shouldn't stay here forever.
  */
-public class Ghost extends DynamicModel {
+public class Character extends DynamicModel {
 	public float speed = 2;
 	public String texture = "models/ghost_texture_blue.png";
 	public Quaternion rotation = new Quaternion();
 
-	public Ghost() {
+	public Character() {
 		model_resource = "models/ghost.g3dj";
 	}
 

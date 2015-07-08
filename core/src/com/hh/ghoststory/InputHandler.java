@@ -57,7 +57,7 @@ public class InputHandler {
 						}
 						screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						break;
-					// Set the
+					// Set the color of the light to something random.
 					case Input.Keys.L:
 						Random generator = new Random();
 						float red = generator.nextFloat();
@@ -95,10 +95,10 @@ public class InputHandler {
 				pickRay = screen.cameraHandler.getPickRay(x, y);
 				Vector3 intersection = getIntersection(pickRay);
 
-				Vector3 position = screen.ghost.position;
-				Quaternion rotation = screen.ghost.rotation;
+				Vector3 position = screen.character.position;
+				Quaternion rotation = screen.character.rotation;
 
-				float translationDuration = intersection.dst(position) / screen.ghost.speed;
+				float translationDuration = intersection.dst(position) / screen.character.speed;
 
 				float newAngle = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
 
@@ -123,10 +123,10 @@ public class InputHandler {
 				float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
 //				float rotationDuration = Math.abs(rotation.dot(newRotation));
 
-				screen.tweenManager.killTarget(screen.ghost.position, Vector3Accessor.POSITION_XYZ);
-				screen.tweenManager.killTarget(screen.ghost.rotation, QuaternionAccessor.ROTATION);
+				screen.tweenManager.killTarget(screen.character.position, Vector3Accessor.POSITION_XYZ);
+				screen.tweenManager.killTarget(screen.character.rotation, QuaternionAccessor.ROTATION);
 
-				screen.tweenFaceAndMoveTo(screen.ghost.rotation, newRotation, screen.ghost.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
+				screen.tweenFaceAndMoveTo(screen.character.rotation, newRotation, screen.character.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
 
 				return false;
 			}

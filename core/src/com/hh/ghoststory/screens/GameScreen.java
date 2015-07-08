@@ -20,7 +20,7 @@ import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.InputHandler;
 import com.hh.ghoststory.TestShader;
 import com.hh.ghoststory.actors.PlayerCharacter;
-import com.hh.ghoststory.game_models.Ghost;
+import com.hh.ghoststory.game_models.Character;
 import com.hh.ghoststory.game_models.Tile;
 import com.hh.ghoststory.game_models.core.GameModel;
 import com.hh.ghoststory.renderers.ModelBatchRenderer;
@@ -37,9 +37,9 @@ public class GameScreen extends AbstractScreen {
 	private InputHandler inputHandler;
 	public CameraHandler cameraHandler;
 	private TestShader testShader = new TestShader();
-	private PlayerCharacter character;
+//	private PlayerCharacter character;
 
-	public Ghost ghost;
+	public Character character;
 	public boolean loading;
 	public Array<GameModel> gameModels = new Array<GameModel>();
 	public TweenManager tweenManager = new TweenManager();
@@ -66,7 +66,7 @@ public class GameScreen extends AbstractScreen {
 		this.setClear(0.5f, 0.5f, 0.5f, 1f);
 		this.setupTweenEngine();
 
-		this.loadCharacter(".ghost_story/character.json");
+//		this.loadCharacter(".ghost_story/character.json");
 //		this.ghost.setTexture(this.character.texture != null ? "models/" + this.character.texture : "models/ghost_texture_blue.png");
 	}
 
@@ -126,8 +126,8 @@ public class GameScreen extends AbstractScreen {
 	 * could maybe be refactored to use somewhere.
 	 */
 	private void setupGameModels() {
-		this.ghost = new Ghost();
-		this.gameModels.add(this.ghost);
+		this.character = new Character();
+		this.gameModels.add(this.character);
 
 //		10x10 grid on the ground.
 		for (int z = 0; z < 10; z++) {
@@ -190,7 +190,7 @@ public class GameScreen extends AbstractScreen {
 			}
 			Tween.call(lightCallback).start(tweenManager);
 			Tween.call(colorCallback).start(tweenManager);
-			this.controller = new AnimationController(ghost.model);
+			this.controller = new AnimationController(character.model);
 			this.controller.setAnimation("float", -1);
 			this.loading = false;
 			return false;
@@ -221,9 +221,9 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void loadCharacter(String file_path) {
-		FileHandle file = Gdx.files.local(file_path);
-		Json json = new Json();
-		this.character = json.fromJson(PlayerCharacter.class, file.readString());
+//		FileHandle file = Gdx.files.local(file_path);
+//		Json json = new Json();
+//		this.character = json.fromJson(PlayerCharacter.class, file.readString());
 	}
 
 	private void updateModels() {
@@ -236,7 +236,7 @@ public class GameScreen extends AbstractScreen {
 	 */
 	private void setupTweenEngine() {
 		Tween.setCombinedAttributesLimit(4); // ColorAccessor returns 4 values (rgba) in one instance
-		Tween.registerAccessor(Ghost.class, new GameModelTweenAccessor());
+		Tween.registerAccessor(Character.class, new GameModelTweenAccessor());
 		Tween.registerAccessor(Vector3.class, new Vector3Accessor());
 		Tween.registerAccessor(Color.class, new ColorAccessor());
 //		Tween.registerAccessor(Matrix4.class, new Matrix4Accessor());
