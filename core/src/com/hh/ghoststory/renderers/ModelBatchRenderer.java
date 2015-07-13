@@ -11,9 +11,12 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import com.hh.ghoststory.Light;
 import com.hh.ghoststory.ShadowMapShader;
 import com.hh.ghoststory.SimpleTextureShader;
 import com.hh.ghoststory.screens.GameScreen;
+
+import java.util.ArrayList;
 
 /**
  * Created by nils on 1/24/15.
@@ -54,7 +57,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 			}
 		});
 	}
-	private ShaderProgram setupShader(String type) {
+	public ShaderProgram setupShader(String type) {
 		ShaderProgram.pedantic = false;
 		final ShaderProgram shaderProgram = new ShaderProgram(
 				Gdx.files.internal("shaders/" + type + ".vertex.glsl"),
@@ -89,9 +92,9 @@ public class ModelBatchRenderer extends AbstractRenderer {
 ////			modelBatch.render(model, environment);
 //			modelBatch.render(model);
 //		modelBatch.end();
-//		for (final Light light : lights) {
-//			light.render(modelInstance);
-//		}
+		for (final Light light : screen.lights) {
+			for (ModelInstance model : modelInstances) light.render(model);
+		}
 		renderShadows();
 		renderScene();
 	}
@@ -138,7 +141,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 		modelBatch.dispose();
 	}
 
-	public void setUpLights(BaseLight[] lights) {
-		environment.add(lights);
+	public void setUpLights(ArrayList<Light> lights) {
+//		environment.add(lights);
 	}
 }

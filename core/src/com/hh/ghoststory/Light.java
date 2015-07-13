@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.hh.ghoststory.screens.GameScreen;
 
 public abstract class Light
 {
@@ -21,7 +22,7 @@ public abstract class Light
 	/**
 	 * Associated screen
 	 */
-	public Screen			mainScreen;
+	public GameScreen			gameScreen;
 	/**
 	 * Position of the light
 	 */
@@ -33,20 +34,20 @@ public abstract class Light
 
 	/**
 	 * Execute an action on the light if needed
-	 * 
+	 *
 	 * @param delta
 	 *            time delta
 	 */
 	public abstract void act(float delta);
 
-	public Light(final Screen mainScreen)
+	public Light(final GameScreen gameScreen)
 	{
-		this.mainScreen = mainScreen;
+		this.gameScreen = gameScreen;
 	}
 
 	/**
 	 * Add the uniforms to the scene shader
-	 * 
+	 *
 	 * @param sceneShaderProgram
 	 */
 	public abstract void applyToShader(ShaderProgram sceneShaderProgram);
@@ -54,25 +55,21 @@ public abstract class Light
 	/**
 	 * Called on creation, initialize the object
 	 */
-	public void init()
-	{
-		if (shaderProgram == null)
-		{
-//			shaderProgram = mainScreen.setupShader("depthmap");
-//			modelBatch = new ModelBatch(new DefaultShaderProvider()
-//			{
-//				@Override
-//				protected Shader createShader(final Renderable renderable)
-//				{
-//					return new DepthMapShader(renderable, shaderProgram);
-//				}
-//			});
+	public void init() {
+		if (shaderProgram == null) {
+			shaderProgram = gameScreen.renderer.setupShader("depth");
+			modelBatch = new ModelBatch(new DefaultShaderProvider() {
+				@Override
+				protected Shader createShader(final Renderable renderable) {
+					return new DepthMapShader(renderable, shaderProgram);
+				}
+			});
 		}
 	}
 
 	/**
 	 * Create the depth map for this light
-	 * 
+	 *
 	 * @param modelInstance
 	 */
 	public abstract void render(ModelInstance modelInstance);

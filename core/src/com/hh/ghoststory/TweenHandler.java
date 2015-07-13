@@ -44,12 +44,12 @@ public class TweenHandler {
 			float red = generator.nextFloat();
 			float green = generator.nextFloat();
 			float blue = generator.nextFloat();
-			Timeline.createSequence()
-					.push(Tween.to(screen.travellingLight.color, ColorAccessor.COLORS, 1)
-							.target(red,green,blue)
-							.ease(TweenEquations.easeNone))
-					.setCallback(this)
-					.start(tweenManager);
+//			Timeline.createSequence()
+//					.push(Tween.to(screen.travellingLight.color, ColorAccessor.COLORS, 1)
+//							.target(red,green,blue)
+//							.ease(TweenEquations.easeNone))
+//					.setCallback(this)
+//					.start(tweenManager);
 		}
 	};
 

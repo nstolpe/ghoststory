@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
-import com.badlogic.gdx.graphics.g3d.environment.PointLight;
+//import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameScreen extends AbstractScreen {
-	public static int DEPTHMAPSIZE = 1024;
+	public static int DEPTHMAPSIZE = 2048;
 	public ModelBatchRenderer renderer;
 
 	private InputHandler inputHandler;
@@ -196,9 +196,10 @@ public class GameScreen extends AbstractScreen {
 		} else if (this.loading && renderer.assetManager.update()) {
 			for (GameModel gameModel : this.gameModels) {
 				setModelResource(gameModel);
+//				gameModel.model.transform.setToScaling(10f, 4f, 4f);
 				gameModel.setTranslation();
 			}
-			tweenHandler.startCallbacks();
+//			tweenHandler.startCallbacks();
 
 			this.controller = new AnimationController(character.model);
 			this.controller.setAnimation("float", -1);
@@ -216,15 +217,21 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void setupLights() {
-		travellingLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
-		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
-		BaseLight[] lights = {
-				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
-				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
-				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
-				travellingLight,
-				colorSwitchLight
-		};
+//		travellingLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
+//		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
+//		BaseLight[] lights = {
+//				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
+//				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
+//				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
+//				travellingLight,
+//				colorSwitchLight
+//		};
+
+//		lights.add(new PointLight(this, new Vector3(0f, 13.8f, 32f)));
+		lights.add(new PointLight(this, new Vector3(-25.5f, 12.0f, -26f)));
+		lights.add(new PointLight(this, new Vector3(5f, 5.0f, 0f)));
+		lights.add(new DirectionalLight(this, new Vector3(0, 0, 2), new Vector3(1, 1, 0)));
+//		lights.add(new MovingPointLight(this, new Vector3(0f, 30.0f, 0f)));
 		this.renderer.setUpLights(lights);
 	}
 

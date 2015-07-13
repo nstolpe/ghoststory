@@ -47,25 +47,25 @@ public class InputHandler {
 			}
 			@Override
 			public boolean keyUp (int keycode) {
-				switch(keycode) {
-					// Switch the camera between orthographic and perspective when C is pressed.
-					case Input.Keys.C:
-						if (screen.getActiveCameraType() == CameraHandler.PERSPECTIVE) {
-							screen.setActiveCameraType(CameraHandler.ORTHOGRAPHIC);
-						} else if (screen.getActiveCameraType() == CameraHandler.ORTHOGRAPHIC) {
-							screen.setActiveCameraType(CameraHandler.PERSPECTIVE);
-						}
-						screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-						break;
-					// Set the color of the light to something random.
-					case Input.Keys.L:
-						Random generator = new Random();
-						float red = generator.nextFloat();
-						float green = generator.nextFloat();
-						float blue = generator.nextFloat();
-						screen.colorSwitchLight.set(new Color(red,green,blue,1f),12,1,10,1);
-						break;
-				}
+//				switch(keycode) {
+//					// Switch the camera between orthographic and perspective when C is pressed.
+//					case Input.Keys.C:
+//						if (screen.getActiveCameraType() == CameraHandler.PERSPECTIVE) {
+//							screen.setActiveCameraType(CameraHandler.ORTHOGRAPHIC);
+//						} else if (screen.getActiveCameraType() == CameraHandler.ORTHOGRAPHIC) {
+//							screen.setActiveCameraType(CameraHandler.PERSPECTIVE);
+//						}
+//						screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//						break;
+//					// Set the color of the light to something random.
+//					case Input.Keys.L:
+//						Random generator = new Random();
+//						float red = generator.nextFloat();
+//						float green = generator.nextFloat();
+//						float blue = generator.nextFloat();
+//						screen.colorSwitchLight.set(new Color(red,green,blue,1f),12,1,10,1);
+//						break;
+//				}
 				return false;
 			}
 		};

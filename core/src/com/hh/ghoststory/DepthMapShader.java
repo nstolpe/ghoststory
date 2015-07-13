@@ -1,4 +1,4 @@
-package com.microbasic.sm.part4;
+package com.hh.ghoststory;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
