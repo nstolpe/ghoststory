@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
-import com.microbasic.sm.tools.FrameBufferCubeMap;
-import com.microbasic.sm.tools.ScreenshotFactory;
+import com.hh.ghoststory.screens.GameScreen;
 
 public class PointLight extends Light
 {
@@ -17,9 +16,9 @@ public class PointLight extends Light
 	public FrameBufferCubeMap	frameBuffer;
 	public Cubemap				depthMap;
 
-	public PointLight(final MainScreen mainScreen, final Vector3 position)
+	public PointLight(final GameScreen gameScreen, final Vector3 position)
 	{
-		super(mainScreen);
+		super(gameScreen);
 		this.position = position;
 		init();
 	}
@@ -40,7 +39,7 @@ public class PointLight extends Light
 	{
 		super.init();
 
-		camera = new PerspectiveCamera(90f, MainScreen.DEPTHMAPSIZE, MainScreen.DEPTHMAPSIZE);
+		camera = new PerspectiveCamera(90f, GameScreen.DEPTHMAPSIZE, GameScreen.DEPTHMAPSIZE);
 		camera.near = 4f;
 		camera.far = 70;
 		camera.position.set(position);
@@ -58,7 +57,7 @@ public class PointLight extends Light
 
 		if (frameBuffer == null)
 		{
-			frameBuffer = new FrameBufferCubeMap(Format.RGBA8888, MainScreen.DEPTHMAPSIZE, true);
+			frameBuffer = new FrameBufferCubeMap(Format.RGBA8888, GameScreen.DEPTHMAPSIZE, true);
 		}
 
 		shaderProgram.begin();

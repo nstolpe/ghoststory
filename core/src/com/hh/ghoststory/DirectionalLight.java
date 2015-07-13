@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
-import com.microbasic.sm.tools.ScreenshotFactory;
+import com.hh.ghoststory.screens.GameScreen;
+//import com.microbasic.sm.tools.ScreenshotFactory;
 
 public class DirectionalLight extends Light
 {
@@ -18,9 +19,9 @@ public class DirectionalLight extends Light
 	public FrameBuffer	frameBuffer;
 	public Texture		depthMap;
 
-	public DirectionalLight(final MainScreen mainScreen, final Vector3 position, final Vector3 direction)
+	public DirectionalLight(final GameScreen gameScreen, final Vector3 position, final Vector3 direction)
 	{
-		super(mainScreen);
+		super(gameScreen);
 		this.position = position;
 		this.direction = direction;
 		init();
@@ -43,7 +44,7 @@ public class DirectionalLight extends Light
 	{
 		super.init();
 
-		camera = new PerspectiveCamera(120f, MainScreen.DEPTHMAPSIZE, MainScreen.DEPTHMAPSIZE);
+		camera = new PerspectiveCamera(120f, GameScreen.DEPTHMAPSIZE, GameScreen.DEPTHMAPSIZE);
 		camera.near = 1f;
 		camera.far = 70;
 		camera.position.set(position);
@@ -62,7 +63,7 @@ public class DirectionalLight extends Light
 
 		if (frameBuffer == null)
 		{
-			frameBuffer = new FrameBuffer(Format.RGBA8888, MainScreen.DEPTHMAPSIZE, MainScreen.DEPTHMAPSIZE, true);
+			frameBuffer = new FrameBuffer(Format.RGBA8888, GameScreen.DEPTHMAPSIZE, GameScreen.DEPTHMAPSIZE, true);
 		}
 
 		frameBuffer.begin();
@@ -78,7 +79,7 @@ public class DirectionalLight extends Light
 		modelBatch.render(modelInstance);
 		modelBatch.end();
 
-//		if (mainScreen.takeScreenshots)
+//		if (gameScreen.takeScreenshots)
 //		{
 //			ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmap");
 //		}
