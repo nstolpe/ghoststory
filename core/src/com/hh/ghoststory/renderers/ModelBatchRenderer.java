@@ -2,9 +2,13 @@ package com.hh.ghoststory.renderers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.ShadowMapShader;
@@ -25,6 +29,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 	private ShaderProgram shaderProgramShadows;
 	private ModelBatch modelBatch;
 	private ModelBatch modelBatchShadows;
+	private FrameBuffer frameBufferShadows;
 
 	public ModelBatchRenderer(GameScreen screen) {
 		this.screen = screen;
@@ -79,11 +84,48 @@ public class ModelBatchRenderer extends AbstractRenderer {
 	 */
 	@Override
 	public void render() {
+//		modelBatch.begin(screen.getActiveCamera());
+//		for (ModelInstance model : modelInstances)
+////			modelBatch.render(model, environment);
+//			modelBatch.render(model);
+//		modelBatch.end();
+//		for (final Light light : lights) {
+//			light.render(modelInstance);
+//		}
+		renderShadows();
+		renderScene();
+	}
+
+	public void renderScene() {
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+		shaderProgram.begin();
+		final int textureNum = 4;
+		frameBufferShadows.getColorBufferTexture().bind(textureNum);
+
+		shaderProgram.setUniformi("u_shadows", textureNum);
+		shaderProgram.setUniformf("u_screenWidth", Gdx.graphics.getWidth());
+		shaderProgram.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
+		shaderProgram.end();
+
 		modelBatch.begin(screen.getActiveCamera());
-		for (ModelInstance model : modelInstances)
-//			modelBatch.render(model, environment);
-			modelBatch.render(model);
+		for (ModelInstance model : modelInstances) modelBatch.render(model);
 		modelBatch.end();
+	}
+	public void renderShadows() {
+		if (frameBufferShadows == null) {
+			frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		}
+		frameBufferShadows.begin();
+
+		Gdx.gl.glClearColor(0.4f, 0.4f, 0.4f, 0.4f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+		modelBatchShadows.begin(screen.getActiveCamera());
+		for (ModelInstance model : modelInstances) modelBatchShadows.render(model);
+		modelBatchShadows.end();
+
+		frameBufferShadows.end();
 	}
 
 	@Override
