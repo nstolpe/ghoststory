@@ -23,10 +23,11 @@ import com.hh.ghoststory.tween_accessors.ColorAccessor;
 import com.hh.ghoststory.tween_accessors.QuaternionAccessor;
 import com.hh.ghoststory.tween_accessors.Vector3Accessor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameScreen extends AbstractScreen {
-	public static int DEPTHMAPSIZE = 1;
+	public static int DEPTHMAPSIZE = 1024;
 	public ModelBatchRenderer renderer;
 
 	private InputHandler inputHandler;
@@ -47,7 +48,7 @@ public class GameScreen extends AbstractScreen {
 	public PointLight colorSwitchLight;
 	private Color colorSwitchColor = new Color(0.6f,0.2f,1f,1f);
 	FPSLogger logger = new FPSLogger();
-	public Light[] lights;
+	public ArrayList<Light> lights = new ArrayList<Light>();
 
 	public GameScreen(GhostStory game) {
 		super(game);

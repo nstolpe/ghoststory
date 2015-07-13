@@ -2,11 +2,13 @@ package com.hh.ghoststory.renderers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
+import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import com.hh.ghoststory.ShadowMapShader;
+import com.hh.ghoststory.SimpleTextureShader;
 import com.hh.ghoststory.screens.GameScreen;
 
 /**
@@ -14,17 +16,54 @@ import com.hh.ghoststory.screens.GameScreen;
  */
 public class ModelBatchRenderer extends AbstractRenderer {
 	public Environment environment = new Environment();
-	private ModelBatch modelBatch;
 	private GameScreen screen;
 
 
 	private Array<ModelInstance> modelInstances;
 	public AssetManager assetManager = new AssetManager();
+	private ShaderProgram shaderProgram;
+	private ShaderProgram shaderProgramShadows;
+	private ModelBatch modelBatch;
+	private ModelBatch modelBatchShadows;
 
 	public ModelBatchRenderer(GameScreen screen) {
 		this.screen = screen;
-//		setModelBatch(new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl")));
-		setModelBatch(new ModelBatch(Gdx.files.internal("shaders/scene.vertex.glsl"), Gdx.files.internal("shaders/scene.fragment.glsl")));
+		initShaders();
+	}
+
+	private void initShaders() {
+		shaderProgram = setupShader("scene");
+		modelBatch = new ModelBatch(new DefaultShaderProvider() {
+			@Override
+			protected Shader createShader(final Renderable renderable) {
+				return new SimpleTextureShader(renderable, shaderProgram);
+			}
+		});
+
+//		final GameScreen self = this;
+		shaderProgramShadows = setupShader("shadow");
+		modelBatchShadows = new ModelBatch(new DefaultShaderProvider() {
+			@Override
+			protected Shader createShader(final Renderable renderable) {
+				return new ShadowMapShader(screen, renderable, shaderProgramShadows);
+			}
+		});
+	}
+	private ShaderProgram setupShader(String type) {
+		ShaderProgram.pedantic = false;
+		final ShaderProgram shaderProgram = new ShaderProgram(
+				Gdx.files.internal("shaders/" + type + ".vertex.glsl"),
+				Gdx.files.internal("shaders/" + type + ".fragment.glsl")
+		);
+
+		if (!shaderProgram.isCompiled()) {
+			System.err.println("Error with shader " + type + ": " + shaderProgram.getLog());
+			System.exit(1);
+		} else {
+			Gdx.app.log("init", "Shader " + type + " compiled " + shaderProgram.getLog());
+		}
+
+		return shaderProgram;
 	}
 
 	public void setModelBatch(ModelBatch modelBatch) {
