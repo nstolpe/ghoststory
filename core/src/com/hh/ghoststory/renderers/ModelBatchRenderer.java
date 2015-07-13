@@ -23,7 +23,8 @@ public class ModelBatchRenderer extends AbstractRenderer {
 
 	public ModelBatchRenderer(GameScreen screen) {
 		this.screen = screen;
-		setModelBatch(new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl")));
+//		setModelBatch(new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl")));
+		setModelBatch(new ModelBatch(Gdx.files.internal("shaders/scene.vertex.glsl"), Gdx.files.internal("shaders/scene.fragment.glsl")));
 	}
 
 	public void setModelBatch(ModelBatch modelBatch) {
@@ -41,7 +42,8 @@ public class ModelBatchRenderer extends AbstractRenderer {
 	public void render() {
 		modelBatch.begin(screen.getActiveCamera());
 		for (ModelInstance model : modelInstances)
-			modelBatch.render(model, environment);
+//			modelBatch.render(model, environment);
+			modelBatch.render(model);
 		modelBatch.end();
 	}
 
