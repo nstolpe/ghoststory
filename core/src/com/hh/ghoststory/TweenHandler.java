@@ -2,7 +2,6 @@ package com.hh.ghoststory;
 
 import aurelienribon.tweenengine.*;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.hh.ghoststory.screens.GameScreen;
@@ -27,10 +26,10 @@ public class TweenHandler {
 		@Override
 		public void onEvent(int i, BaseTween<?> baseTween) {
 			Timeline.createSequence()
-					.push(Tween.to(screen.barLight.position, Vector3Accessor.POSITION_Z, 1)
+					.push(Tween.to(screen.colorSwitchLight.position, Vector3Accessor.POSITION_Z, 1)
 							.target(10)
 							.ease(TweenEquations.easeInSine))
-					.push(Tween.to(screen.barLight.position, Vector3Accessor.POSITION_Z, 1)
+					.push(Tween.to(screen.colorSwitchLight.position, Vector3Accessor.POSITION_Z, 1)
 							.target(0)
 							.ease(TweenEquations.easeInSine))
 					.setCallback(this)
@@ -46,7 +45,7 @@ public class TweenHandler {
 			float green = generator.nextFloat();
 			float blue = generator.nextFloat();
 			Timeline.createSequence()
-					.push(Tween.to(screen.fooLight.color, ColorAccessor.COLORS, 1)
+					.push(Tween.to(screen.travellingLight.color, ColorAccessor.COLORS, 1)
 							.target(red,green,blue)
 							.ease(TweenEquations.easeNone))
 					.setCallback(this)
@@ -99,7 +98,9 @@ public class TweenHandler {
 
 	/*
 	 * Creates a tween timeline that will rotate to face a point and then move to it.
-	 * Made public right now because it's used by input manager. Should change.
+	 * It needs a better name.
+	 *
+	 * @TODO Rename this and make it more abstract. Pass in an array of sequential Tweens and push each to the timeline.
 	 *
 	 * @param Quaternion currentRotation  The current facing rotation of the object being tweened.
 	 * @param Quaternion targetRotation   The rotation the object should tween towards.
@@ -109,17 +110,32 @@ public class TweenHandler {
 	 * @param float      td               The duration that the object's translation should take to complete.
 	 */
 	public void tweenFaceAndMoveTo(Quaternion currentRotation, Quaternion targetRotation, Vector3 currentPosition, Vector3 targetPosition, float rd, float td) {
+		Tween rotate = Tween.to(currentRotation, QuaternionAccessor.ROTATION, rd)
+				.target(targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w)
+				.ease(TweenEquations.easeNone);
+
+		Tween translate = Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, td)
+				.target(targetPosition.x, targetPosition.y, targetPosition.z)
+				.ease(TweenEquations.easeNone);
+
 		Timeline.createSequence()
-				.push(
-					Tween.to(currentRotation, QuaternionAccessor.ROTATION, rd)
-					.target(targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w)
-					.ease(TweenEquations.easeNone)
-				)
-				.push(
-					Tween.to(currentPosition, Vector3Accessor.POSITION_XYZ, td)
-					.target(targetPosition.x, targetPosition.y, targetPosition.z)
-					.ease(TweenEquations.easeNone)
-				)
-				.start(tweenManager);
+			.push(rotate)
+			.push(translate)
+			.start(tweenManager);
+	}
+
+	public Tween buildTween(Object current, float[] targetValues, int type, float duration, TweenEquation easing) {
+		return Tween
+				.to(current, type, duration)
+				.target(targetValues)
+				.ease(easing);
+	}
+
+	public void runSequence(Tween[] tweens) {
+		Timeline timeline = Timeline.createSequence();
+
+		for (int i =0; i < tweens.length; i++)  timeline.push(tweens[i]);
+
+		timeline.start(tweenManager);
 	}
 }

@@ -18,9 +18,12 @@ public class CameraHandler {
 	private PerspectiveCamera pCamera;
 	private OrthographicCamera oCamera;
 	private int activeCameraType;
+	private Class acttype;
+	private Camera activeCamera;
 
-	public CameraHandler(GameScreen screen) {
-
+	public CameraHandler(GameScreen screen, Camera camera) {
+		this.screen = screen;
+		this.activeCamera = camera;
 	}
 
 	public int getActiveCameraType() {
@@ -36,7 +39,7 @@ public class CameraHandler {
 
 	public void setCameraViewport(int width, int height) {
 		getActiveCamera().viewportWidth = width;
-		getActiveCamera().viewportHeight= height;
+		getActiveCamera().viewportHeight = height;
 
 		if (getActiveCamera() instanceof OrthographicCamera) {
 			oCamera.setToOrtho(false, 20, 20 * ((float) height / (float) width));
@@ -61,23 +64,9 @@ public class CameraHandler {
 				break;
 		}
 	}
-//    public void setUpDefaultCamera(Camera camera) {
-//        if (camera instanceof PerspectiveCamera) {
-//
-//        }
-//        switch (type) {
-//            case PERSP:
-//                setUpPerspectiveCamera();
-//                setActiveCameraType(PERSP);
-//                break;
-//            case ORTHO:
-//                setUpOrthographicCamera();
-//                setActiveCameraType(ORTHO);
-//                break;
-//            default:
-//                break;
-//        }
-//    }
+    public void setUpDefaultCamera(Camera camera) {
+	    acttype = camera.getClass();
+    }
 
 	public void zoomCamera(double amount) {
 		if (getActiveCamera() instanceof PerspectiveCamera)

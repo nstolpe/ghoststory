@@ -1,11 +1,10 @@
 package com.hh.ghoststory.screens;
 
+import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenAccessor;
-import aurelienribon.tweenengine.TweenManager;
+import aurelienribon.tweenengine.TweenEquations;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
@@ -13,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.*;
 import com.hh.ghoststory.game_models.Character;
@@ -30,6 +30,9 @@ public class GameScreen extends AbstractScreen {
 
 	private InputHandler inputHandler;
 	public CameraHandler cameraHandler;
+	public TweenHandler tweenHandler;
+
+
 	private TestShader testShader = new TestShader();
 
 //	private PlayerCharacter character;
@@ -37,12 +40,11 @@ public class GameScreen extends AbstractScreen {
 	public Character character;
 	public boolean loading;
 	public Array<GameModel> gameModels = new Array<GameModel>();
-	public TweenManager tweenManager = new TweenManager();
-	public TweenHandler tweenHandler;
+
 	private AnimationController controller;
-	public PointLight fooLight;
-	public PointLight barLight;
-	private Color barColor = new Color(0.6f,0.2f,1f,1f);
+	public PointLight travellingLight;
+	public PointLight colorSwitchLight;
+	private Color colorSwitchColor = new Color(0.6f,0.2f,1f,1f);
 	FPSLogger logger = new FPSLogger();
 
 	public GameScreen(GhostStory game) {
@@ -50,9 +52,8 @@ public class GameScreen extends AbstractScreen {
 
 		inputHandler = new InputHandler(this);
 
-		cameraHandler = new CameraHandler(this);
+		cameraHandler = new CameraHandler(this, new OrthographicCamera());
 		cameraHandler.setUpDefaultCamera(CameraHandler.ORTHOGRAPHIC);
-//		this.cameraHandler.setUpDefaultCamera(CameraHandler.PERSPECTIVE);
 
 		tweenHandler = new TweenHandler(this, 4, getTweenAccessors());
 
@@ -212,14 +213,14 @@ public class GameScreen extends AbstractScreen {
 	}
 
 	private void setupLights() {
-		fooLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
-		barLight = new PointLight().set(barColor,12,1,10,1);
+		travellingLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
+		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
 		BaseLight[] lights = {
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
 				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
 				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
-				fooLight,
-				barLight
+				travellingLight,
+				colorSwitchLight
 		};
 		this.renderer.setUpLights(lights);
 	}
@@ -233,5 +234,69 @@ public class GameScreen extends AbstractScreen {
 //		FileHandle file = Gdx.files.local(file_path);
 //		Json json = new Json();
 //		this.character = json.fromJson(PlayerCharacter.class, file.readString());
+	}
+
+	// Interface methods for communicating between components
+	// This all is getting ugly and stupid now.
+	//     CameraHandler
+
+	// 3 uses in InputHandler
+	public Ray getPickRay(float x, float y) {
+		return cameraHandler.getActiveCamera().getPickRay(x, y);
+	}
+
+	// 1 use in InputHandler
+	public void moveCameraBy(float x, float y, float z) {
+		cameraHandler.getActiveCamera().position.add(x, y, z);
+	}
+
+	// 1 use in InputHandler
+	public void translateCamera(float x, float y, float z) {
+		cameraHandler.getActiveCamera().translate(x, y, z);
+	}
+
+	// 2 uses in InputHandler
+	public Vector3 getCameraPosition() {
+		return cameraHandler.getActiveCamera().position.cpy();
+	}
+
+	// 1 use in InputHandler
+	public Vector3 getCameraDirection() {
+		return new Vector3();
+	}
+
+	// 1 use in InputHandler
+	public void zoomCamera(int distance) {
+		cameraHandler.zoomCamera(distance);
+	}
+
+	// 1 use in ModelBatchRenderer
+	public Camera getActiveCamera() {
+		return cameraHandler.getActiveCamera();
+	}
+
+	// 2 uses in InputHandler
+	public int getActiveCameraType() {
+		return cameraHandler.getActiveCameraType();
+	}
+
+	// 2 uses in InputHandler
+	public void setActiveCameraType(int type) {
+		cameraHandler.setActiveCameraType(type);
+	}
+
+	//     TweenHandler
+
+	// 1 use in InputHandler
+	public void tweenFaceAndMoveTo(Quaternion currentRotation, Quaternion targetRotation, Vector3 currentPosition, Vector3 targetPosition, float rd, float td) {
+		tweenHandler.runSequence(new Tween[] {
+				tweenHandler.buildTween(currentRotation, new float[]{targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w }, QuaternionAccessor.ROTATION, rd, TweenEquations.easeNone),
+				tweenHandler.buildTween(currentPosition, new float[] { targetPosition.x, targetPosition.y, targetPosition.z }, Vector3Accessor.POSITION_XYZ, td, TweenEquations.easeNone)
+		});
+	}
+
+	// 2 uses in InputHandler
+	public void killTween(Object target, int tweenType) {
+		tweenHandler.tweenManager.killTarget(target, tweenType);
 	}
 }
