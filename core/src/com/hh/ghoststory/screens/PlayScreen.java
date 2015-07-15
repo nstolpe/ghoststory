@@ -71,7 +71,6 @@ public class PlayScreen extends AbstractScreen {
 	 * @param camera
 	 */
 	public void setUpOrthographicCamera(OrthographicCamera camera) {
-		System.out.println("Ortho setup");
 		cameraType = OrthographicCamera.class;
 		setUpOrthographicCamera(camera, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
@@ -85,7 +84,6 @@ public class PlayScreen extends AbstractScreen {
 		this.orthographicCamera = camera;
 	}
 	public void setUpPerspectiveCamera(PerspectiveCamera camera) {
-		System.out.println("Perspective setup");
 		setUpPerspectiveCamera(camera, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
