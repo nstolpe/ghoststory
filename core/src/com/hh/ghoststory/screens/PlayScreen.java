@@ -5,10 +5,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.globals.CameraType;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.hh.ghoststory.utility.ClassFunction;
 
 /**
  * Created by nils on 7/14/15.
@@ -59,34 +56,20 @@ public class PlayScreen extends AbstractScreen {
 	/*
 	 * Camera Section
 	 */
-	public void foo() {
-		System.out.println("this is working");
-	}
+
+	/**
+	 * Sets up the default camera (either Perspective or Orthographic) for the screen. Uses
+	 * reflection to pass the camera to the proper setup method based on its type.
+	 * @param camera
+	 */
 	public void setUpDefaultCamera(Camera camera) {
-		String cameraClass = camera.getClass().getSimpleName();
-
-		Method realMethod = null;
-
-		try {
-			realMethod = ((Object) this).getClass().getMethod("setUp" + cameraClass, camera.getClass());
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			realMethod.invoke(this, camera);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		for (Class cameraType : cameraTypes ) {
-			if (cameraType == camera.getClass()) {
-
-			}
-		}
+		ClassFunction.call(this, "setUp" + camera.getClass().getSimpleName(), camera);
 	}
+
+	/**
+	 * Sets up an OrthographicCamera.
+	 * @param camera
+	 */
 	public void setUpOrthographicCamera(OrthographicCamera camera) {
 		System.out.println("Ortho setup");
 		cameraType = OrthographicCamera.class;
