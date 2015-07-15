@@ -5,13 +5,19 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.globals.CameraType;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Created by nils on 7/14/15.
  */
 public class PlayScreen extends AbstractScreen {
-	private PerspectiveCamera perspective;
-	private OrthographicCamera orthographic;
+	private PerspectiveCamera perspectiveCamera;
+	private OrthographicCamera orthographicCamera;
+	private final Class[] cameraTypes = { OrthographicCamera.class, PerspectiveCamera.class };
+	private Class cameraType;
 
 	public PlayScreen(GhostStory game) {
 		super(game);
@@ -53,12 +59,37 @@ public class PlayScreen extends AbstractScreen {
 	/*
 	 * Camera Section
 	 */
+	public void foo() {
+		System.out.println("this is working");
+	}
 	public void setUpDefaultCamera(Camera camera) {
-//		switch (camera) {
-//			case instance of
-//		}
+		String cameraClass = camera.getClass().getSimpleName();
+
+		Method realMethod = null;
+
+		try {
+			realMethod = ((Object) this).getClass().getMethod("setUp" + cameraClass, camera.getClass());
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			realMethod.invoke(this, camera);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		for (Class cameraType : cameraTypes ) {
+			if (cameraType == camera.getClass()) {
+
+			}
+		}
 	}
 	public void setUpOrthographicCamera(OrthographicCamera camera) {
+		System.out.println("Ortho setup");
+		cameraType = OrthographicCamera.class;
 		setUpOrthographicCamera(camera, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
@@ -68,6 +99,14 @@ public class PlayScreen extends AbstractScreen {
 		camera.direction.set(-1, -1, -1);
 		camera.near = 1;
 		camera.far = 300;
+		this.orthographicCamera = camera;
+	}
+	public void setUpPerspectiveCamera(PerspectiveCamera camera) {
+		System.out.println("Perspective setup");
+		setUpPerspectiveCamera(camera, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
+	private void setUpPerspectiveCamera(PerspectiveCamera perspective, int viewportWidth, int viewportHeight) {
 	}
 	/*
 	 * End Camera Section
