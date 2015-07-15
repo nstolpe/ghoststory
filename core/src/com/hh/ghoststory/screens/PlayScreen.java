@@ -1,9 +1,15 @@
 package com.hh.ghoststory.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.utility.ClassFunction;
 
@@ -16,11 +22,31 @@ public class PlayScreen extends AbstractScreen {
 	private final Class[] cameraTypes = { OrthographicCamera.class, PerspectiveCamera.class };
 	private Class cameraType;
 
+	private AssetManager assetManager = new AssetManager();
+	private ModelBatch modelBatch = new ModelBatch();
+	private ModelInstance model;
+	public Array<ModelInstance> instances = new Array<ModelInstance>();
+	private boolean loading;
+
 	public PlayScreen(GhostStory game) {
 		super(game);
-		setUpDefaultCamera(new PerspectiveCamera());
+		setUpDefaultCamera(new OrthographicCamera());
+		// make the background purple so we know something is happening.
+		setClear(0.7f, 0.1f, 1f, 1);
+		assetManager.load("models/ghost.g3dj", Model.class);
+
+		loading = true;
 	}
 
+	/**
+	 * Called when the asset manager has finished updating. Make models here.
+	 * @TODO Add more stuff that needs to happen after loading.
+	 */
+	public void doneLoading() {
+		model = new ModelInstance(assetManager.get("models/ghost.g3dj", Model.class));
+		instances.add(model);
+		loading = false;
+	}
 	@Override
 	public void show() {
 	}
@@ -32,6 +58,17 @@ public class PlayScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
+
+		if (loading && assetManager.update())
+			doneLoading();
+
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+		orthographicCamera.update();
+		modelBatch.begin(orthographicCamera);
+		modelBatch.render(instances);
+		modelBatch.end();
 	}
 
 	@Override
