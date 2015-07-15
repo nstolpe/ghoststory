@@ -53,42 +53,23 @@ public class PlayScreen extends AbstractScreen {
 	public void dispose() {
 		super.dispose();
 	}
-	/*
-	 * Camera Section
-	 */
 
+	/** Camera Section */
 	/**
 	 * Sets up the default camera (either Perspective or Orthographic) for the screen. Uses
 	 * reflection to pass the camera to the proper setup method based on its type.
 	 * @param camera
 	 */
 	public void setUpDefaultCamera(Camera camera) {
-		ClassFunction.call(this, "setUpDefault" + camera.getClass().getSimpleName(), camera);
+		cameraType = camera.getClass();
+		ClassFunction.call(this, "setUp" + camera.getClass().getSimpleName(), camera);
 	}
 
-	/**
-	 *
-	 * @param camera
-	 */
-	public void setUpDefaultOrthographicCamera(OrthographicCamera camera) {
-		cameraType = camera.getClass();
-		setUpOrthographicCamera(camera);
-	}
-
-	/**
-	 *
-	 * @param camera
-	 */
-	public void setUpDefaultPerspectiveCamera(PerspectiveCamera camera) {
-		cameraType = camera.getClass();
-		setUpPerspectiveCamera(camera);
-	}
 	/**
 	 * Sets up an OrthographicCamera.
 	 * @param camera
 	 */
 	public void setUpOrthographicCamera(OrthographicCamera camera) {
-		cameraType = OrthographicCamera.class;
 		setUpOrthographicCamera(camera, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
@@ -121,7 +102,5 @@ public class PlayScreen extends AbstractScreen {
 		camera.direction.set(-1, -1, -1);
 		camera.near = 1;
 	}
-	/*
-	 * End Camera Section
-	 */
+	/** End Camera Section */
 }
