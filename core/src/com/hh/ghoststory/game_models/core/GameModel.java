@@ -17,10 +17,10 @@ public abstract class GameModel {
 	public Vector3 verticalAxis = new Vector3(0, 1, 0);
 
 	public void update() {
-		setRotation();
-		setTranslation();
-		model.transform.setToTranslation(position);
-		model.transform.rotate(verticalAxis, rotation);
+//		setRotation();
+//		setTranslation();
+//		model.transform.setToTranslation(position);
+//		model.transform.rotate(verticalAxis, rotation);
 	}
 
 	abstract public void setRotation();

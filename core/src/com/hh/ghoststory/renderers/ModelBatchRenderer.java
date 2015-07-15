@@ -139,6 +139,10 @@ public class ModelBatchRenderer extends AbstractRenderer {
 	@Override
 	public void dispose() {
 		modelBatch.dispose();
+		modelBatchShadows.dispose();
+		frameBufferShadows.dispose();
+		shaderProgram.dispose();
+		shaderProgramShadows.dispose();
 	}
 
 	public void setUpLights(ArrayList<Light> lights) {
