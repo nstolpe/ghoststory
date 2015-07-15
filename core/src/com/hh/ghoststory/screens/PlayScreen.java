@@ -18,7 +18,7 @@ public class PlayScreen extends AbstractScreen {
 
 	public PlayScreen(GhostStory game) {
 		super(game);
-		setUpDefaultCamera(new OrthographicCamera());
+		setUpDefaultCamera(new PerspectiveCamera());
 	}
 
 	@Override
@@ -63,9 +63,26 @@ public class PlayScreen extends AbstractScreen {
 	 * @param camera
 	 */
 	public void setUpDefaultCamera(Camera camera) {
-		ClassFunction.call(this, "setUp" + camera.getClass().getSimpleName(), camera);
+		ClassFunction.call(this, "setUpDefault" + camera.getClass().getSimpleName(), camera);
 	}
 
+	/**
+	 *
+	 * @param camera
+	 */
+	public void setUpDefaultOrthographicCamera(OrthographicCamera camera) {
+		cameraType = camera.getClass();
+		setUpOrthographicCamera(camera);
+	}
+
+	/**
+	 *
+	 * @param camera
+	 */
+	public void setUpDefaultPerspectiveCamera(PerspectiveCamera camera) {
+		cameraType = camera.getClass();
+		setUpPerspectiveCamera(camera);
+	}
 	/**
 	 * Sets up an OrthographicCamera.
 	 * @param camera
@@ -75,6 +92,12 @@ public class PlayScreen extends AbstractScreen {
 		setUpOrthographicCamera(camera, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
+	/**
+	 *
+	 * @param camera
+	 * @param viewportWidth
+	 * @param viewportHeight
+	 */
 	public void setUpOrthographicCamera(OrthographicCamera camera, float viewportWidth, float viewportHeight) {
 		camera.setToOrtho(false, 20, 20 * (viewportHeight / viewportWidth));
 		camera.position.set(100, 100, 100);
@@ -83,11 +106,20 @@ public class PlayScreen extends AbstractScreen {
 		camera.far = 300;
 		this.orthographicCamera = camera;
 	}
+
+	/**
+	 *
+	 * @param camera
+	 */
 	public void setUpPerspectiveCamera(PerspectiveCamera camera) {
-		setUpPerspectiveCamera(camera, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		setUpPerspectiveCamera(camera, 67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
-	private void setUpPerspectiveCamera(PerspectiveCamera perspective, int viewportWidth, int viewportHeight) {
+	private void setUpPerspectiveCamera(PerspectiveCamera camera, float fieldOfViewY, float viewportWidth, float viewportHeight) {
+		camera.fieldOfView = fieldOfViewY;
+		camera.position.set(10, 10, 10);
+		camera.direction.set(-1, -1, -1);
+		camera.near = 1;
 	}
 	/*
 	 * End Camera Section
