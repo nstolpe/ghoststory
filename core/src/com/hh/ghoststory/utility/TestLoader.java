@@ -1,8 +1,12 @@
 package com.hh.ghoststory.utility;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
+import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -59,5 +63,18 @@ public class TestLoader {
 		}
 
 		return instances;
+	}
+	public static void setLights(Environment environment) {
+//		travellingLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
+//		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
+		BaseLight[] lights = {
+				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
+				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
+				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1)//,
+//				travellingLight,
+//				colorSwitchLight
+		};
+		environment.add(lights);
+//		return environment;
 	}
 }

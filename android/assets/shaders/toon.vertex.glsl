@@ -1,17 +1,10 @@
-in vec4 Position;
-in vec3 Normal;
+varying vec3 vNormal;
+varying vec3 vVertex;
 
-uniform mat4 Projection;
-uniform mat4 Modelview;
-uniform mat3 NormalMatrix;
-uniform vec3 DiffuseMaterial;
-
-out vec3 EyespaceNormal;
-out vec3 Diffuse;
-
-void main()
+void main(void)
 {
-    EyespaceNormal = NormalMatrix * Normal;
-    gl_Position = Projection * Modelview * Position;
-    Diffuse = DiffuseMaterial;
+   gl_Position = ftransform();
+   gl_TexCoord[0] = gl_MultiTexCoord0;
+   vVertex = vec3(gl_ModelViewMatrix * gl_Vertex);
+   vNormal = normalize(gl_NormalMatrix * gl_Normal);
 }

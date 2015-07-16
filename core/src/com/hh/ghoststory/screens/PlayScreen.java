@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
@@ -25,20 +26,26 @@ public class PlayScreen extends AbstractScreen {
 	private OrthographicCamera orthographicCamera = null;
 
 	private AssetManager assetManager = new AssetManager();
-	private ModelBatch modelBatch = new ModelBatch();
+	private ModelBatch modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 	public Array<ModelInstance> instances = new Array<ModelInstance>();
 	private boolean loading;
 
 	private Environment environment = new Environment();
+	private CameraInputController camController;
 
 	public PlayScreen(GhostStory game) {
 		super(game);
-		setUpDefaultCamera(new OrthographicCamera());
+		setUpDefaultCamera(new PerspectiveCamera());
+		camController = new CameraInputController(camera);
+		Gdx.input.setInputProcessor(camController);
 		// make the background purple so we know something is happening.
 		setClear(0.7f, 0.1f, 1f, 1);
+
+		// load assets. These should be pulled in through a config.
 		assetManager.load("models/ghost.g3dj", Model.class);
 		assetManager.load("models/tile.g3dj", Model.class);
 
+		TestLoader.setLights(environment);
 		loading = true;
 	}
 
@@ -74,8 +81,8 @@ public class PlayScreen extends AbstractScreen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		orthographicCamera.update();
-		modelBatch.begin(orthographicCamera);
+		camera.update();
+		modelBatch.begin(camera);
 		modelBatch.render(instances, environment);
 		modelBatch.end();
 	}
