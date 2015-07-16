@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -27,6 +28,8 @@ public class PlayScreen extends AbstractScreen {
 	private ModelBatch modelBatch = new ModelBatch();
 	public Array<ModelInstance> instances = new Array<ModelInstance>();
 	private boolean loading;
+
+	private Environment environment = new Environment();
 
 	public PlayScreen(GhostStory game) {
 		super(game);
@@ -73,7 +76,7 @@ public class PlayScreen extends AbstractScreen {
 
 		orthographicCamera.update();
 		modelBatch.begin(orthographicCamera);
-		modelBatch.render(instances);
+		modelBatch.render(instances, environment);
 		modelBatch.end();
 	}
 
