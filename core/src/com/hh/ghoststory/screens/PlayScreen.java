@@ -20,8 +20,8 @@ import com.hh.ghoststory.utility.TestLoader;
  */
 public class PlayScreen extends AbstractScreen {
 	private Camera camera;
-	private PerspectiveCamera perspectiveCamera;
-	private OrthographicCamera orthographicCamera;
+	private PerspectiveCamera perspectiveCamera = null;
+	private OrthographicCamera orthographicCamera = null;
 
 	private AssetManager assetManager = new AssetManager();
 	private ModelBatch modelBatch = new ModelBatch();
@@ -54,6 +54,11 @@ public class PlayScreen extends AbstractScreen {
 
 	@Override
 	public void resize(int width, int height) {
+		camera.viewportWidth = width;
+		camera.viewportHeight = height;
+
+		if (camera instanceof OrthographicCamera)
+			setUpOrthographicCamera((OrthographicCamera) camera);
 	}
 
 	@Override
@@ -131,7 +136,9 @@ public class PlayScreen extends AbstractScreen {
 		camera.lookAt(0,0,0);
 		camera.near = 1;
 		camera.far = 300;
-		this.orthographicCamera = camera;
+
+		if (orthographicCamera != camera)
+			orthographicCamera = camera;
 	}
 
 	/**

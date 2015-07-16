@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 public class TestLoader {
 	public static Array<ModelInstance> getTestModels(AssetManager assetManager) {
 		ModelInstance character = new ModelInstance(assetManager.get("models/ghost.g3dj", Model.class));
+		character.transform.setTranslation(5,0,5);
 		ModelInstance tile;
 		Array<ModelInstance> instances = new Array<ModelInstance>();
 
