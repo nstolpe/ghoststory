@@ -43,6 +43,7 @@ public class GameScreen extends AbstractScreen {
 	public boolean loading;
 	public Array<GameModel> gameModels = new Array<GameModel>();
 
+	// AnimationController should be on GameModel
 	private AnimationController controller;
 	public PointLight travellingLight;
 	public PointLight colorSwitchLight;
