@@ -40,8 +40,8 @@ public class TestShader implements Shader {
 	@Override
 	public void init() {
 		System.out.println("vertexing");
-		String vert = Gdx.files.internal("shaders/scene.vertex.glsl").readString();
-		String frag = Gdx.files.internal("shaders/scene.fragment.glsl").readString();
+		String vert = Gdx.files.internal("shaders/test.vertex.glsl").readString();
+		String frag = Gdx.files.internal("shaders/test.fragment.glsl").readString();
 		program = new ShaderProgram(vert, frag);
 		if (!program.isCompiled())
 			throw new GdxRuntimeException(program.getLog());

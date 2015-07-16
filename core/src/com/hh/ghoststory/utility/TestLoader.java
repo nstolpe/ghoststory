@@ -45,11 +45,18 @@ public class TestLoader {
 			tile.transform.setTranslation(10, 2, z + 5);
 			instances.add(tile);
 		}
-//		front of the wall thing.
+//		thin front of the wall thing.
 		for (int y = 0; y < 2; y++) {
 			tile = new ModelInstance(assetManager.get("models/tile.g3dj", Model.class));
 			tile.transform.setToRotation(new Vector3(1, 0, 0), 90);
 			tile.transform.setTranslation(10, y + 0.5f, 7.5f);
+			instances.add(tile);
+		}
+//		thin back of wall
+		for (int y = 0; y < 2; y++) {
+			tile = new ModelInstance(assetManager.get("models/tile.g3dj", Model.class));
+			tile.transform.setToRotation(new Vector3(1, 0, 0), 270);
+			tile.transform.setTranslation(10, y + 0.5f, 4.5f);
 			instances.add(tile);
 		}
 //		side of the wall thing, the big part.
