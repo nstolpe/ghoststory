@@ -20,7 +20,7 @@ public class DualCameraAbstractScreen extends AbstractScreen {
 	protected OrthographicCamera orthographicCamera = null;
 	protected CameraInputController camController;
 	protected AssetManager assetManager = new AssetManager();
-	protected Array<ModelInstance> instances = new Array<>();
+	protected Array<ModelInstance> instances = new Array<ModelInstance>();
     protected boolean loading;
 
 	public DualCameraAbstractScreen(GhostStory game) {
