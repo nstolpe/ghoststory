@@ -26,8 +26,17 @@ varying vec3 v_normal;
 
 #ifdef textureFlag
 attribute vec2 a_texCoord0;
-varying vec2 v_texCoords0;
 #endif // textureFlag
+
+#ifdef diffuseTextureFlag
+uniform vec4 u_diffuseUVTransform;
+varying vec2 v_diffuseUV;
+#endif
+
+#ifdef specularTextureFlag
+uniform vec4 u_specularUVTransform;
+varying vec2 v_specularUV;
+#endif
 
 #ifdef boneWeight0Flag
 #define boneWeightsFlag
@@ -176,9 +185,13 @@ varying vec3 v_ambientLight;
 #endif // lightingFlag
 
 void main() {
-	#ifdef textureFlag
-		v_texCoords0 = a_texCoord0;
-	#endif // textureFlag
+	#ifdef diffuseTextureFlag
+		v_diffuseUV = u_diffuseUVTransform.xy + a_texCoord0 * u_diffuseUVTransform.zw;
+	#endif //diffuseTextureFlag
+	
+	#ifdef specularTextureFlag
+		v_specularUV = u_specularUVTransform.xy + a_texCoord0 * u_specularUVTransform.zw;
+	#endif //specularTextureFlag
 	
 	#if defined(colorFlag)
 		v_color = a_color;
@@ -224,9 +237,9 @@ void main() {
 	#else
 		vec4 pos = u_worldTrans * vec4(a_position, 1.0);
 	#endif
-
+		
 	gl_Position = u_projViewTrans * pos;
-
+		
 	#ifdef shadowMapFlag
 		vec4 spos = u_shadowMapProjViewTrans * pos;
 		v_shadowMapUv.xy = (spos.xy / spos.w) * 0.5 + 0.5;
@@ -289,9 +302,11 @@ void main() {
 			
 		#ifdef specularFlag
 			v_lightSpecular = vec3(0.0);
-			// vec3 viewVec = normalize(u_cameraPosition.xyz - pos.xyz);
-			// this is maybe fixing the specular thing --ns
-			vec3 viewVec = normalize(pos.xyz);
+			// Uncommenting normalize(pos.xyz) might have fixed that specular issue before.
+			// doesn't seem to be happening now w/o it though, but it's there if it needs
+			// to change back.
+			// vec3 viewVec = normalize(pos.xyz);
+			vec3 viewVec = normalize(u_cameraPosition.xyz - pos.xyz);
 		#endif // specularFlag
 			
 		#if defined(numDirectionalLights) && (numDirectionalLights > 0) && defined(normalFlag)
