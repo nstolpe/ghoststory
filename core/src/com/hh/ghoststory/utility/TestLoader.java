@@ -6,9 +6,10 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.PointLightsAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.environment.SpotLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -79,7 +80,8 @@ public class TestLoader {
 		BaseLight[] lights = {
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
 				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
-				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1)//,
+				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
+				new SpotLight().set(new Color(0.5f, 0.3f, 1f, 1f), new Vector3(3,1,3), new Vector3(-1, 0, -1), 1, 1, 1)
 //				travellingLight,
 //				colorSwitchLight
 		};
