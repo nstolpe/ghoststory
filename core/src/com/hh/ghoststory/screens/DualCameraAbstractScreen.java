@@ -24,7 +24,7 @@ public abstract class DualCameraAbstractScreen extends AbstractScreen {
     protected boolean loading;
 
 	public DualCameraAbstractScreen(GhostStory game) {
-		this(game, new OrthographicCamera());
+		this(game, new PerspectiveCamera());
 	}
 
 	public DualCameraAbstractScreen(GhostStory game, Camera camera) {

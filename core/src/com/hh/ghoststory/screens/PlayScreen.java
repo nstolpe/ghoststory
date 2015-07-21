@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.shadowcaster.PointShadowCaster;
 import com.hh.ghoststory.utility.TestLoader;
 
 /**
@@ -25,6 +27,7 @@ public class PlayScreen extends DualCameraAbstractScreen {
 		super(game);
 		setClear(0.7f, 0.1f, 1f, 1);
 
+		PointShadowCaster p = new PointShadowCaster(new PointLight());
 		// load assets. These should be pulled in through a config.
 		assetManager.load("models/ghost.g3dj", Model.class);
 		assetManager.load("models/tile.g3dj", Model.class);

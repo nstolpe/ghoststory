@@ -302,11 +302,20 @@ void main() {
 			
 		#ifdef specularFlag
 			v_lightSpecular = vec3(0.0);
-			// Uncommenting normalize(pos.xyz) might have fixed that specular issue before.
-			// doesn't seem to be happening now w/o it though, but it's there if it needs
-			// to change back.
-			// vec3 viewVec = normalize(pos.xyz);
-			vec3 viewVec = normalize(u_cameraPosition.xyz - pos.xyz);
+			// Using
+			// `vec3 viewVec = normalize(pos.xyz);`
+			// instead of
+			// `vec3 viewVec = normalize(u_cameraPosition.xyz - pos.xyz);`
+			// keeps the specular heightlight in the same place on models,
+			// so it doesn't move in relation to the camera. This can be
+			// switched on and off by passing something to the shader. Off for
+			// ortho but on for perspective?
+			//
+			// `u_cameraPosition` is also used with the `fogFlag`
+			// @author nils
+
+			 vec3 viewVec = normalize(pos.xyz);
+			// vec3 viewVec = normalize(u_cameraPosition.xyz - pos.xyz);
 		#endif // specularFlag
 			
 		#if defined(numDirectionalLights) && (numDirectionalLights > 0) && defined(normalFlag)

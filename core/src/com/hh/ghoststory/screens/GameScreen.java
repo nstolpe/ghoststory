@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GameScreen extends AbstractScreen {
-	public static int DEPTHMAPSIZE = 2048;
+	public static int DEPTHMAPSIZE = 4096;
 	public ModelBatchRenderer renderer;
 
 	private InputHandler inputHandler;
@@ -89,6 +89,7 @@ public class GameScreen extends AbstractScreen {
 		tweenHandler.update();
 		cameraHandler.getActiveCamera().update();
 
+		for (final Light light : lights) light.needsUpdate= true;
 		if (doneLoading()) {
 			this.updateModels();
 			this.renderer.setRenderables(collectModelInstances());
@@ -231,7 +232,7 @@ public class GameScreen extends AbstractScreen {
 //		lights.add(new PointLight(this, new Vector3(0f, 13.8f, 32f)));
 		lights.add(new PointLight(this, new Vector3(-25.5f, 12.0f, -26f)));
 		lights.add(new PointLight(this, new Vector3(5f, 5.0f, 0f)));
-		lights.add(new DirectionalLight(this, new Vector3(0, 0, 2), new Vector3(1, 1, 0)));
+//		lights.add(new DirectionalLight(this, new Vector3(0, 0, 2), new Vector3(1, 1, 0)));
 //		lights.add(new MovingPointLight(this, new Vector3(0f, 30.0f, 0f)));
 		this.renderer.setUpLights(lights);
 	}

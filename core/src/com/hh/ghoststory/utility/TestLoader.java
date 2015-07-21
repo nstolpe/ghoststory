@@ -79,7 +79,10 @@ public class TestLoader {
 //		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
 		BaseLight[] lights = {
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
-				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 1, 4, 1),
+				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 2, 4, 1),
+				new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 2, 6, 1),
+				new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 4, 2, 6, 1),
+				new PointLight().set(new Color(1f, 0.3f, 0.3f, 1f), 6, 2, 4, 1),
 				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
 				new SpotLight().set(new Color(0.5f, 0.3f, 1f, 1f), new Vector3(3,1,3), new Vector3(-1, 0, -1), 1, 1, 1)
 //				travellingLight,
