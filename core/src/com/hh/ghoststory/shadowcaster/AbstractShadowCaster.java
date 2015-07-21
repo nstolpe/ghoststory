@@ -10,27 +10,30 @@ import com.badlogic.gdx.math.Vector3;
 public abstract class AbstractShadowCaster {
 	protected BaseLight light;
 	protected Camera camera;
-	protected Vector3 position;
-	protected int depthmapsize = 1024;
+	public int depthmapsize = 1024;
+	public boolean casting = true;
 
+	public AbstractShadowCaster() {
+		this.light = new BaseLight() {
+			@Override
+			public BaseLight setColor(float r, float g, float b, float a) {
+				return super.setColor(r, g, b, a);
+			}
+		};
+	}
 	/**
 	 *
 	 * @param light
-	 * @param position
 	 */
-	public AbstractShadowCaster(BaseLight light, Vector3 position) {
+	public AbstractShadowCaster(BaseLight light) {
 		this.light = light;
-		this.position = position;
 	}
 
 	/**
-	 *
+	 * Sets the light.
 	 * @param light
-	 * @param position
-	 * @param depthmapsize
 	 */
-	public AbstractShadowCaster(BaseLight light, Vector3 position, int depthmapsize) {
-		this(light, position);
-		this.depthmapsize = depthmapsize;
+	public void set(BaseLight light) {
+		this.light = light;
 	}
 }
