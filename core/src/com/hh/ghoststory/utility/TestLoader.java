@@ -18,6 +18,8 @@ import com.hh.ghoststory.shadowcaster.PointShadowCaster;
  * Created by nils on 7/15/15.
  */
 public class TestLoader {
+	public static PointShadowCaster pointShadowCaster = new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 4, 1, 6, 1));
+
 	public static Array<ModelInstance> getTestModels(AssetManager assetManager) {
 		ModelInstance character = new ModelInstance(assetManager.get("models/ghost.g3dj", Model.class));
 		character.transform.setTranslation(5,0,5);
@@ -78,12 +80,12 @@ public class TestLoader {
 	public static void setLights(Environment environment) {
 //		travellingLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
 //		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
-		PointShadowCaster foo = new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 4, 1, 6, 1));
+
 		BaseLight[] lights = {
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
 				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 2, 4, 1),
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 2, 6, 1),
-				foo.light,
+				pointShadowCaster.light,
 //				new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 4, 2, 6, 1),
 				new PointLight().set(new Color(1f, 0.3f, 0.3f, 1f), 6, 2, 4, 1),
 //				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),

@@ -4,10 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Cubemap;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.glutils.FrameBufferCubemap;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.hh.ghoststory.ScreenshotFactory;
 
 /**
  * Created by nils on 7/21/15.
@@ -23,6 +28,7 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
     public PointShadowCaster(PointLight light) {
 	    this.light.set(light);
 	    this.position.set(light.position);
+	    modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 	    setupCamera();
 	    setupFrameBuffer();
     }
@@ -30,6 +36,7 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
 	public PointShadowCaster(PointLight light, Vector3 position) {
 		this.position.set(position);
 		this.light = light.setPosition(position);
+		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 		setupCamera();
 		setupFrameBuffer();
 	}
@@ -50,7 +57,7 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
     }
 
     @Override
-    public void render() {
+    public void render(Array<ModelInstance> instances, Environment environment) {
 	    frameBuffer.begin();
 	    while( frameBuffer.nextSide() ) {
 		    frameBuffer.getSide().getUp(camera.up);
@@ -59,10 +66,12 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
 		    Gdx.gl.glClearColor(0, 0, 0, 1);
 		    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		    modelBatch.begin(camera);
-		    modelBatch.render(instances);
+		    modelBatch.render(instances, environment);
 		    modelBatch.end();
+		    ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
 	    }
 	    frameBuffer.end();
+	    depthMap = frameBuffer.getColorBufferTexture();
     }
 
     @Override
