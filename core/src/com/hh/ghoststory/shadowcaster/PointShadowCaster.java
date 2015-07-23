@@ -28,7 +28,7 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
     public PointShadowCaster(PointLight light) {
 	    this.light.set(light);
 	    this.position.set(light.position);
-	    modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
+//	    modelBatch = new ModelBatch(Gdx.files.internal("shaders/depth.vertex.glsl"), Gdx.files.internal("shaders/depth.fragment.glsl"));
 	    setupCamera();
 	    setupFrameBuffer();
     }
@@ -64,7 +64,6 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
 		shaderProgram.end();
 
 		frameBuffer.begin();
-
 	    while(frameBuffer.nextSide()) {
 		    frameBuffer.getSide().getUp(camera.up);
 		    frameBuffer.getSide().getDirection(camera.direction);
@@ -72,13 +71,14 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
 		    Gdx.gl.glClearColor(0, 0, 0, 1);
 		    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		    modelBatch.begin(camera);
-		    modelBatch.render(instances, environment);
-//		    modelBatch.render(instances);
+//		    modelBatch.render(instances, environment);
+		    modelBatch.render(instances);
 		    modelBatch.end();
 		    ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
 	    }
 	    frameBuffer.end();
-	    depthMap = frameBuffer.getColorBufferTexture();
+
+		depthMap = frameBuffer.getColorBufferTexture();
     }
 
     @Override
