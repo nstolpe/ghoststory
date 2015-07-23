@@ -58,16 +58,22 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
 
     @Override
     public void render(Array<ModelInstance> instances, Environment environment) {
-	    frameBuffer.begin();
-	    while( frameBuffer.nextSide() ) {
+		shaderProgram.begin();
+		shaderProgram.setUniformf("u_cameraFar", camera.far);
+		shaderProgram.setUniformf("u_lightPosition", position);
+		shaderProgram.end();
+
+		frameBuffer.begin();
+
+	    while(frameBuffer.nextSide()) {
 		    frameBuffer.getSide().getUp(camera.up);
 		    frameBuffer.getSide().getDirection(camera.direction);
 		    camera.update();
 		    Gdx.gl.glClearColor(0, 0, 0, 1);
 		    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		    modelBatch.begin(camera);
-//		    modelBatch.render(instances, environment);
-		    modelBatch.render(instances);
+		    modelBatch.render(instances, environment);
+//		    modelBatch.render(instances);
 		    modelBatch.end();
 		    ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
 	    }
