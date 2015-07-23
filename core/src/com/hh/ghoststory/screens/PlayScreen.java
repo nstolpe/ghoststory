@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.renderers.ShadowRenderer;
 import com.hh.ghoststory.shadowcaster.PointShadowCaster;
 import com.hh.ghoststory.utility.TestLoader;
 
@@ -19,6 +20,7 @@ public class PlayScreen extends DualCameraAbstractScreen {
 //	private ModelBatch modelBatch = new ModelBatch();
 
 	private Environment environment = new Environment();
+	private ShadowRenderer renderer = new ShadowRenderer(this);
 
 	public PlayScreen(GhostStory game, Camera camera) {
 		super(game, camera);
@@ -47,6 +49,7 @@ public class PlayScreen extends DualCameraAbstractScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
+		renderer.render();
 
 		if (loading && assetManager.update())
 			doneLoading();

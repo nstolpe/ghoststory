@@ -20,10 +20,10 @@ public abstract class AbstractScreen implements Screen {
 	protected Camera camera;
 	protected float screenWidth;
 	protected float screenHeight;
-	protected float clearRed = 0f;
-	protected float clearBlue = 0f;
-	protected float clearGreen = 0f;
-	protected float clearAlpha = 1f;
+	public float clearRed = 0f;
+	public float clearBlue = 0f;
+	public float clearGreen = 0f;
+	public float clearAlpha = 1f;
 
 	protected BitmapFont font = new BitmapFont(
 			Gdx.files.internal("fonts/crimson.fnt"),
