@@ -66,9 +66,10 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
 		    Gdx.gl.glClearColor(0, 0, 0, 1);
 		    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		    modelBatch.begin(camera);
-		    modelBatch.render(instances, environment);
+//		    modelBatch.render(instances, environment);
+		    modelBatch.render(instances);
 		    modelBatch.end();
-		    ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
+//		    ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
 	    }
 	    frameBuffer.end();
 	    depthMap = frameBuffer.getColorBufferTexture();

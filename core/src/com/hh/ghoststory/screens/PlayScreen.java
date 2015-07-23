@@ -30,6 +30,7 @@ public class PlayScreen extends DualCameraAbstractScreen {
 		PointShadowCaster p = new PointShadowCaster(new PointLight());
 		// load assets. These should be pulled in through a config.
 		assetManager.load("models/ghost.g3dj", Model.class);
+		assetManager.load("models/scene.g3dj", Model.class);
 		assetManager.load("models/tile.g3dj", Model.class);
 
 		// Test loader is for temporary data/assets/whatever
