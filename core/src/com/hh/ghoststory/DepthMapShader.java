@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class DepthMapShader extends BaseShader {
-	public Renderable	renderable;
+	public Renderable renderable;
 
 	@Override
 	public void end() {
@@ -39,11 +39,10 @@ public class DepthMapShader extends BaseShader {
 
 	@Override
 	public void render(final Renderable renderable) {
-		if (!renderable.material.has(BlendingAttribute.Type)) {
+		if (!renderable.material.has(BlendingAttribute.Type))
 			context.setBlending(false, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		} else {
+		else
 			context.setBlending(true, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
 		super.render(renderable);
 	}
 
