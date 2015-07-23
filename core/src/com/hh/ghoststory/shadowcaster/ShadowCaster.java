@@ -16,7 +16,7 @@ import com.hh.ghoststory.utility.Shader;
  * Created by nils on 7/20/15.
  * @TODO move some methods to interface, make this implement the interface.
  */
-public abstract class AbstractShadowCaster {
+public abstract class ShadowCaster {
 	public PerspectiveCamera camera = new PerspectiveCamera();
 	public Vector3 position = new Vector3();
 	public int depthmapsize = 1024;

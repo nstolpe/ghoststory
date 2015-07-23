@@ -54,7 +54,10 @@ public class PlayScreen extends DualCameraAbstractScreen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+		// Register shadow lights and loop through them
+		// for (ShadowCaster caster: shadowcasters) caster.render(instances);
 		TestLoader.pointShadowCaster.render(instances);
+
 		camera.update();
 		modelBatch.begin(camera);
 		modelBatch.render(instances, environment);

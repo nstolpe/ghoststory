@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Disposable;
 /**
  * Created by nils on 7/21/15.
  */
-public class PointShadowCaster extends AbstractShadowCaster implements Disposable {
+public class PointShadowCaster extends ShadowCaster implements Disposable {
     public PointLight light = new PointLight();
     public FrameBufferCubemap frameBuffer;
     public Cubemap depthMap;
