@@ -12,8 +12,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Setters;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
-public class DepthMapShader extends BaseShader
-{
+public class DepthMapShader extends BaseShader {
 	public Renderable	renderable;
 
 	@Override
