@@ -50,7 +50,7 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
         camera.fieldOfView = 90f;
         camera.viewportWidth = depthmapsize;
         camera.viewportHeight = depthmapsize;
-        camera.near = 1f;
+        camera.near = 4f;
         camera.far = 70;
         camera.position.set(position);
         camera.update();
@@ -69,7 +69,7 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
 //		    modelBatch.render(instances, environment);
 		    modelBatch.render(instances);
 		    modelBatch.end();
-//		    ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
+		    ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
 	    }
 	    frameBuffer.end();
 	    depthMap = frameBuffer.getColorBufferTexture();

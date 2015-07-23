@@ -17,19 +17,16 @@ import com.hh.ghoststory.screens.GameScreen;
  * Shader used to render multiple shadows on the main scene.
  * This shader will render the scene multiple times, adding shadows for one light at a time
  */
-public class ShadowMapShader extends BaseShader
-{
+public class ShadowMapShader extends BaseShader {
 	public Renderable	renderable;
 	public GameScreen gameScreen;
 
 	@Override
-	public void end()
-	{
+	public void end() {
 		super.end();
 	}
 
-	public ShadowMapShader(final GameScreen gameScreen, final Renderable renderable, final ShaderProgram shaderProgramModelBorder)
-	{
+	public ShadowMapShader(final GameScreen gameScreen, final Renderable renderable, final ShaderProgram shaderProgramModelBorder) {
 		this.gameScreen = gameScreen;
 		this.renderable = renderable;
 		this.program = shaderProgramModelBorder;
@@ -40,8 +37,7 @@ public class ShadowMapShader extends BaseShader
 	}
 
 	@Override
-	public void begin(final Camera camera, final RenderContext context)
-	{
+	public void begin(final Camera camera, final RenderContext context) {
 		super.begin(camera, context);
 		context.setDepthTest(GL20.GL_LEQUAL);
 		context.setCullFace(GL20.GL_BACK);
@@ -49,22 +45,17 @@ public class ShadowMapShader extends BaseShader
 	}
 
 	@Override
-	public void render(final Renderable renderable)
-	{
-		if (!renderable.material.has(BlendingAttribute.Type))
-		{
+	public void render(final Renderable renderable) {
+		if (!renderable.material.has(BlendingAttribute.Type)) {
 			context.setBlending(false, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-		else
-		{
+		} else {
 			context.setBlending(true, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		}
 		super.render(renderable);
 	}
 
 	@Override
-	public void init()
-	{
+	public void init() {
 		final ShaderProgram program = this.program;
 		this.program = null;
 		init(program, renderable);
@@ -72,35 +63,28 @@ public class ShadowMapShader extends BaseShader
 	}
 
 	@Override
-	public int compareTo(final Shader other)
-	{
+	public int compareTo(final Shader other) {
 		return 0;
 	}
 
 	@Override
-	public boolean canRender(final Renderable instance)
-	{
+	public boolean canRender(final Renderable instance) {
 		return true;
 	}
 
 	@Override
-	public void render(final Renderable renderable, final Attributes combinedAttributes)
-	{
+	public void render(final Renderable renderable, final Attributes combinedAttributes) {
 		boolean firstCall = true;
-		for (final Light light : gameScreen.lights)
-		{
+		for (final Light light : gameScreen.lights) {
 			light.applyToShader(program);
-			if (firstCall)
-			{
+			if (firstCall) {
 				// Classic depth test 
 				context.setDepthTest(GL20.GL_LEQUAL);
 				// Deactivate blending on first pass
 				context.setBlending(false, GL20.GL_ONE, GL20.GL_ONE);
 				super.render(renderable, combinedAttributes);
 				firstCall = false;
-			}
-			else
-			{
+			} else {
 				// We could use the classic depth test (less or equal), but strict equality works fine on next passes as depth buffer already contains our scene
 				context.setDepthTest(GL20.GL_EQUAL);
 				// Activate additive blending
