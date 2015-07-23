@@ -17,13 +17,11 @@ public class DepthMapShader extends BaseShader
 	public Renderable	renderable;
 
 	@Override
-	public void end()
-	{
+	public void end() {
 		super.end();
 	}
 
-	public DepthMapShader(final Renderable renderable, final ShaderProgram shaderProgramModelBorder)
-	{
+	public DepthMapShader(final Renderable renderable, final ShaderProgram shaderProgramModelBorder) {
 		this.renderable = renderable;
 		this.program = shaderProgramModelBorder;
 		register(Inputs.worldTrans, Setters.worldTrans);
@@ -33,8 +31,7 @@ public class DepthMapShader extends BaseShader
 	}
 
 	@Override
-	public void begin(final Camera camera, final RenderContext context)
-	{
+	public void begin(final Camera camera, final RenderContext context) {
 		super.begin(camera, context);
 		context.setDepthTest(GL20.GL_LEQUAL);
 		context.setCullFace(GL20.GL_BACK);
@@ -42,22 +39,17 @@ public class DepthMapShader extends BaseShader
 	}
 
 	@Override
-	public void render(final Renderable renderable)
-	{
-		if (!renderable.material.has(BlendingAttribute.Type))
-		{
+	public void render(final Renderable renderable) {
+		if (!renderable.material.has(BlendingAttribute.Type)) {
 			context.setBlending(false, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-		else
-		{
+		} else {
 			context.setBlending(true, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		}
 		super.render(renderable);
 	}
 
 	@Override
-	public void init()
-	{
+	public void init() {
 		final ShaderProgram program = this.program;
 		this.program = null;
 		init(program, renderable);
@@ -65,20 +57,17 @@ public class DepthMapShader extends BaseShader
 	}
 
 	@Override
-	public int compareTo(final Shader other)
-	{
+	public int compareTo(final Shader other) {
 		return 0;
 	}
 
 	@Override
-	public boolean canRender(final Renderable instance)
-	{
+	public boolean canRender(final Renderable instance) {
 		return true;
 	}
 
 	@Override
-	public void render(final Renderable renderable, final Attributes combinedAttributes)
-	{
+	public void render(final Renderable renderable, final Attributes combinedAttributes) {
 		super.render(renderable, combinedAttributes);
 	}
 
