@@ -32,7 +32,7 @@ public abstract class AbstractShadowCaster {
 
 	public abstract void setupCamera();
 
-	public abstract void render(Array<ModelInstance> instances, Environment environment);
+	public abstract void render(Array<ModelInstance> instances);
 
 	public void setPosition(Vector3 position) {
 		this.position = position;
