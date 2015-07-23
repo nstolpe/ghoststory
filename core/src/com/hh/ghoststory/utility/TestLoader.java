@@ -19,17 +19,24 @@ import com.hh.ghoststory.shadowcaster.PointShadowCaster;
  */
 public class TestLoader {
 	public static PointShadowCaster pointShadowCaster = new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 4, 1, 6, 1));
+	public static Vector3[] characterPositions = new Vector3[]{
+			new Vector3(5,0,5),
+			new Vector3(0,0,0),
+			new Vector3(10,0,6),
+	};
 
 	public static Array<ModelInstance> getTestModels(AssetManager assetManager) {
-		ModelInstance character = new ModelInstance(assetManager.get("models/ghost.g3dj", Model.class));
-		character.transform.setTranslation(5,0,5);
-		ModelInstance tile;
-		ModelInstance scene = new ModelInstance(assetManager.get("models/scene.g3dj", Model.class));
-		scene.transform.setTranslation(0,0,0);
 		Array<ModelInstance> instances = new Array<ModelInstance>();
 
-		instances.add(character);
+		ModelInstance scene = new ModelInstance(assetManager.get("models/scene.g3dj", Model.class));
+		scene.transform.setTranslation(0,0,0);
 		instances.add(scene);
+
+		for (int i =0; i < characterPositions.length; i++) {
+			ModelInstance character = new ModelInstance(assetManager.get("models/ghost.g3dj", Model.class));
+			character.transform.setTranslation(characterPositions[i]);
+			instances.add(character);
+		}
 
 		return instances;
 	}
@@ -38,7 +45,7 @@ public class TestLoader {
 //		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
 
 		BaseLight[] lights = {
-				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 1, 0, 1),
+				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1),
 				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 2, 4, 1),
 				new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 2, 6, 1),
 				pointShadowCaster.light,

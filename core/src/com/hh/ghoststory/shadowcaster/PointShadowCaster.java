@@ -50,7 +50,7 @@ public class PointShadowCaster extends AbstractShadowCaster implements Disposabl
         camera.fieldOfView = 90f;
         camera.viewportWidth = depthmapsize;
         camera.viewportHeight = depthmapsize;
-        camera.near = 4f;
+        camera.near = 1f;
         camera.far = 70;
         camera.position.set(position);
         camera.update();
