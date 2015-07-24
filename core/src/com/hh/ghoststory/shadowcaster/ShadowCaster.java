@@ -19,7 +19,7 @@ import com.hh.ghoststory.utility.ShaderUtil;
 public abstract class ShadowCaster {
 	public PerspectiveCamera camera = new PerspectiveCamera();
 	public Vector3 position = new Vector3();
-	public int depthmapsize = 4096;
+	public int depthmapsize = 1024;
 	public boolean casting = true;
 
 	public ShaderProgram shaderProgram = ShaderUtil.getShader("depth");
