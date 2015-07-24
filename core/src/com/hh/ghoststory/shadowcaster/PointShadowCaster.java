@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.glutils.FrameBufferCubemap;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.hh.ghoststory.ScreenshotFactory;
 
 /**
  * Created by nils on 7/21/15.
@@ -82,6 +84,16 @@ public class PointShadowCaster extends ShadowCaster implements Disposable {
 		light.setPosition(position);
 		camera.position.set(position);
 		camera.update();
+	}
+
+	@Override
+	public void applyToShader(final ShaderProgram sceneShaderProgram) {
+		final int textureNum = 2;
+		depthMap.bind(textureNum);
+		sceneShaderProgram.setUniformf("u_type", 2);
+		sceneShaderProgram.setUniformi("u_depthMapCube", textureNum);
+		sceneShaderProgram.setUniformf("u_cameraFar", camera.far);
+		sceneShaderProgram.setUniformf("u_lightPosition", position);
 	}
 
     @Override

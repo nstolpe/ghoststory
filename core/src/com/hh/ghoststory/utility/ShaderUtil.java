@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 /**
  * Created by nils on 7/23/15.
  */
-public class Shader {
+public class ShaderUtil {
     public static final String shaderPath = "shaders/";
 
     /**

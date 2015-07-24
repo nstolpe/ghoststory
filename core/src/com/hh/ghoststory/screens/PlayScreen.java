@@ -17,9 +17,7 @@ import com.hh.ghoststory.utility.TestLoader;
  */
 public class PlayScreen extends DualCameraAbstractScreen {
 	private ModelBatch modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
-//	private ModelBatch modelBatch = new ModelBatch();
 
-	private Environment environment = new Environment();
 	private ShadowRenderer renderer = new ShadowRenderer(this);
 
 	public PlayScreen(GhostStory game, Camera camera) {
@@ -35,8 +33,11 @@ public class PlayScreen extends DualCameraAbstractScreen {
 		assetManager.load("models/scene.g3dj", Model.class);
 		assetManager.load("models/tile.g3dj", Model.class);
 
-		// Test loader is for temporary data/assets/whatever
+		// TestLoader is for temporary data/assets/whatever. Only used for testing
+		// this setup, move stuff to more permanent locations once it's all working.
 		TestLoader.setLights(environment);
+		shadowCasters.add(TestLoader.pointShadowCaster);
+
 		loading = true;
 	}
 
@@ -49,7 +50,7 @@ public class PlayScreen extends DualCameraAbstractScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		renderer.render();
+
 
 		if (loading && assetManager.update())
 			doneLoading();
@@ -57,14 +58,12 @@ public class PlayScreen extends DualCameraAbstractScreen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		// Register shadow lights and loop through them
-		// for (ShadowCaster caster: shadowcasters) caster.render(instances);
-		TestLoader.pointShadowCaster.render(instances);
 
 		camera.update();
-		modelBatch.begin(camera);
-		modelBatch.render(instances, environment);
-		modelBatch.end();
+//		modelBatch.begin(camera);
+//		modelBatch.render(instances, environment);
+//		modelBatch.end();
+		renderer.render();
 	}
 
 	@Override

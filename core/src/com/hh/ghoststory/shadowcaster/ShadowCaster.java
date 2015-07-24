@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.DepthMapShader;
-import com.hh.ghoststory.utility.Shader;
+import com.hh.ghoststory.utility.ShaderUtil;
 
 /**
  * Created by nils on 7/20/15.
@@ -19,10 +19,10 @@ import com.hh.ghoststory.utility.Shader;
 public abstract class ShadowCaster {
 	public PerspectiveCamera camera = new PerspectiveCamera();
 	public Vector3 position = new Vector3();
-	public int depthmapsize = 1024;
+	public int depthmapsize = 4096;
 	public boolean casting = true;
 
-	public ShaderProgram shaderProgram = Shader.getShader("depth");
+	public ShaderProgram shaderProgram = ShaderUtil.getShader("depth");
 	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {
 		@Override
 		protected com.badlogic.gdx.graphics.g3d.Shader createShader(final Renderable renderable) {
@@ -37,4 +37,11 @@ public abstract class ShadowCaster {
 	public void setPosition(Vector3 position) {
 		this.position = position;
 	}
+
+	/**
+	 * Add the uniforms to the scene shader
+	 *
+	 * @param sceneShaderProgram
+	 */
+	public abstract void applyToShader(ShaderProgram sceneShaderProgram);
 }

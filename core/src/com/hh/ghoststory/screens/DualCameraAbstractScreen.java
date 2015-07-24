@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
@@ -20,8 +21,9 @@ public abstract class DualCameraAbstractScreen extends AbstractScreen {
 	protected OrthographicCamera orthographicCamera = null;
 	protected CameraInputController camController;
 	protected AssetManager assetManager = new AssetManager();
-	protected Array<ModelInstance> instances = new Array<ModelInstance>();
+	public Array<ModelInstance> instances = new Array<ModelInstance>();
     protected boolean loading;
+	public Environment environment = new Environment();
 
 	public DualCameraAbstractScreen(GhostStory game) {
 		this(game, new PerspectiveCamera());
