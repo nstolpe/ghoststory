@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.shadowcaster.PointShadowCaster;
 import com.hh.ghoststory.shadowcaster.ShadowCaster;
 
 /**
@@ -26,7 +27,7 @@ public abstract class AbstractScreen implements Screen {
 	public float clearBlue = 0f;
 	public float clearGreen = 0f;
 	public float clearAlpha = 1f;
-	public Array<ShadowCaster> shadowCasters = new Array<ShadowCaster>();
+	public Array<PointShadowCaster> shadowCasters = new Array<PointShadowCaster>();
 
 	protected BitmapFont font = new BitmapFont(
 			Gdx.files.internal("fonts/crimson.fnt"),

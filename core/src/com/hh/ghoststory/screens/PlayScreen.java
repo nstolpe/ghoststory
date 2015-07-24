@@ -16,7 +16,6 @@ import com.hh.ghoststory.utility.TestLoader;
  * Created by nils on 7/14/15.
  */
 public class PlayScreen extends DualCameraAbstractScreen {
-	private ModelBatch modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 
 	private ShadowRenderer renderer = new ShadowRenderer(this);
 
@@ -27,7 +26,6 @@ public class PlayScreen extends DualCameraAbstractScreen {
 		super(game);
 		setClear(0.7f, 0.1f, 1f, 1);
 
-		PointShadowCaster p = new PointShadowCaster(new PointLight());
 		// load assets. These should be pulled in through a config.
 		assetManager.load("models/ghost.g3dj", Model.class);
 		assetManager.load("models/scene.g3dj", Model.class);
@@ -36,7 +34,7 @@ public class PlayScreen extends DualCameraAbstractScreen {
 		// TestLoader is for temporary data/assets/whatever. Only used for testing
 		// this setup, move stuff to more permanent locations once it's all working.
 		TestLoader.setLights(environment);
-		shadowCasters.add(TestLoader.pointShadowCaster);
+		shadowCasters.addAll(TestLoader.pointShadowCasters);
 
 		loading = true;
 	}

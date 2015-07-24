@@ -18,7 +18,13 @@ import com.hh.ghoststory.shadowcaster.PointShadowCaster;
  * Created by nils on 7/15/15.
  */
 public class TestLoader {
-	public static PointShadowCaster pointShadowCaster = new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 4, 1, 6, 1));
+	public static PointShadowCaster[] pointShadowCasters = new PointShadowCaster[]{
+			new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 20, 5, 6, 1)),
+			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 5, 0, 0.7f)),
+//			new PointShadowCaster(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 5, 4, 1)),
+//			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 5, 6, 1)),
+//			new PointShadowCaster(new PointLight().set(new Color(1f, 0.3f, 0.3f, 1f), 6, 5, 4, 1))
+	};
 	public static Vector3[] characterPositions = new Vector3[]{
 			new Vector3(5,0,5),
 			new Vector3(0,0,0),
@@ -43,20 +49,11 @@ public class TestLoader {
 	public static void setLights(Environment environment) {
 //		travellingLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
 //		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
+		BaseLight[] sources = new BaseLight[pointShadowCasters.length];
 
-		BaseLight[] lights = {
-				new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 2, 0, 1),
-				new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 2, 4, 1),
-				new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 2, 6, 1),
-				pointShadowCaster.light,
-//				new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 4, 2, 6, 1),
-				new PointLight().set(new Color(1f, 0.3f, 0.3f, 1f), 6, 2, 4, 1),
-//				new PointLight().set(new Color(0f, 0f, 1f, 1f), 6, 1, 0, 1),
-				new SpotLight().set(new Color(0.5f, 0.3f, 1f, 1f), new Vector3(3,1,3), new Vector3(-1, 0, -1), 1, 1, 1)
-//				travellingLight,
-//				colorSwitchLight
-		};
-		environment.add(lights);
+		for (int i = 0; i < sources.length; i++) sources[i] = pointShadowCasters[i].light;
+
+		environment.add(sources);
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.1f, 0.1f, 0.1f, 1));
 //		return environment;
 	}
