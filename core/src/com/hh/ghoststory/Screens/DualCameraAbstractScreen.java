@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.utility.ClassFunction;
-import com.hh.ghoststory.utility.TestLoader;
+import com.hh.ghoststory.Utility.ClassFunction;
+import com.hh.ghoststory.Utility.TestLoader;
 
 /**
  * Created by nils on 7/17/15.

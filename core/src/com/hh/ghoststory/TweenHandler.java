@@ -4,10 +4,9 @@ import aurelienribon.tweenengine.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
-import com.hh.ghoststory.screens.GameScreen;
-import com.hh.ghoststory.tween_accessors.ColorAccessor;
-import com.hh.ghoststory.tween_accessors.QuaternionAccessor;
-import com.hh.ghoststory.tween_accessors.Vector3Accessor;
+import com.hh.ghoststory.Screens.GameScreen;
+import com.hh.ghoststory.TweenAccessors.QuaternionAccessor;
+import com.hh.ghoststory.TweenAccessors.Vector3Accessor;
 
 import java.util.HashMap;
 import java.util.Map;

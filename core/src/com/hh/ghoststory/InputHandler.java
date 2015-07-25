@@ -1,18 +1,14 @@
 package com.hh.ghoststory;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
-import com.hh.ghoststory.screens.GameScreen;
-import com.hh.ghoststory.tween_accessors.QuaternionAccessor;
-import com.hh.ghoststory.tween_accessors.Vector3Accessor;
-
-import java.util.Random;
+import com.hh.ghoststory.Screens.GameScreen;
+import com.hh.ghoststory.TweenAccessors.QuaternionAccessor;
+import com.hh.ghoststory.TweenAccessors.Vector3Accessor;
 
 /**
  * Created by nils on 7/6/15.

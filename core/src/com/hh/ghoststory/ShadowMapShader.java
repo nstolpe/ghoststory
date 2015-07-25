@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Inputs;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Setters;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.hh.ghoststory.screens.GameScreen;
+import com.hh.ghoststory.Screens.GameScreen;
 
 /**
  * Shader used to render multiple shadows on the main scene.
@@ -78,7 +78,7 @@ public class ShadowMapShader extends BaseShader {
 		for (final Light light : gameScreen.lights) {
 			light.applyToShader(program);
 			if (firstCall) {
-				// Classic depth test 
+				// Classic depth test
 				context.setDepthTest(GL20.GL_LEQUAL);
 				// Deactivate blending on first pass
 				context.setBlending(false, GL20.GL_ONE, GL20.GL_ONE);

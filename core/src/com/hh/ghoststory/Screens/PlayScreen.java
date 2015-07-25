@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.renderers.ShadowRenderer;
-import com.hh.ghoststory.utility.TestLoader;
+import com.hh.ghoststory.Renderers.ShadowRenderer;
+import com.hh.ghoststory.Utility.TestLoader;
 
 /**
  * Created by nils on 7/14/15.
