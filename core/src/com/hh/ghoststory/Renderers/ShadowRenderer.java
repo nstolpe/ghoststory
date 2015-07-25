@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.hh.ghoststory.Shaders.ShadowShader;
 import com.hh.ghoststory.SimpleTextureShader;
 import com.hh.ghoststory.Screens.DualCameraAbstractScreen;
 import com.hh.ghoststory.ShadowCasters.ShadowCaster;
@@ -30,7 +31,8 @@ public class ShadowRenderer {
 	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {
 		@Override
 		protected Shader createShader(final Renderable renderable) {
-			return new SimpleTextureShader(renderable, shaderProgram);
+//			return new ShadowShader(renderable, shaderProgram);
+			return new ShadowShader(renderable, new DefaultShader.Config());
 		}
 	});
 	public ShaderProgram shaderProgramShadows = ShaderUtil.getShader("shadow");
@@ -80,7 +82,7 @@ public class ShadowRenderer {
 		shaderProgram.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
 		shaderProgram.end();
 
-		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
+//		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 		modelBatch.begin(screen.camera);
 		modelBatch.render(screen.instances, screen.environment);
 		modelBatch.end();
