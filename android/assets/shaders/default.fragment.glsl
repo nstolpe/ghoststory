@@ -113,7 +113,22 @@ varying vec2 v_texCoords0;
 varying float v_intensity;
 // @author nils
 void main() {
-	#if defined(normalFlag)
+	// shadowmap stuff
+	vec4 finalColor  = texture2D(u_diffuseTexture, v_texCoords0);
+	finalColor.rgb   = finalColor.rgb;
+
+	// Retrieve the shadow color from shadow map
+	vec2 c= gl_FragCoord.xy;
+	c.x/=u_screenWidth;
+	c.y/=u_screenHeight;
+	vec4 color=texture2D(u_shadows,c);
+
+	// Apply shadow
+	finalColor.rgb*=(0.4+0.6*color.a);
+
+	gl_FragColor = finalColor;
+	// @author nils
+	/*#if defined(normalFlag)
 		vec3 normal = v_normal;
 	#endif // normalFlag
 
@@ -191,20 +206,6 @@ void main() {
 		#endif
 	#else
 		gl_FragColor.a = 1.0;
-	#endif
-	// shadowmap stuff
-	vec4 finalColor  = texture2D(u_diffuseTexture, v_texCoords0);
-	finalColor.rgb   = finalColor.rgb*v_intensity;
+	#endif*/
 
-	// Retrieve the shadow color from shadow map
-	vec2 c= gl_FragCoord.xy;
-	c.x/=u_screenWidth;
-	c.y/=u_screenHeight;
-	vec4 color=texture2D(u_shadows,c);
-
-	// Apply shadow
-	finalColor.rgb*=(0.4+0.6*color.a);
-
-	gl_FragColor = finalColor;
-	// @author nils
 }

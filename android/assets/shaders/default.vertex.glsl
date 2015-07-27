@@ -357,13 +357,13 @@ void main() {
 	#endif // lightingFlag
 	// shadowmap stuff
 	v_texCoords0 = a_texCoord0;
-	v_intensity=1.0;
+/*	v_intensity=1.0;
 	vec3 normal = normalize(u_normalMatrix * a_normal);
 	if(normal.y<0.5){
 		if(normal.x>0.5 || normal.x<-0.5)
 			v_intensity*=0.8;
 		if(normal.z>0.5 || normal.z<-0.5)
 			v_intensity*=0.6;
-	}
+	}*/
 	// @author nils
 }
