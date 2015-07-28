@@ -32,8 +32,8 @@ public class ShadowRenderer {
 		@Override
 		protected Shader createShader(final Renderable renderable) {
 //			return new ShadowShader(renderable, shaderProgram);
-//			return new ShadowShader(renderable, new DefaultShader.Config());
-            return new SimpleTextureShader(renderable, shaderProgram);
+			return new ShadowShader(renderable, new ShadowShader.Config());
+//            return new SimpleTextureShader(renderable, shaderProgram);
 		}
 	});
 	public ShaderProgram shaderProgramShadows = ShaderUtil.getShader("shadow");
@@ -83,7 +83,7 @@ public class ShadowRenderer {
 		shaderProgram.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
 		shaderProgram.end();
 
-		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
+//		modelBatch = new ModelBatch(Gdx.files.internal("shaders/default.vertex.glsl"), Gdx.files.internal("shaders/default.fragment.glsl"));
 		modelBatch.begin(screen.camera);
 		modelBatch.render(screen.instances, screen.environment);
 		modelBatch.end();

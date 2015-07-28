@@ -21,7 +21,8 @@ public class ShadowShader extends DefaultShader {
 
         public Config () {
             super();
-            defaultCullFace = GL20.GL_FRONT;
+// wasn't rendering lights w/ this on. specific to depth?
+//            defaultCullFace = GL20.GL_FRONT;
         }
 
         public Config (String vertexShader, String fragmentShader) {
@@ -61,8 +62,7 @@ public class ShadowShader extends DefaultShader {
     public static String createPrefix(final Renderable renderable, final DefaultShader.Config config) {
         String prefix = DefaultShader.createPrefix(renderable, config);
         prefix += "#define shadowFlag\n";
-// Append extra stuff here.
-//        prefix += "#define ambientCubemapFlag\n";
+        // Append extra stuff here, like shadowFlag
         return prefix;
     }
     public ShadowShader (final Renderable renderable) {
