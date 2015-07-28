@@ -103,31 +103,39 @@ varying vec3 v_ambientLight;
 uniform vec4 u_fogColor;
 varying float v_fog;
 #endif // fogFlag
-// shadowmap stuff
-uniform sampler2D u_diffuseTexture;
-uniform sampler2D u_shadows;
-uniform float u_screenWidth;
-uniform float u_screenHeight;
 
-varying vec2 v_texCoords0;
-varying float v_intensity;
+// shadowmap stuff
+#ifdef shadowFlag
+// uniform sampler2D u_shadows;
+// uniform float u_screenWidth;
+// uniform float u_screenHeight;
+// varying vec2 v_texCoords0;
+// varying float v_intensity;
+
+// Below should be already defined.
+// uniform sampler2D u_diffuseTexture;
+#endif // shadowFlag
 // @author nils
+
 void main() {
 	// shadowmap stuff
-	vec4 finalColor  = texture2D(u_diffuseTexture, v_texCoords0);
-	finalColor.rgb   = finalColor.rgb;
+	#ifdef shadowFlag
+	// vec4 finalColor  = texture2D(u_diffuseTexture, v_texCoords0);
+	// finalColor.rgb   = finalColor.rgb * v_intensity;
 
 	// Retrieve the shadow color from shadow map
-	vec2 c= gl_FragCoord.xy;
-	c.x/=u_screenWidth;
-	c.y/=u_screenHeight;
-	vec4 color=texture2D(u_shadows,c);
+	// vec2 c= gl_FragCoord.xy;
+	// c.x/=u_screenWidth;
+	// c.y/=u_screenHeight;
+	// vec4 color=texture2D(u_shadows,c);
 
 	// Apply shadow
-	finalColor.rgb*=(0.4+0.6*color.a);
+	// finalColor.rgb*=(0.4+0.6*color.a);
 
-	gl_FragColor = finalColor;
+	// gl_FragColor = finalColor;
+	#endif // shadowFlag
 	// @author nils
+
 	#if defined(normalFlag)
 		vec3 normal = v_normal;
 	#endif // normalFlag
