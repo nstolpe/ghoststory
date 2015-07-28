@@ -128,7 +128,7 @@ void main() {
 
 	gl_FragColor = finalColor;
 	// @author nils
-	/*#if defined(normalFlag)
+	#if defined(normalFlag)
 		vec3 normal = v_normal;
 	#endif // normalFlag
 
@@ -206,6 +206,6 @@ void main() {
 		#endif
 	#else
 		gl_FragColor.a = 1.0;
-	#endif*/
+	#endif
 
 }

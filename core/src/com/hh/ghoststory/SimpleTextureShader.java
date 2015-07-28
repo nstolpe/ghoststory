@@ -25,9 +25,9 @@ public class SimpleTextureShader extends BaseShader
 		super.end();
 	}
 
-	public SimpleTextureShader(final Renderable renderable, final ShaderProgram shaderProgramModelBorder) {
+	public SimpleTextureShader(final Renderable renderable, final ShaderProgram shaderProgram) {
 		this.renderable = renderable;
-		this.program = shaderProgramModelBorder;
+		this.program = shaderProgram;
 		register(Inputs.worldTrans, Setters.worldTrans);
 		register(Inputs.projViewTrans, Setters.projViewTrans);
 		register(Inputs.normalMatrix, Setters.normalMatrix);
@@ -43,15 +43,17 @@ public class SimpleTextureShader extends BaseShader
 
 	}
 
-	@Override
-	public void render(final Renderable renderable) {
-		if (!renderable.material.has(BlendingAttribute.Type)) {
-			context.setBlending(false, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		} else {
-			context.setBlending(true, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-		super.render(renderable);
-	}
+// This might be ok to take out, nothing seems to have died
+// Lighting may work better, original does something w/ lights
+//	@Override
+//	public void render(final Renderable renderable) {
+//		if (!renderable.material.has(BlendingAttribute.Type)) {
+//			context.setBlending(false, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//		} else {
+//			context.setBlending(true, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//		}
+//		super.render(renderable);
+//	}
 
 	@Override
 	public void init() {
