@@ -46,11 +46,11 @@ public class ShadowShader extends DefaultShader {
         return defaultFragmentShader;
     }
 
-    public static String createPrefix (final Renderable renderable, final Config config) {
-        String prefix = DefaultShader.createPrefix(renderable, config);
-        if (!config.depthBufferOnly) prefix += "#define PackedDepthFlag\n";
-        return prefix;
-    }
+//    public static String createPrefix (final Renderable renderable, final Config config) {
+//        String prefix = DefaultShader.createPrefix(renderable, config);
+//        if (!config.depthBufferOnly) prefix += "#define PackedDepthFlag\n";
+//        return prefix;
+//    }
 
 //    public final int numBones;
 //    public final int weights;
@@ -59,6 +59,13 @@ public class ShadowShader extends DefaultShader {
     public ShadowShader (final Renderable renderable, final DefaultShader.Config config) {
         super(renderable, config, createPrefix(renderable, config));
     }
+
+    /**
+     * Adds the shadowFlag normal to the shader prefix from `DefaultShader.createPrefix()`
+     * @param renderable
+     * @param config
+     * @return
+     */
     public static String createPrefix(final Renderable renderable, final DefaultShader.Config config) {
         String prefix = DefaultShader.createPrefix(renderable, config);
         prefix += "#define shadowFlag\n";
