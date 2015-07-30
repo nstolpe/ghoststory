@@ -361,7 +361,8 @@ void main() {
 //  `normal` is introduced above, but on condition
 //  vec3 normal = normalize(u_normalMatrix * a_normal);
 	v_intensity=1.0;
-//
+
+// below is what puts the weirdish shadows on things
 //	if(normal.y<0.5){
 //		if(normal.x>0.5 || normal.x<-0.5)
 //			v_intensity*=0.8;

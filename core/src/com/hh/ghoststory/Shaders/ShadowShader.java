@@ -109,6 +109,9 @@ public class ShadowShader extends DefaultShader {
         super.begin(camera, context);
         // Gdx.gl20.glEnable(GL20.GL_POLYGON_OFFSET_FILL);
         // Gdx.gl20.glPolygonOffset(2.f, 100.f);
+	    // maybe use below
+//        context.setDepthTest(GL20.GL_LEQUAL);
+//        context.setCullFace(GL20.GL_BACK);
     }
 
     @Override
@@ -141,19 +144,7 @@ public class ShadowShader extends DefaultShader {
 
     @Override
     public void render (Renderable renderable, Attributes combinedAttributes) {
-        if (combinedAttributes.has(BlendingAttribute.Type)) {
-            final BlendingAttribute blending = (BlendingAttribute)combinedAttributes.get(BlendingAttribute.Type);
-            combinedAttributes.remove(BlendingAttribute.Type);
-            final boolean hasAlphaTest = combinedAttributes.has(FloatAttribute.AlphaTest);
-            if (!hasAlphaTest)
-//                combinedAttributes.set(alphaTestAttribute);
-            if (blending.opacity >= ((FloatAttribute)combinedAttributes.get(FloatAttribute.AlphaTest)).value)
-                super.render(renderable, combinedAttributes);
-            if (!hasAlphaTest)
-                combinedAttributes.remove(FloatAttribute.AlphaTest);
-            combinedAttributes.set(blending);
-        } else
-            super.render(renderable, combinedAttributes);
+		super.render(renderable, combinedAttributes);
     }
 
     private final static Attributes tmpAttributes = new Attributes();

@@ -197,6 +197,7 @@ void main() {
 	#else
 		gl_FragColor.a = 1.0;
 	#endif
+
 	// shadowmap stuff
 	#ifdef shadowFlag
 	 vec4 finalColor = texture2D(u_diffuseTexture, v_texCoords0);
