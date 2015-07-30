@@ -27,12 +27,14 @@ import com.hh.ghoststory.Utility.ShaderUtil;
 public class ShadowRenderer {
     public DualCameraAbstractScreen screen;
 	public FrameBuffer frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-	public ShaderProgram shaderProgram = ShaderUtil.getShader("new");
+	public ShaderProgram shaderProgram = ShaderUtil.getShader("scene");
+	public ShaderProgram newShaderProgram = ShaderUtil.getShader("new");
 	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {
 		@Override
 		protected Shader createShader(final Renderable renderable) {
 //			return new ShadowShader(renderable, shaderProgram);
 			return new ShadowShader(renderable, new ShadowShader.Config());
+            // use SimpleTextureShader to show shadows. shaderProgram needs to use scene though.
 //            return new SimpleTextureShader(renderable, shaderProgram);
 		}
 	});

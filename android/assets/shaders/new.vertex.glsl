@@ -188,6 +188,11 @@ varying vec3 v_ambientLight;
 #if defined(shadowFlag)
 varying vec2 v_texCoords0;
 varying float v_intensity;
+
+// need to define this
+#if !defined textureFlag
+attribute vec2 a_texCoord0;
+#endif // textureFlag
 #endif // shadowFlag
 // @author nils
 
@@ -355,6 +360,9 @@ void main() {
 	#endif // lightingFlag
 
 	// Shadow map stuff
+	// next two are only needed if everything else is out
+	// vec4 pos = u_worldTrans * vec4(a_position, 1.0);
+	gl_Position = u_projViewTrans * pos;
     #if defined(shadowFlag)
 	v_texCoords0 = a_texCoord0;
 
