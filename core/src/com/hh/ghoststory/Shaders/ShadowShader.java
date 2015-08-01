@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class ShadowShader extends DefaultShader {
+	public Renderable renderable;
     public static class Config extends DefaultShader.Config {
         public boolean depthBufferOnly = false;
         public float defaultAlphaTest = 0.5f;
@@ -34,7 +35,7 @@ public class ShadowShader extends DefaultShader {
 
     public final static String getDefaultVertexShader () {
         if (defaultVertexShader == null)
-            defaultVertexShader = Gdx.files.internal("shaders/new.vertex.glsl").readString();
+            defaultVertexShader = Gdx.files.internal("shaders/scene.vertex.glsl").readString();
         return defaultVertexShader;
     }
 
@@ -42,7 +43,7 @@ public class ShadowShader extends DefaultShader {
 
     public final static String getDefaultFragmentShader () {
         if (defaultFragmentShader == null)
-            defaultFragmentShader = Gdx.files.internal("shaders/new.fragment.glsl").readString();
+            defaultFragmentShader = Gdx.files.internal("shaders/scene.fragment.glsl").readString();
         return defaultFragmentShader;
     }
 
@@ -100,6 +101,7 @@ public class ShadowShader extends DefaultShader {
             final VertexAttribute attr = renderable.mesh.getVertexAttributes().get(i);
             if (attr.usage == Usage.BoneWeight) w |= (1 << attr.unit);
         }
+	    this.renderable = renderable;
 //        weights = w;
 //        alphaTestAttribute = new FloatAttribute(FloatAttribute.AlphaTest, config.defaultAlphaTest);
     }

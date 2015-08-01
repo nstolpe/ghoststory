@@ -2,13 +2,13 @@
 #define textureFlag
 #endif
 
-#if defined(specularTextureFlag) || defined(specularColorFlag)
+//#if defined(specularTextureFlag) || defined(specularColorFlag)
 #define specularFlag
-#endif
+//#endif
 
-#if defined(specularFlag) || defined(fogFlag)
+//#if defined(specularFlag) || defined(fogFlag)
 #define cameraPositionFlag
-#endif
+//#endif
 
 attribute vec3 a_position;
 uniform mat4 u_projViewTrans;
@@ -18,20 +18,20 @@ varying vec4 v_color;
 attribute vec4 a_color;
 #endif // colorFlag
 
-#ifdef normalFlag
+//#ifdef normalFlag
 attribute vec3 a_normal;
 uniform mat3 u_normalMatrix;
 varying vec3 v_normal;
-#endif // normalFlag
+//#endif // normalFlag
 
-#ifdef textureFlag
+//#ifdef textureFlag
 attribute vec2 a_texCoord0;
-#endif // textureFlag
+//#endif // textureFlag
 
-#ifdef diffuseTextureFlag
+//#ifdef diffuseTextureFlag
 uniform vec4 u_diffuseUVTransform;
 varying vec2 v_diffuseUV;
-#endif
+//#endif
 
 #ifdef specularTextureFlag
 uniform vec4 u_specularUVTransform;
@@ -122,7 +122,7 @@ varying float v_alphaTest;
 #endif //alphaTestFlag
 #endif // blendedFlag
 
-#ifdef lightingFlag
+//#ifdef lightingFlag
 varying vec3 v_lightDiffuse;
 
 #ifdef ambientLightFlag
@@ -182,7 +182,7 @@ varying vec3 v_shadowMapUv;
 varying vec3 v_ambientLight;
 #endif //separateAmbientFlag
 
-#endif // lightingFlag
+//#endif // lightingFlag
 
 // Shadow map stuff
 #if defined(shadowFlag)
@@ -190,16 +190,16 @@ varying vec2 v_texCoords0;
 varying float v_intensity;
 
 // need to define this
-#if !defined textureFlag
-attribute vec2 a_texCoord0;
-#endif // textureFlag
+//#if !defined textureFlag
+//attribute vec2 a_texCoord0;
+//#endif // textureFlag
 #endif // shadowFlag
 // @author nils
 
 void main() {
-	#ifdef diffuseTextureFlag
+//	#ifdef diffuseTextureFlag
 		v_diffuseUV = u_diffuseUVTransform.xy + a_texCoord0 * u_diffuseUVTransform.zw;
-	#endif //diffuseTextureFlag
+//	#endif //diffuseTextureFlag
 
 	#ifdef specularTextureFlag
 		v_specularUV = u_specularUVTransform.xy + a_texCoord0 * u_specularUVTransform.zw;
@@ -258,14 +258,14 @@ void main() {
 		v_shadowMapUv.z = min(spos.z * 0.5 + 0.5, 0.998);
 	#endif //shadowMapFlag
 
-	#if defined(normalFlag)
+//	#if defined(normalFlag)
 		#if defined(skinningFlag)
 			vec3 normal = normalize((u_worldTrans * skinning * vec4(a_normal, 0.0)).xyz);
 		#else
 			vec3 normal = normalize(u_normalMatrix * a_normal);
 		#endif
 		v_normal = normal;
-	#endif // normalFlag
+//	#endif // normalFlag
 
     #ifdef fogFlag
         vec3 flen = u_cameraPosition.xyz - pos.xyz;
@@ -361,13 +361,12 @@ void main() {
 
 	// Shadow map stuff
 	// next two are only needed if everything else is out
+	// `normal` is introduced above, but on condition
 	// vec4 pos = u_worldTrans * vec4(a_position, 1.0);
-	gl_Position = u_projViewTrans * pos;
+	// gl_Position = u_projViewTrans * pos;
     #if defined(shadowFlag)
 	v_texCoords0 = a_texCoord0;
 
-//  `normal` is introduced above, but on condition
-//  vec3 normal = normalize(u_normalMatrix * a_normal);
 	v_intensity=1.0;
 
 // below is what puts the weirdish shadows on things
