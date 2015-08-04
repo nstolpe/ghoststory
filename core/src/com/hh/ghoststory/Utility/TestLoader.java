@@ -52,7 +52,7 @@ public class TestLoader {
 		for (int i = 0; i < sources.length; i++) sources[i] = pointShadowCasters[i].light;
 
 		environment.add(sources);
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.1f, 0.1f, 0.1f, 1));
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 //		return environment;
 	}
 }
