@@ -27,15 +27,15 @@ import com.hh.ghoststory.Utility.ShaderUtil;
 public class ShadowRenderer {
     public DualCameraAbstractScreen screen;
 	public FrameBuffer frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-	public ShaderProgram shaderProgram = ShaderUtil.getShader("scene");
+	public ShaderProgram shaderProgram = ShaderUtil.getShader("new");
 	public ShaderProgram newShaderProgram = ShaderUtil.getShader("new");
 	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {
 		@Override
 		protected Shader createShader(final Renderable renderable) {
 //			return new ShadowShader(renderable, shaderProgram);
-			return new ShadowShader(renderable, new ShadowShader.Config());
+//			return new ShadowShader(renderable, new ShadowShader.Config());
             // use SimpleTextureShader to show shadows. shaderProgram needs to use scene though.
-//            return new SimpleTextureShader(renderable, shaderProgram);
+            return new SimpleTextureShader(renderable, shaderProgram);
 		}
 	});
 	public ShaderProgram shaderProgramShadows = ShaderUtil.getShader("shadow");
@@ -85,7 +85,7 @@ public class ShadowRenderer {
 		shaderProgram.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
 		shaderProgram.end();
 
-//		modelBatch = new ModelBatch(Gdx.files.internal("shaders/scene.vertex.glsl"), Gdx.files.internal("shaders/scene.fragment.glsl"));
+//		modelBatch = new ModelBatch(Gdx.files.internal("shaders/again.vertex.glsl"), Gdx.files.internal("shaders/again.fragment.glsl"));
 		modelBatch.begin(screen.camera);
 		modelBatch.render(screen.instances, screen.environment);
 		modelBatch.end();

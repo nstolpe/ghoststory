@@ -35,7 +35,7 @@ public class ShadowShader extends DefaultShader {
 
     public final static String getDefaultVertexShader () {
         if (defaultVertexShader == null)
-            defaultVertexShader = Gdx.files.internal("shaders/scene.vertex.glsl").readString();
+            defaultVertexShader = Gdx.files.internal("shaders/new.vertex.glsl").readString();
         return defaultVertexShader;
     }
 
@@ -43,7 +43,7 @@ public class ShadowShader extends DefaultShader {
 
     public final static String getDefaultFragmentShader () {
         if (defaultFragmentShader == null)
-            defaultFragmentShader = Gdx.files.internal("shaders/scene.fragment.glsl").readString();
+            defaultFragmentShader = Gdx.files.internal("shaders/new.fragment.glsl").readString();
         return defaultFragmentShader;
     }
 
@@ -95,13 +95,14 @@ public class ShadowShader extends DefaultShader {
         super(renderable, config, shaderProgram);
         final Attributes attributes = combineAttributes(renderable);
 //        this.numBones = renderable.bones == null ? 0 : config.numBones;
-        int w = 0;
-        final int n = renderable.mesh.getVertexAttributes().size();
-        for (int i = 0; i < n; i++) {
-            final VertexAttribute attr = renderable.mesh.getVertexAttributes().get(i);
-            if (attr.usage == Usage.BoneWeight) w |= (1 << attr.unit);
-        }
+//        int w = 0;
+//        final int n = renderable.mesh.getVertexAttributes().size();
+//        for (int i = 0; i < n; i++) {
+//            final VertexAttribute attr = renderable.mesh.getVertexAttributes().get(i);
+//            if (attr.usage == Usage.BoneWeight) w |= (1 << attr.unit);
+//        }
 	    this.renderable = renderable;
+        this.program = shaderProgram;
 //        weights = w;
 //        alphaTestAttribute = new FloatAttribute(FloatAttribute.AlphaTest, config.defaultAlphaTest);
     }
@@ -119,7 +120,7 @@ public class ShadowShader extends DefaultShader {
     @Override
     public void end () {
         super.end();
-        // Gdx.gl20.glDisable(GL20.GL_POLYGON_OFFSET_FILL);
+         Gdx.gl20.glDisable(GL20.GL_POLYGON_OFFSET_FILL);
     }
 
     @Override

@@ -185,7 +185,7 @@ varying vec3 v_ambientLight;
 //#endif // lightingFlag
 
 // Shadow map stuff
-#if defined(shadowFlag)
+//#if defined(shadowFlag)
 varying vec2 v_texCoords0;
 varying float v_intensity;
 
@@ -193,7 +193,7 @@ varying float v_intensity;
 //#if !defined textureFlag
 //attribute vec2 a_texCoord0;
 //#endif // textureFlag
-#endif // shadowFlag
+//#endif // shadowFlag
 // @author nils
 
 void main() {
@@ -364,7 +364,7 @@ void main() {
 	// `normal` is introduced above, but on condition
 	// vec4 pos = u_worldTrans * vec4(a_position, 1.0);
 	// gl_Position = u_projViewTrans * pos;
-    #if defined(shadowFlag)
+//    #if defined(shadowFlag)
 	v_texCoords0 = a_texCoord0;
 
 	v_intensity=1.0;
@@ -376,6 +376,6 @@ void main() {
 //		if(normal.z>0.5 || normal.z<-0.5)
 //			v_intensity*=0.6;
 //	}
-    #endif // shadowFlag
+//    #endif // shadowFlag
     // @author nils
 }
