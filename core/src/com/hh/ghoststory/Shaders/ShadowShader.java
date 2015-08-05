@@ -16,7 +16,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class ShadowShader extends DefaultShader {
 	public Renderable renderable;
-    public static class Config extends DefaultShader.Config {
+
+	public static class Config extends DefaultShader.Config {
         public boolean depthBufferOnly = false;
         public float defaultAlphaTest = 0.5f;
 
@@ -73,6 +74,7 @@ public class ShadowShader extends DefaultShader {
         // Append extra stuff here, like shadowFlag
         return prefix;
     }
+
     public ShadowShader (final Renderable renderable) {
         this(renderable, new Config());
     }
@@ -93,7 +95,7 @@ public class ShadowShader extends DefaultShader {
 
     public ShadowShader (final Renderable renderable, final Config config, final ShaderProgram shaderProgram) {
         super(renderable, config, shaderProgram);
-        final Attributes attributes = combineAttributes(renderable);
+//        final Attributes attributes = combineAttributes(renderable);
 //        this.numBones = renderable.bones == null ? 0 : config.numBones;
 //        int w = 0;
 //        final int n = renderable.mesh.getVertexAttributes().size();
@@ -113,8 +115,8 @@ public class ShadowShader extends DefaultShader {
         // Gdx.gl20.glEnable(GL20.GL_POLYGON_OFFSET_FILL);
         // Gdx.gl20.glPolygonOffset(2.f, 100.f);
 	    // maybe use below
-//        context.setDepthTest(GL20.GL_LEQUAL);
-//        context.setCullFace(GL20.GL_BACK);
+        context.setDepthTest(GL20.GL_LEQUAL);
+        context.setCullFace(GL20.GL_BACK);
     }
 
     @Override

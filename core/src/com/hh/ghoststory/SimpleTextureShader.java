@@ -32,6 +32,8 @@ public class SimpleTextureShader extends BaseShader
 		register(Inputs.projViewTrans, Setters.projViewTrans);
 		register(Inputs.normalMatrix, Setters.normalMatrix);
 		register(Inputs.diffuseTexture, Setters.diffuseTexture);
+		register(Inputs.diffuseColor, Setters.diffuseColor);
+		register(Inputs.diffuseUVTransform, Setters.diffuseUVTransform);
 
 	}
 
