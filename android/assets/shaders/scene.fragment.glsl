@@ -24,6 +24,7 @@ varying MED vec2 v_diffuseUV;
 void main() {
 	vec4 diffuse = texture2D(u_diffuseTexture, v_diffuseUV) * u_diffuseColor;
 
+	// finalColor might not be needed, diffuse is working now. maybe don't need v_texCoords0 either.
 	vec4 finalColor = texture2D(u_diffuseTexture, v_texCoords0);
 	finalColor.rgb = finalColor.rgb * v_intensity;
 

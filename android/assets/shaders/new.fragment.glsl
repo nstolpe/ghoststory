@@ -210,7 +210,7 @@ void main() {
 	 vec4 color = texture2D(u_shadows,c);
 
 	// Apply shadow
-	 finalColor.rgb *= (0.4 + 0.6 * color.a);
+	 gl_FragColor.rgb *= (0.4 + 0.6 * color.a);
 	 // here's what needs to be fixed.
 
 //	 gl_FragColor.rgb = mix(finalColor.rgb, gl_FragColor.rgb, 0.5);
