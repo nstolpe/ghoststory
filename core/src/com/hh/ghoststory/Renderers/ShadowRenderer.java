@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.Shaders.ShadowShader;
 import com.hh.ghoststory.SimpleTextureShader;
 import com.hh.ghoststory.Screens.DualCameraAbstractScreen;
@@ -71,7 +70,6 @@ public class ShadowRenderer {
 		modelBatchShadows.begin(screen.camera);
 		modelBatchShadows.render(screen.instances);
 		modelBatchShadows.end();
-//        ScreenshotFactory.saveScreenshot(frameBufferShadows.getWidth(), frameBufferShadows.getHeight(), "shadows");
 		frameBufferShadows.end();
 	}
 
