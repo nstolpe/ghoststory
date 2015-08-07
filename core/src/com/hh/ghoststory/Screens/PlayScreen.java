@@ -79,4 +79,9 @@ public class PlayScreen extends DualCameraAbstractScreen {
 	public void dispose() {
 		super.dispose();
 	}
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		renderer.updateBuffers(width, height);
+	}
 }

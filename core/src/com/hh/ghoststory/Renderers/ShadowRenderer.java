@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.Shaders.ShadowShader;
 import com.hh.ghoststory.SimpleTextureShader;
 import com.hh.ghoststory.Screens.DualCameraAbstractScreen;
@@ -70,7 +71,7 @@ public class ShadowRenderer {
 		modelBatchShadows.begin(screen.camera);
 		modelBatchShadows.render(screen.instances);
 		modelBatchShadows.end();
-
+//        ScreenshotFactory.saveScreenshot(frameBufferShadows.getWidth(), frameBufferShadows.getHeight(), "shadows");
 		frameBufferShadows.end();
 	}
 
@@ -91,6 +92,11 @@ public class ShadowRenderer {
 		modelBatch.render(screen.instances, screen.environment);
 		modelBatch.end();
 	}
+
+    public void updateBuffers(int width, int height) {
+        frameBufferShadows.dispose();
+        frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+    }
 
     /**
      * Shader used to render multiple shadows on the main scene.
