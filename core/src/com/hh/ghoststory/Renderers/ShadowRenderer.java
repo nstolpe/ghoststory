@@ -91,7 +91,7 @@ public class ShadowRenderer {
 		modelBatch.end();
 	}
 
-    public void updateBuffers(int width, int height) {
+    public void updateShadowBuffer() {
         frameBufferShadows.dispose();
         frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
@@ -108,9 +108,9 @@ public class ShadowRenderer {
             super.end();
         }
 
-        public ShadowMapShader(final Renderable renderable, final ShaderProgram shaderProgramModelBorder) {
+        public ShadowMapShader(final Renderable renderable, final ShaderProgram program) {
             this.renderable = renderable;
-            this.program = shaderProgramModelBorder;
+            this.program = program;
             register(DefaultShader.Inputs.worldTrans, DefaultShader.Setters.worldTrans);
             register(DefaultShader.Inputs.projViewTrans, DefaultShader.Setters.projViewTrans);
             register(DefaultShader.Inputs.normalMatrix, DefaultShader.Setters.normalMatrix);

@@ -82,6 +82,6 @@ public class PlayScreen extends DualCameraAbstractScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		renderer.updateBuffers(width, height);
+		renderer.updateShadowBuffer();
 	}
 }
