@@ -34,6 +34,9 @@ public class SimpleTextureShader extends BaseShader
 		register(Inputs.diffuseTexture, Setters.diffuseTexture);
 		register(Inputs.diffuseColor, Setters.diffuseColor);
 		register(Inputs.diffuseUVTransform, Setters.diffuseUVTransform);
+		register(Inputs.specularColor, Setters.specularColor);
+//		register(Inputs.ambientCube, new Setters.ACubemap(config.numDirectionalLights, config.numPointLights))
+		register(Inputs.ambientCube, new Setters.ACubemap(1, 1));
 
 	}
 

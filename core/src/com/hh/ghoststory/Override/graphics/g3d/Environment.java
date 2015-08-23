@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Override.graphics.graphics.g3d;
+package com.hh.ghoststory.Override.graphics.g3d;
 
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;

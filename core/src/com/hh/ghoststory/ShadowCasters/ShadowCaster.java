@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
@@ -18,8 +19,9 @@ import com.hh.ghoststory.Utility.ShaderUtil;
 public abstract class ShadowCaster {
 	public PerspectiveCamera camera = new PerspectiveCamera();
 	public Vector3 position = new Vector3();
-	public int depthmapsize = 1024;
+	public int depthmapsize = 4096;
 	public boolean casting = true;
+	public BaseLight light;
 
 	public ShaderProgram shaderProgram = ShaderUtil.getShader("depth");
 	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {

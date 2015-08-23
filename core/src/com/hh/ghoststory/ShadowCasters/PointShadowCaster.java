@@ -47,8 +47,8 @@ public class PointShadowCaster extends ShadowCaster implements Disposable {
         camera.fieldOfView = 90f;
         camera.viewportWidth = depthmapsize;
         camera.viewportHeight = depthmapsize;
-        camera.near = 4f;
-        camera.far = 70;
+        camera.near = 1f;
+        camera.far = 30;
         camera.position.set(position);
         camera.update();
     }

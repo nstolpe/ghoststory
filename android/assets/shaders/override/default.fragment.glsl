@@ -1,4 +1,4 @@
-#ifdef GL_ES
+#ifdef GL_ES 
 #define LOWP lowp
 #define MED mediump
 #define HIGH highp
@@ -80,12 +80,12 @@ varying vec3 v_shadowMapUv;
 float getShadowness(vec2 offset)
 {
     const vec4 bitShifts = vec4(1.0, 1.0 / 255.0, 1.0 / 65025.0, 1.0 / 160581375.0);
-    return step(v_shadowMapUv.z, dot(texture2D(u_shadowTexture, v_shadowMapUv.xy + offset), bitShifts));//+(1.0/255.0));
+    return step(v_shadowMapUv.z, dot(texture2D(u_shadowTexture, v_shadowMapUv.xy + offset), bitShifts));//+(1.0/255.0));	
 }
 
-float getShadow()
+float getShadow() 
 {
-	return (//getShadowness(vec2(0,0)) +
+	return (//getShadowness(vec2(0,0)) + 
 			getShadowness(vec2(u_shadowPCFOffset, u_shadowPCFOffset)) +
 			getShadowness(vec2(-u_shadowPCFOffset, u_shadowPCFOffset)) +
 			getShadowness(vec2(u_shadowPCFOffset, -u_shadowPCFOffset)) +
@@ -104,27 +104,15 @@ uniform vec4 u_fogColor;
 varying float v_fog;
 #endif // fogFlag
 
-//// shadowmap stuff
-//#ifdef shadowFlag
-// uniform sampler2D u_shadows;
-// uniform float u_screenWidth;
-// uniform float u_screenHeight;
-// varying vec2 v_texCoords0;
-// varying float v_intensity;
-//
-//// Below should be already defined.
-//// uniform sampler2D u_diffuseTexture;
-//#endif // shadowFlag
-//// @author nils
-//uniform sampler2D u_shadows;
-uniform sampler2DShadow u_shadows;
+//uniform sampler2DShadow u_shadows;
+uniform sampler2D u_shadows;
 uniform float u_screenWidth;
 uniform float u_screenHeight;
 void main() {
-	#if defined(normalFlag)
+	#if defined(normalFlag) 
 		vec3 normal = v_normal;
 	#endif // normalFlag
-
+		
 	#if defined(diffuseTextureFlag) && defined(diffuseColorFlag) && defined(colorFlag)
 		vec4 diffuse = texture2D(u_diffuseTexture, v_diffuseUV) * u_diffuseColor * v_color;
 	#elif defined(diffuseTextureFlag) && defined(diffuseColorFlag)
@@ -143,7 +131,7 @@ void main() {
 		vec4 diffuse = vec4(1.0);
 	#endif
 
-	#if (!defined(lightingFlag))
+	#if (!defined(lightingFlag))  
 		gl_FragColor.rgb = diffuse.rgb;
 	#elif (!defined(specularFlag))
 		#if defined(ambientFlag) && defined(separateAmbientFlag)
@@ -170,7 +158,7 @@ void main() {
 		#else
 			vec3 specular = v_lightSpecular;
 		#endif
-
+			
 		#if defined(ambientFlag) && defined(separateAmbientFlag)
 			#ifdef shadowMapFlag
 			gl_FragColor.rgb = (diffuse.rgb * (getShadow() * v_lightDiffuse + v_ambientLight)) + specular;
@@ -200,28 +188,15 @@ void main() {
 	#else
 		gl_FragColor.a = 1.0;
 	#endif
-//	// shadowmap stuff
-//	#ifdef shadowFlag
-//	 vec4 finalColor  = texture2D(u_diffuseTexture, v_texCoords0);
-//	 finalColor.rgb   = finalColor.rgb * v_intensity;
-//
-//	// Retrieve the shadow color from shadow map
-//	 vec2 c= gl_FragCoord.xy;
-//	 c.x/=u_screenWidth;
-//	 c.y/=u_screenHeight;
-//	 vec4 color=texture2D(u_shadows,c);
-//
-//	// Apply shadow
-//	 finalColor.rgb*=(0.4+0.6*color.a);
-//
-//	 gl_FragColor = finalColor;
-//	#endif // shadowFlag
-//	// @author nils
 
+	// get the xy coordinates of the current scene, then divide them by width and height
+	// to convert to the depth map.
 	vec2 c = gl_FragCoord.xy;
 	c.x /= u_screenWidth;
 	c.y /= u_screenHeight;
-//	vec4 color = texture(u_shadows, c);
-	vec4 color = texture(u_shadows, vec3(c, gl_FragCoord.z));
+
+	// get the color from u_shadows
+	vec4 color = texture2D(u_shadows, c);
+//	vec4 color = texture(u_shadows, vec3(c, gl_FragCoord.z));
 	gl_FragColor.rgb *= (0.4 + 0.6 * color.a);
 }

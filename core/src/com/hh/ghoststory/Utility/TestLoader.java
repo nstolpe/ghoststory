@@ -17,10 +17,10 @@ import com.hh.ghoststory.ShadowCasters.PointShadowCaster;
  */
 public class TestLoader {
 	public static PointShadowCaster[] pointShadowCasters = new PointShadowCaster[]{
-			new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 20, 5, 6, 1)),
+			new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 20, 6, 6, 1)),
 			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 5, 0, 0.7f)),
 //			new PointShadowCaster(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 5, 4, 1)),
-//			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 5, 6, 1)),
+//			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 20, 6, 1)),
 //			new PointShadowCaster(new PointLight().set(new Color(1f, 0.3f, 0.3f, 1f), 6, 5, 4, 1))
 	};
 	public static Vector3[] characterPositions = new Vector3[]{
