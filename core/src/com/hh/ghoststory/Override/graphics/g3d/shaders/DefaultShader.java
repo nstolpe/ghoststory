@@ -37,7 +37,8 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
  * Created by nils on 8/23/15.
  */
 public class DefaultShader extends BaseShader {
-	private final int textureNum = 4;
+	public static final int textureNum = 4;
+
 	public static class Config {
 		/** The uber vertex shader to use, null to use the default vertex shader. */
 		public String vertexShader = null;
