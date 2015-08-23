@@ -21,7 +21,7 @@ public class TestLoader {
 			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 5, 0, 0.7f)),
 //			new PointShadowCaster(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 5, 4, 1)),
 //			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 20, 6, 1)),
-//			new PointShadowCaster(new PointLight().set(new Color(1f, 0.3f, 0.3f, 1f), 6, 5, 4, 1))
+			new PointShadowCaster(new PointLight().set(new Color(1f, 0.3f, 0.3f, 1f), 6, 5, 4, 1))
 	};
 	public static Vector3[] characterPositions = new Vector3[]{
 			new Vector3(5,0,5),

@@ -4752,89 +4752,47 @@
 			"id": "18 - Default", 
 			"ambient": [ 0.588235,  0.725490,  1.000000], 
 			"diffuse": [ 0.588235,  0.725490,  1.000000], 
-			"specular": [ 0.898039,  0.898039,  0.898039], 
-			"textures": [
-				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "textures/bg_repeat.tga", 
-					"type": "DIFFUSE"
-				}
-			]
+			"specular": [ 0.898039,  0.898039,  0.898039]
 		}, 
 		{
 			"id": "bg4", 
 			"ambient": [ 0.964706,  0.588235,  0.827451], 
 			"diffuse": [ 0.964706,  0.588235,  0.827451], 
-			"specular": [ 0.898039,  0.898039,  0.898039], 
-			"textures": [
-				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "textures/bg_repeat.tga", 
-					"type": "DIFFUSE"
-				}
-			]
+			"specular": [ 0.898039,  0.898039,  0.898039]
 		}, 
 		{
 			"id": "bg5", 
 			"ambient": [ 0.964706,  0.047059,  0.219608], 
 			"diffuse": [ 0.964706,  0.047059,  0.219608], 
-			"specular": [ 0.898039,  0.898039,  0.898039], 
-			"textures": [
-				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "bg_repeat.tga", 
-					"type": "DIFFUSE"
-				}
-			]
+			"specular": [ 0.898039,  0.898039,  0.898039]
 		}, 
 		{
 			"id": "17 - Default", 
 			"ambient": [ 1.000000,  0.705882,  0.588235], 
 			"diffuse": [ 1.000000,  0.705882,  0.588235], 
-			"specular": [ 0.898039,  0.898039,  0.898039], 
-			"textures": [
-				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "bg_repeat.tga", 
-					"type": "DIFFUSE"
-				}
-			]
+			"specular": [ 0.898039,  0.898039,  0.898039]
 		}, 
 		{
 			"id": "bg6", 
 			"ambient": [ 0.047059,  0.129412,  0.400000], 
 			"diffuse": [ 0.047059,  0.129412,  0.400000], 
-			"specular": [ 0.898039,  0.898039,  0.898039], 
-			"textures": [
-				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "bg_repeat.tga", 
-					"type": "DIFFUSE"
-				}
-			]
+			"specular": [ 0.898039,  0.898039,  0.898039]
 		}, 
 		{
 			"id": "bg8", 
 			"ambient": [ 0.968627,  0.674510,  0.047059], 
 			"diffuse": [ 0.968627,  0.674510,  0.047059], 
-			"specular": [ 0.898039,  0.898039,  0.898039], 
-			"textures": [
-				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "bg_repeat.tga", 
-					"type": "DIFFUSE"
-				}
-			]
+			"specular": [ 0.898039,  0.898039,  0.898039]
 		}, 
 		{
 			"id": "Material #49", 
 			"ambient": [ 1.000000,  1.000000,  1.000000], 
 			"diffuse": [ 1.000000,  1.000000,  1.000000], 
-			"specular": [ 1.000000,  1.000000,  1.000000], 
+			"specular": [ 1.000000,  1.000000,  1.000000],
 			"textures": [
 				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "bg_repeat.tga", 
+					"id": "BG_REPEA.JPG",
+					"filename": "bg_repeat.tga",
 					"type": "DIFFUSE"
 				}
 			]
@@ -4843,27 +4801,13 @@
 			"id": "Material #52", 
 			"ambient": [ 0.721569,  0.800000,  0.588235], 
 			"diffuse": [ 0.721569,  0.800000,  0.588235], 
-			"specular": [ 0.898039,  0.898039,  0.898039], 
-			"textures": [
-				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "bg_repeat.tga", 
-					"type": "DIFFUSE"
-				}
-			]
+			"specular": [ 0.898039,  0.898039,  0.898039]
 		}, 
 		{
 			"id": "21 - Default", 
 			"ambient": [ 0.156863,  0.301961,  0.839216], 
 			"diffuse": [ 0.156863,  0.301961,  0.839216], 
-			"specular": [ 0.898039,  0.898039,  0.898039], 
-			"textures": [
-				{
-					"id": "BG_REPEA.JPG", 
-					"filename": "bg_repeat.tga", 
-					"type": "DIFFUSE"
-				}
-			]
+			"specular": [ 0.898039,  0.898039,  0.898039]
 		}
 	], 
 	"nodes": [
@@ -4882,7 +4826,7 @@
 						}, 
 						{
 							"meshpartid": "mpart2", 
-							"materialid": "18 - Default", 
+							"materialid": "18 - Default",
 							"uvMapping": [[  0]]
 						}, 
 						{
