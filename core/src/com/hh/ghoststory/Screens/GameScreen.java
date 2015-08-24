@@ -34,9 +34,6 @@ public class GameScreen extends AbstractScreen {
 	public CameraHandler cameraHandler;
 	public TweenHandler tweenHandler;
 
-
-	private TestShader testShader = new TestShader();
-
 //	private PlayerCharacter character;
 
 	public Character character;
@@ -103,7 +100,6 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void dispose() {
 		super.dispose();
-		this.testShader.dispose();
 	}
 
 	/*
