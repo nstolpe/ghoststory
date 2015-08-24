@@ -13,8 +13,8 @@ public class GhostStory extends Game {
 	@Override
 	public void create() {
 		FileHandle file = Gdx.files.local(".ghost_story/character.json");
-		file.file().getParentFile().mkdirs();
-		file.writeString("{}", false);
+//		file.file().getParentFile().mkdirs();
+//		file.writeString("{}", false);
 //		setScreen(getMainScreen());
 //		setScreen(getGameScreen());
 		setScreen(getPlayScreen());
