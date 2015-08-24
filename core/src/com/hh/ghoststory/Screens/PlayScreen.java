@@ -23,7 +23,7 @@ public class PlayScreen extends DualCameraAbstractScreen {
 		setClear(0.7f, 0.1f, 1f, 1);
 
 		// load assets. These should be pulled in through a config.
-		assetManager.load("models/ghost.g3dj", Model.class);
+		assetManager.load("models/ghost_red.g3dj", Model.class);
 		assetManager.load("models/scene.g3dj", Model.class);
 		assetManager.load("models/tile.g3dj", Model.class);
 

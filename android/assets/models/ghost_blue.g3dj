@@ -1100,7 +1100,7 @@
 			"textures": [
 				{
 					"id": "Texture_001", 
-					"filename": "ghost_texture_green.png", 
+					"filename": "ghost_texture_blue.png",
 					"type": "DIFFUSE"
 				}
 			]

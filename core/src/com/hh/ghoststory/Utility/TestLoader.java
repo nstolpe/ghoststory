@@ -38,7 +38,7 @@ public class TestLoader {
 		instances.add(scene);
 
 		for (int i =0; i < characterPositions.length; i++) {
-			ModelInstance character = new ModelInstance(assetManager.get("models/ghost.g3dj", Model.class));
+			ModelInstance character = new ModelInstance(assetManager.get("models/ghost_red.g3dj", Model.class));
 			character.transform.setTranslation(characterPositions[i]);
 			instances.add(character);
 		}
