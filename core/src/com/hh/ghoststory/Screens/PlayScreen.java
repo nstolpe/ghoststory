@@ -45,18 +45,13 @@ public class PlayScreen extends DualCameraAbstractScreen {
 	public void render(float delta) {
 		super.render(delta);
 
-
 		if (loading && assetManager.update())
 			doneLoading();
 
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-
 		camera.update();
-//		modelBatch.begin(camera);
-//		modelBatch.render(instances, environment);
-//		modelBatch.end();
 		renderer.render();
 	}
 
