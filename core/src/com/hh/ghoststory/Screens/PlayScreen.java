@@ -11,7 +11,7 @@ import com.hh.ghoststory.Utility.TestLoader;
 /**
  * Created by nils on 7/14/15.
  */
-public class PlayScreen extends DualCameraAbstractScreen {
+public class PlayScreen extends DualCameraScreen {
 
 	private ShadowRenderer renderer = new ShadowRenderer(this);
 
