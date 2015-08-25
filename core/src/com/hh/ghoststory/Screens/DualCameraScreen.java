@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.Overrides.ShadowEnvironment;
+import com.hh.ghoststory.Overrides.GameEnvironment;
 import com.hh.ghoststory.Utility.ClassFunction;
 import com.hh.ghoststory.Utility.TestLoader;
 
@@ -24,7 +24,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	protected AssetManager assetManager = new AssetManager();
 	public Array<ModelInstance> instances = new Array<ModelInstance>();
     protected boolean loading;
-	public Environment environment = new ShadowEnvironment();
+	public Environment environment = new GameEnvironment();
 
 	public DualCameraScreen(GhostStory game) {
 		this(game, new PerspectiveCamera());

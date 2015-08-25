@@ -8,7 +8,7 @@ import com.hh.ghoststory.ShadowCasters.ShadowCaster;
 /**
  * Created by nils on 8/24/15.
  */
-public class ShadowEnvironment extends Environment {
+public class GameEnvironment extends Environment {
 	// array if shadowcasters. see if these can be implemented as Attributes later,
 	// like the lights.
 	public Array<ShadowCaster> shadowCasters = new Array<ShadowCaster>();

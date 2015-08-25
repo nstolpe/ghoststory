@@ -1,26 +1,17 @@
 package com.hh.ghoststory.Renderers;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.Shader;
-import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
-import com.badlogic.gdx.graphics.g3d.shaders.BaseShader;
-import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
-import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.Overrides.ShadowMapShader;
-import com.hh.ghoststory.Overrides.ShadowShader;
+import com.hh.ghoststory.Overrides.GameShader;
 import com.hh.ghoststory.Screens.DualCameraScreen;
-import com.hh.ghoststory.ShadowCasters.PointShadowCaster;
-import com.hh.ghoststory.ShadowCasters.ShadowCaster;
 import com.hh.ghoststory.Utility.ShaderUtil;
 
 /**
@@ -45,7 +36,7 @@ public class ShadowRenderer {
 		modelBatch = new ModelBatch(new DefaultShaderProvider() {
 			@Override
 			protected Shader createShader(final Renderable renderable) {
-				return new ShadowShader(renderable);
+				return new GameShader(renderable);
 			}
 		});
 
@@ -85,7 +76,7 @@ public class ShadowRenderer {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
-		frameBufferShadows.getColorBufferTexture().bind(ShadowShader.textureNum);
+		frameBufferShadows.getColorBufferTexture().bind(GameShader.textureNum);
 
 		modelBatch.begin(screen.camera);
 		modelBatch.render(screen.instances, screen.environment);

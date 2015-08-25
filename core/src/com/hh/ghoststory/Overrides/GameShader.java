@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 /**
  * Created by nils on 8/24/15.
  */
-public class ShadowShader extends DefaultShader {
+public class GameShader extends DefaultShader {
 	public static final int textureNum = 4;
 
-	public ShadowShader(Renderable renderable) {
+	public GameShader(Renderable renderable) {
 		super(
 			renderable,
 			new Config(
