@@ -41,7 +41,7 @@ public class GameScreen extends AbstractScreen {
 	public Array<GameModel> gameModels = new Array<GameModel>();
 
 	// AnimationController should be on GameModel
-	private AnimationController controller;
+	private AnimationController animationController;
 	public PointLight travellingLight;
 	public PointLight colorSwitchLight;
 	private Color colorSwitchColor = new Color(0.6f,0.2f,1f,1f);
@@ -90,7 +90,7 @@ public class GameScreen extends AbstractScreen {
 		if (doneLoading()) {
 			this.updateModels();
 			this.renderer.setRenderables(collectModelInstances());
-			this.controller.update(Gdx.graphics.getDeltaTime());
+			this.animationController.update(Gdx.graphics.getDeltaTime());
 			this.renderer.render();
 		}
 		this.logger.log();
@@ -199,8 +199,8 @@ public class GameScreen extends AbstractScreen {
 			}
 //			tweenHandler.startCallbacks();
 
-			this.controller = new AnimationController(character.model);
-			this.controller.setAnimation("float", -1);
+			this.animationController = new AnimationController(character.model);
+			this.animationController.setAnimation("float", -1);
 			this.loading = false;
 			return false;
 		}

@@ -17,7 +17,7 @@ import com.hh.ghoststory.Utility.TestLoader;
 /**
  * Created by nils on 7/17/15.
  */
-public abstract class DualCameraAbstractScreen extends AbstractScreen {
+public abstract class DualCameraScreen extends AbstractScreen {
 	protected PerspectiveCamera perspectiveCamera = null;
 	protected OrthographicCamera orthographicCamera = null;
 	protected CameraInputController camController;
@@ -26,11 +26,11 @@ public abstract class DualCameraAbstractScreen extends AbstractScreen {
     protected boolean loading;
 	public Environment environment = new ShadowEnvironment();
 
-	public DualCameraAbstractScreen(GhostStory game) {
+	public DualCameraScreen(GhostStory game) {
 		this(game, new PerspectiveCamera());
 	}
 
-	public DualCameraAbstractScreen(GhostStory game, Camera camera) {
+	public DualCameraScreen(GhostStory game, Camera camera) {
 		super(game);
 		setActiveCamera(camera);
 	}
