@@ -15,9 +15,11 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Array;
+import com.hh.ghoststory.Overrides.ShadowMapShader;
 import com.hh.ghoststory.Overrides.ShadowShader;
-import com.hh.ghoststory.ScreenshotFactory;
-import com.hh.ghoststory.Screens.DualCameraAbstractScreen;
+import com.hh.ghoststory.Screens.DualCameraScreen;
+import com.hh.ghoststory.ShadowCasters.PointShadowCaster;
 import com.hh.ghoststory.ShadowCasters.ShadowCaster;
 import com.hh.ghoststory.Utility.ShaderUtil;
 
@@ -25,32 +27,43 @@ import com.hh.ghoststory.Utility.ShaderUtil;
  * Created by nils on 7/23/15.
  */
 public class ShadowRenderer {
-    public DualCameraAbstractScreen screen;
-	public FrameBuffer frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {
-		@Override
-		protected Shader createShader(final Renderable renderable) {
-            return new ShadowShader(renderable);
-		}
-	});
-	public ShaderProgram shaderProgramShadows = ShaderUtil.getShader("shadow");
-	public ModelBatch  modelBatchShadows = new ModelBatch(new DefaultShaderProvider() {
-		@Override
-		protected Shader createShader(final Renderable renderable) {
-			return new ShadowMapShader(renderable, shaderProgramShadows);
-		}
-	});
+    public DualCameraScreen screen;
+	public FrameBuffer frameBufferShadows;
+	public ModelBatch modelBatch;
+	public ShaderProgram shaderProgramShadows;
+	public ModelBatch modelBatchShadows;
 
-    public ShadowRenderer(DualCameraAbstractScreen screen) {
+    public ShadowRenderer(DualCameraScreen screen) {
         this.screen = screen;
+	    init();
     }
+
+	private void init() {
+		frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		shaderProgramShadows = ShaderUtil.getShader("shadow");
+
+		modelBatch = new ModelBatch(new DefaultShaderProvider() {
+			@Override
+			protected Shader createShader(final Renderable renderable) {
+				return new ShadowShader(renderable);
+			}
+		});
+
+		modelBatchShadows = new ModelBatch(new DefaultShaderProvider() {
+			@Override
+			protected Shader createShader(final Renderable renderable) {
+				return new ShadowMapShader(renderable, shaderProgramShadows, screen.shadowCasters);
+			}
+		});
+	}
 
     public void render() {
         Gdx.gl.glClearColor(screen.clearRed, screen.clearGreen, screen.clearBlue, screen.clearAlpha);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	    for (int i = 0; i < screen.shadowCasters.size; i++) {
+
+	    for (int i = 0; i < screen.shadowCasters.size; i++)
 		    screen.shadowCasters.get(i).render(screen.instances);
-	    }
+
 	    renderShadows();
 	    renderScene();
     }
@@ -84,82 +97,4 @@ public class ShadowRenderer {
         frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
 
-    /**
-     * Shader used to render multiple shadows on the main scene.
-     * This shader will render the scene multiple times, adding shadows for one light at a time
-     */
-    public class ShadowMapShader extends BaseShader {
-        public Renderable renderable;
-
-        @Override
-        public void end() {
-            super.end();
-        }
-
-        public ShadowMapShader(final Renderable renderable, final ShaderProgram program) {
-            this.renderable = renderable;
-            this.program = program;
-            register(DefaultShader.Inputs.worldTrans, DefaultShader.Setters.worldTrans);
-            register(DefaultShader.Inputs.projViewTrans, DefaultShader.Setters.projViewTrans);
-            register(DefaultShader.Inputs.normalMatrix, DefaultShader.Setters.normalMatrix);
-        }
-
-        @Override
-        public void begin(final Camera camera, final RenderContext context) {
-            super.begin(camera, context);
-            context.setDepthTest(GL20.GL_LEQUAL);
-            context.setCullFace(GL20.GL_BACK);
-        }
-
-        @Override
-        public void render(final Renderable renderable) {
-            if (!renderable.material.has(BlendingAttribute.Type))
-                context.setBlending(false, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            else
-                context.setBlending(true, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-            super.render(renderable);
-        }
-
-        @Override
-        public void init() {
-            final ShaderProgram program = this.program;
-            this.program = null;
-            init(program, renderable);
-            renderable = null;
-        }
-
-        @Override
-        public int compareTo(final Shader other) {
-            return 0;
-        }
-
-        @Override
-        public boolean canRender(final Renderable instance) {
-            return true;
-        }
-
-        @Override
-        public void render(final Renderable renderable, final Attributes combinedAttributes) {
-            boolean firstCall = true;
-            for (final ShadowCaster shadowCaster : screen.shadowCasters) {
-	            shadowCaster.applyToShader(program);
-                if (firstCall) {
-                    // Classic depth test
-                    context.setDepthTest(GL20.GL_LEQUAL);
-                    // Deactivate blending on first pass
-                    context.setBlending(false, GL20.GL_ONE, GL20.GL_ONE);
-                    super.render(renderable, combinedAttributes);
-                    firstCall = false;
-                } else {
-                    // We could use the classic depth test (less or equal), but strict equality works fine on next passes as depth buffer already contains our scene
-                    context.setDepthTest(GL20.GL_EQUAL);
-                    // Activate additive blending
-                    context.setBlending(true, GL20.GL_ONE, GL20.GL_ONE);
-                    // Render the mesh again
-                    renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize, false);
-                }
-            }
-        }
-    }
 }
