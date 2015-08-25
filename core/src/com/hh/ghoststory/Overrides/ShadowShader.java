@@ -16,8 +16,8 @@ public class ShadowShader extends DefaultShader {
 		super(
 			renderable,
 			new Config(
-				Gdx.files.internal("shaders/shadow_shader.vertex.glsl").readString(),
-				Gdx.files.internal("shaders/shadow_shader.fragment.glsl").readString()
+				Gdx.files.internal("shaders/default.vertex.glsl").readString(),
+				Gdx.files.internal("shaders/default.fragment.glsl").readString()
 			)
 		);
 	}
