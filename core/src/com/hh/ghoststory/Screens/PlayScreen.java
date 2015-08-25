@@ -82,7 +82,7 @@ public class PlayScreen extends DualCameraScreen {
 			animationControllers.add(ac);
 		}
 
-		instances.add(scene);
+//		instances.add(scene);
 		instances.addAll(mobGhosts);
 	}
 	@Override
