@@ -52,13 +52,14 @@ public class ShadowRenderer {
         Gdx.gl.glClearColor(screen.clearRed, screen.clearGreen, screen.clearBlue, screen.clearAlpha);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-	    for (int i = 0; i < screen.shadowCasters.size; i++)
-		    screen.shadowCasters.get(i).render(screen.instances);
-
+	    renderDepth();
 	    renderShadows();
 	    renderScene();
     }
-
+	public void renderDepth() {
+		for (int i = 0; i < screen.shadowCasters.size; i++)
+			screen.shadowCasters.get(i).render(screen.instances);
+	}
 	public void renderShadows() {
 		frameBufferShadows.begin();
 
