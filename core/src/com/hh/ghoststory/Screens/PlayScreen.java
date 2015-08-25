@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
+import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.Renderers.ShadowRenderer;
 import com.hh.ghoststory.Utility.TestLoader;
@@ -14,6 +17,7 @@ import com.hh.ghoststory.Utility.TestLoader;
 public class PlayScreen extends DualCameraScreen {
 
 	private ShadowRenderer renderer = new ShadowRenderer(this);
+	private Array<AnimationController> animationControllers = new Array<AnimationController>();
 
 	public PlayScreen(GhostStory game, Camera camera) {
 		super(game, camera);
@@ -45,8 +49,13 @@ public class PlayScreen extends DualCameraScreen {
 	public void render(float delta) {
 		super.render(delta);
 
-		if (loading && assetManager.update())
+		if (loading && assetManager.update()) {
 			doneLoading();
+		} else {
+			for (int i =0; i < animationControllers.size; i++) {
+				animationControllers.get(i).update(Gdx.graphics.getDeltaTime());
+			}
+		}
 
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -55,6 +64,27 @@ public class PlayScreen extends DualCameraScreen {
 		renderer.render();
 	}
 
+	@Override
+	public void doneLoading() {
+		super.doneLoading();
+		Array<ModelInstance> mobGhosts = TestLoader.getGhostModels(assetManager);
+		ModelInstance scene = TestLoader.getSceneModel(assetManager);
+
+		for (int i = 0; i < mobGhosts.size; i++) {
+			AnimationController ac = new AnimationController(mobGhosts.get(i));
+//			ac.setAnimation("float", -1);
+			ac.setAnimation("float", 0f, -1, -1, i + 1, new AnimationController.AnimationListener() {
+				@Override
+				public void onEnd(AnimationController.AnimationDesc animation) {}
+				@Override
+				public void onLoop(AnimationController.AnimationDesc animation) {}
+			});
+			animationControllers.add(ac);
+		}
+
+		instances.add(scene);
+		instances.addAll(mobGhosts);
+	}
 	@Override
 	public void hide() {
 		super.hide();

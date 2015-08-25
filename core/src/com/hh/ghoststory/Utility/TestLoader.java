@@ -45,6 +45,20 @@ public class TestLoader {
 
 		return instances;
 	}
+	public static Array<ModelInstance> getGhostModels(AssetManager assetManager) {
+		Array<ModelInstance> instances = new Array<ModelInstance>();
+		for (int i =0; i < characterPositions.length; i++) {
+			ModelInstance character = new ModelInstance(assetManager.get("models/ghost_red.g3dj", Model.class));
+			character.transform.setTranslation(characterPositions[i]);
+			instances.add(character);
+		}
+		return instances;
+	}
+	public static ModelInstance getSceneModel(AssetManager assetManager) {
+		ModelInstance scene = new ModelInstance(assetManager.get("models/scene.g3dj", Model.class));
+		scene.transform.setTranslation(0,0,0);
+		return scene;
+	}
 	public static void setLights(Environment environment) {
 //		travellingLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
 //		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);

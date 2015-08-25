@@ -48,7 +48,6 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 * @TODO Add more stuff that needs to happen after loading.
 	 */
 	public void doneLoading() {
-		instances = TestLoader.getTestModels(assetManager);
 		loading = false;
 	}
 
