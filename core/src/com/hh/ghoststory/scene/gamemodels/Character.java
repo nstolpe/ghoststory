@@ -15,7 +15,7 @@ public class Character extends DynamicModel {
 	public Quaternion rotation = new Quaternion();
 
 	public Character() {
-		model_resource = "models/ghost.g3dj";
+		model_resource = "models/ghost_blue.g3dj";
 	}
 
 	public void update() {
