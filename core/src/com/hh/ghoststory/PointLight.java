@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
-import com.hh.ghoststory.Screens.GameScreen;
+import com.hh.ghoststory.screen.GameScreen;
 
 public class PointLight extends Light
 {

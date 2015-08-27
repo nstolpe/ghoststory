@@ -6,7 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
-import com.hh.ghoststory.Screens.GameScreen;
+import com.hh.ghoststory.screen.GameScreen;
 import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 

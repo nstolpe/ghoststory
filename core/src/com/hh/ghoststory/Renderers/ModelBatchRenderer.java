@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.Light;
 import com.hh.ghoststory.ShadowMapShader;
 import com.hh.ghoststory.SimpleTextureShader;
-import com.hh.ghoststory.Screens.GameScreen;
+import com.hh.ghoststory.screen.GameScreen;
 
 import java.util.ArrayList;
 

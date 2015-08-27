@@ -2,7 +2,7 @@ package com.hh.ghoststory;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.hh.ghoststory.Screens.GameScreen;
+import com.hh.ghoststory.screen.GameScreen;
 
 public class MovingPointLight extends PointLight
 {

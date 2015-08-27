@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Screens;
+package com.hh.ghoststory.screen.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -79,11 +79,11 @@ public abstract class AbstractScreen implements Screen {
 	 * Class to create buttons on the main screen. A factory may be better, or use libGDX skin. Or move
 	 * to own class.
 	 */
-	class MainScreenButton {
+	public class MainScreenButton {
 		NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
 		NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
 		TextButtonStyle style = new TextButtonStyle();
-		TextButton button;
+		public TextButton button;
 
 		public MainScreenButton(String label) {
 			style.up = new NinePatchDrawable(up);

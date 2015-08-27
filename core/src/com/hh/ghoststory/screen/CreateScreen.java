@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Screens;
+package com.hh.ghoststory.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -31,6 +31,7 @@ import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.Actors.PlayerCharacter;
 import com.hh.ghoststory.GameModels.core.GameModel;
 import com.hh.ghoststory.GameModels.Character;
+import com.hh.ghoststory.screen.core.AbstractScreen;
 
 import java.util.HashMap;
 import java.util.Map;

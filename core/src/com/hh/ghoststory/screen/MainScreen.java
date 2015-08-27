@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Screens;
+package com.hh.ghoststory.screen;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
@@ -15,13 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.screen.core.AbstractScreen;
 
 public class MainScreen extends AbstractScreen {
 	protected Table table;
 	private Stage stage;
 	private SpriteBatch batch;
-	private MainScreenButton startButton;
-	private MainScreenButton createButton;
+	public MainScreenButton startButton;
+	public MainScreenButton createButton;
 	private EventListener startButtonListener;
 	private EventListener createButtonListener;
 

@@ -4,10 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
-import com.hh.ghoststory.Screens.CreateScreen;
-import com.hh.ghoststory.Screens.GameScreen;
-import com.hh.ghoststory.Screens.MainScreen;
-import com.hh.ghoststory.Screens.PlayScreen;
+import com.hh.ghoststory.screen.CreateScreen;
+import com.hh.ghoststory.screen.GameScreen;
+import com.hh.ghoststory.screen.MainScreen;
+import com.hh.ghoststory.screen.PlayScreen;
 
 public class GhostStory extends Game {
 	@Override

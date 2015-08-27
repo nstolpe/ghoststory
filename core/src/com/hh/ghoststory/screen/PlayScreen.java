@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Screens;
+package com.hh.ghoststory.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.Renderers.ShadowRenderer;
 import com.hh.ghoststory.lib.utility.TestLoader;
+import com.hh.ghoststory.screen.core.DualCameraScreen;
 
 /**
  * Created by nils on 7/14/15.

@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Screens;
+package com.hh.ghoststory.screen.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
