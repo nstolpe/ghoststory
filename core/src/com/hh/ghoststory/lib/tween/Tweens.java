@@ -1,11 +1,11 @@
-package com.hh.ghoststory.tween;
+package com.hh.ghoststory.lib.tween;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenEquation;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
-import com.hh.ghoststory.tween.accessors.QuaternionAccessor;
-import com.hh.ghoststory.tween.accessors.Vector3Accessor;
+import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
+import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 
 /**
  * Class to store often used tweens.

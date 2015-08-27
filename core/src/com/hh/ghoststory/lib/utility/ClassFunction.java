@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Utility;
+package com.hh.ghoststory.lib.utility;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

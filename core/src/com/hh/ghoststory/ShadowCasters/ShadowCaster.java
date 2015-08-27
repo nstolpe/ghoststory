@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.DepthMapShader;
-import com.hh.ghoststory.Utility.ShaderUtil;
+import com.hh.ghoststory.lib.utility.ShaderUtil;
 
 /**
  * Created by nils on 7/20/15.

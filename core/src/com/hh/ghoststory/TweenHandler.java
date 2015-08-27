@@ -5,8 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.hh.ghoststory.Screens.GameScreen;
-import com.hh.ghoststory.tween.accessors.QuaternionAccessor;
-import com.hh.ghoststory.tween.accessors.Vector3Accessor;
+import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
+import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.hh.ghoststory.Overrides.ShadowMapShader;
 import com.hh.ghoststory.Overrides.GameShader;
 import com.hh.ghoststory.Screens.DualCameraScreen;
-import com.hh.ghoststory.Utility.ShaderUtil;
+import com.hh.ghoststory.lib.utility.ShaderUtil;
 
 /**
  * Created by nils on 7/23/15.

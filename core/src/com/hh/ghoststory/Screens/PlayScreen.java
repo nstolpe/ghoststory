@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.Renderers.ShadowRenderer;
-import com.hh.ghoststory.Utility.TestLoader;
+import com.hh.ghoststory.lib.utility.TestLoader;
 
 /**
  * Created by nils on 7/14/15.

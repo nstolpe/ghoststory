@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Utility;
+package com.hh.ghoststory.lib.utility;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;

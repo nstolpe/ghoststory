@@ -1,4 +1,4 @@
-package com.hh.ghoststory.tween;
+package com.hh.ghoststory.lib.tween;
 
 import aurelienribon.tweenengine.*;
 import com.badlogic.gdx.math.MathUtils;

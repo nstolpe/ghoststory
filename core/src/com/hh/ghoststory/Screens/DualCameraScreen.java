@@ -11,8 +11,7 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.Overrides.GameEnvironment;
-import com.hh.ghoststory.Utility.ClassFunction;
-import com.hh.ghoststory.Utility.TestLoader;
+import com.hh.ghoststory.lib.utility.ClassFunction;
 
 /**
  * Created by nils on 7/17/15.
