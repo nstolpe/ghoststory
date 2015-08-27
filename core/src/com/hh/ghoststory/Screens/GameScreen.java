@@ -19,9 +19,9 @@ import com.hh.ghoststory.GameModels.Character;
 import com.hh.ghoststory.GameModels.Tile;
 import com.hh.ghoststory.GameModels.core.GameModel;
 import com.hh.ghoststory.Renderers.ModelBatchRenderer;
-import com.hh.ghoststory.TweenAccessors.ColorAccessor;
-import com.hh.ghoststory.TweenAccessors.QuaternionAccessor;
-import com.hh.ghoststory.TweenAccessors.Vector3Accessor;
+import com.hh.ghoststory.Tween.ColorAccessor;
+import com.hh.ghoststory.Tween.QuaternionAccessor;
+import com.hh.ghoststory.Tween.Vector3Accessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
