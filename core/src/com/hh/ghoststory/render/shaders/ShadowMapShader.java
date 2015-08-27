@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Overrides;
+package com.hh.ghoststory.render.shaders;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;

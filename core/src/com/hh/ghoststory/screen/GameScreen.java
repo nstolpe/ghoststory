@@ -18,7 +18,7 @@ import com.hh.ghoststory.*;
 import com.hh.ghoststory.scene.gamemodels.Character;
 import com.hh.ghoststory.scene.gamemodels.Tile;
 import com.hh.ghoststory.scene.gamemodels.core.GameModel;
-import com.hh.ghoststory.Renderers.ModelBatchRenderer;
+import com.hh.ghoststory.render.renderers.ModelBatchRenderer;
 import com.hh.ghoststory.lib.tween.accessors.ColorAccessor;
 import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;

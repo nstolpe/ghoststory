@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Renderers;
+package com.hh.ghoststory.render.renderers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.Light;
 import com.hh.ghoststory.ShadowMapShader;
 import com.hh.ghoststory.SimpleTextureShader;
+import com.hh.ghoststory.render.renderers.core.AbstractRenderer;
 import com.hh.ghoststory.screen.GameScreen;
 
 import java.util.ArrayList;

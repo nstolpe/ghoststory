@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Renderers;
+package com.hh.ghoststory.render.renderers;
 
 import com.badlogic.gdx.utils.Array;
 

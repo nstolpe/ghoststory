@@ -1,9 +1,10 @@
-package com.hh.ghoststory.Renderers;
+package com.hh.ghoststory.render.renderers.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.utils.Disposable;
+import com.hh.ghoststory.render.renderers.Renderer;
 
 /**
  * Created by nils on 1/24/15.

@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Renderers;
+package com.hh.ghoststory.render.renderers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.hh.ghoststory.Overrides.ShadowMapShader;
-import com.hh.ghoststory.Overrides.GameShader;
+import com.hh.ghoststory.render.shaders.ShadowMapShader;
+import com.hh.ghoststory.render.shaders.GameShader;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
 import com.hh.ghoststory.lib.utility.ShaderUtil;
 

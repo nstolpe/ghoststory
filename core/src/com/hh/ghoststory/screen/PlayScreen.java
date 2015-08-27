@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.Renderers.ShadowRenderer;
+import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.lib.utility.TestLoader;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
 
