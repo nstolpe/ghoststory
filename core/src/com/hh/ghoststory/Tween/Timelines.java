@@ -26,7 +26,7 @@ import java.util.Random;
  * };
  *
  */
-public class Tweens {
+public class Timelines {
 
 
 	/**
