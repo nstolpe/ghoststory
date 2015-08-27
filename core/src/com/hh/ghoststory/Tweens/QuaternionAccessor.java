@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Tween;
+package com.hh.ghoststory.Tweens;
 
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.math.Quaternion;
