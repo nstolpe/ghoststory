@@ -1,6 +1,7 @@
 package com.hh.ghoststory.Tween;
 
 import aurelienribon.tweenengine.*;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 
@@ -85,18 +86,36 @@ public class Timelines {
 	 * towards it.
 	 *
 	 * @param rotation        Current rotation of the Actor being tweened.
-	 * @param rotationTarget    Target rotation of the Actor being tweened.
-	 * @param rotationDuration    Duration the rotation tween will last.
-	 *
 	 * @param translation      Current translation of the Actor being tweened.
 	 * @param translationTarget  Target translation of the Actor being tweened.
-	 * @param translationDuration  Duration the translation tween will last.
+	 * @param rate  The rate that controls the duration of the Tween.
+	 *
 	 * @return A configured Timeline.
+	 * @TODO test some of the options and then clean up the comments.
 	 */
-	public static Timeline faceAndGoto(Quaternion rotation, Quaternion rotationTarget, float rotationDuration, Vector3 translation, Vector3 translationTarget, float translationDuration) {
+	public static Timeline faceAndGo(Quaternion rotation, Vector3 translation, Vector3 translationTarget, final float rate) {
+		float angle = rotation.getYaw();
+//		float angle = rotation.getAxisAngle(new Vector3(0, 1, 0));
+		float angleTarget = MathUtils.atan2(translationTarget.x - translation.x, translationTarget.z - translation.z);
+		final float translationDuration = translationTarget.dst(translation) / rate;
+		final Quaternion rotationTarget = new Quaternion(new Vector3(0,1,0), angleTarget).nor();
+
+//		keep the angle between -180 and 180. Why doesn't the quat rotation take care of this?
+		if (Math.abs(angleTarget - angle) >  180) angleTarget += angleTarget < angle ? 360 : -360;
+
+//		invert he rotationTarget if the dot product between it and rotation is < 0
+		if (rotation.dot(rotationTarget) < 0) rotationTarget.mul(-1);
+
+//		Figure this out w/ quats, if possible.
+		float rotationDuration = Math.abs(angle - angleTarget) / 200;
+//		float rotationDuration = Math.abs(rotation.dot(rotationTarget));
+
 		Tween rotate = Tweens.rotate(rotationDuration, TweenEquations.easeNone, rotation, rotationTarget);
 		Tween translate = Tweens.translate(translationDuration, TweenEquations.easeNone, translation, translationTarget);
 
+//		These can't be here anymore and should be moved to whatever is requesting the Timeline.
+//		screen.killTween(screen.character.position, Vector3Accessor.POSITION_XYZ);
+//		screen.killTween(screen.character.rotation, QuaternionAccessor.ROTATION);
 		return Timeline.createSequence().push(rotate).push(translate);
 	}
 }
