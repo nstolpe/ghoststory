@@ -1,4 +1,4 @@
-package com.hh.ghoststory.TweenAccessors;
+package com.hh.ghoststory.Tween;
 
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.graphics.Color;
