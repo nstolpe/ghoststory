@@ -1,4 +1,4 @@
-package com.hh.ghoststory.GameModels.core;
+package com.hh.ghoststory.scene.gamemodels.core;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;

@@ -28,9 +28,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.Actors.PlayerCharacter;
-import com.hh.ghoststory.GameModels.core.GameModel;
-import com.hh.ghoststory.GameModels.Character;
+import com.hh.ghoststory.scene.actors.PlayerCharacter;
+import com.hh.ghoststory.scene.gamemodels.core.GameModel;
+import com.hh.ghoststory.scene.gamemodels.Character;
 import com.hh.ghoststory.screen.core.AbstractScreen;
 
 import java.util.HashMap;

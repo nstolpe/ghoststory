@@ -1,4 +1,4 @@
-package com.hh.ghoststory.GameModels.core;
+package com.hh.ghoststory.scene.gamemodels.core;
 
 public class DynamicModel extends GameModel {
 	@Override

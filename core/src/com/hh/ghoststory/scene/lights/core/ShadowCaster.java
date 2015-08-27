@@ -1,4 +1,4 @@
-package com.hh.ghoststory.ShadowCasters;
+package com.hh.ghoststory.scene.lights.core;
 
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -14,7 +14,11 @@ import com.hh.ghoststory.lib.utility.ShaderUtil;
 
 /**
  * Created by nils on 7/20/15.
- * @TODO move some methods to interface, make this implement the interface.
+ * @TODO move some methods to interface, make this implement the interface. Or, make this
+ * extend baselight, then implement specific point/directional behavior again in PointShadowCaster, etc
+ * replace lighting with this, and allow shadows and lights to be turned on and off.
+ *
+ * public abstract class Light extends BaseLight {...add camera and universal stuff here...}
  */
 public abstract class ShadowCaster {
 	public PerspectiveCamera camera = new PerspectiveCamera();

@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.hh.ghoststory.ShadowCasters.PointShadowCaster;
-import com.hh.ghoststory.ShadowCasters.ShadowCaster;
+import com.hh.ghoststory.scene.lights.PointShadowCaster;
+import com.hh.ghoststory.scene.lights.core.ShadowCaster;
 
 /**
  * Created by nils on 7/15/15.

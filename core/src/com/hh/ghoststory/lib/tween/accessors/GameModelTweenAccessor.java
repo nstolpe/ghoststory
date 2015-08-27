@@ -3,7 +3,7 @@ package com.hh.ghoststory.lib.tween.accessors;
 import aurelienribon.tweenengine.TweenAccessor;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
-import com.hh.ghoststory.GameModels.core.DynamicModel;
+import com.hh.ghoststory.scene.gamemodels.core.DynamicModel;
 
 import java.util.Arrays;
 

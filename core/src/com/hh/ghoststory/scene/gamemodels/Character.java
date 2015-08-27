@@ -1,10 +1,10 @@
-package com.hh.ghoststory.GameModels;
+package com.hh.ghoststory.scene.gamemodels;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.math.Quaternion;
-import com.hh.ghoststory.GameModels.core.DynamicModel;
+import com.hh.ghoststory.scene.gamemodels.core.DynamicModel;
 
 /*
  * The ghost. Also shouldn't stay here forever.

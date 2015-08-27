@@ -1,7 +1,7 @@
-package com.hh.ghoststory.GameModels;
+package com.hh.ghoststory.scene.gamemodels;
 
 import com.badlogic.gdx.math.Vector3;
-import com.hh.ghoststory.GameModels.core.StaticModel;
+import com.hh.ghoststory.scene.gamemodels.core.StaticModel;
 
 /*
  * Tiles for making the ground. Shouldn't stay here forever.

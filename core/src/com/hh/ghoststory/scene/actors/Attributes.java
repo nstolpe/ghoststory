@@ -1,4 +1,4 @@
-package com.hh.ghoststory.Actors;
+package com.hh.ghoststory.scene.actors;
 
 /**
  * Created with IntelliJ IDEA.

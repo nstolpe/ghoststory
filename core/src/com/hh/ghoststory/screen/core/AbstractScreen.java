@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.ShadowCasters.PointShadowCaster;
+import com.hh.ghoststory.scene.lights.PointShadowCaster;
 
 /**
  * The base class for all game screens.
