@@ -1,5 +1,6 @@
 package com.hh.ghoststory.render.shaders;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Attributes;
@@ -25,9 +26,12 @@ public class ShadowMapShader extends BaseShader {
 	private final Array<PointShadowCaster> shadowCasters;
 	public Renderable renderable;
 
-	public ShadowMapShader(final Renderable renderable, final ShaderProgram program, Array<PointShadowCaster> shadowCasters) {
+	public ShadowMapShader(final Renderable renderable, Array<PointShadowCaster> shadowCasters) {
 		this.renderable = renderable;
-		this.program = program;
+		program = new ShaderProgram(
+			Gdx.files.internal("shaders/shadow.vertex.glsl"),
+			Gdx.files.internal("shaders/shadow.fragment.glsl")
+		);;
 		this.shadowCasters = shadowCasters;
 		register(DefaultShader.Inputs.worldTrans, DefaultShader.Setters.worldTrans);
 		register(DefaultShader.Inputs.projViewTrans, DefaultShader.Setters.projViewTrans);

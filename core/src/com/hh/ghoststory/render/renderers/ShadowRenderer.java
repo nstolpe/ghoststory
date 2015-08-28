@@ -4,15 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.Renderable;
-import com.badlogic.gdx.graphics.g3d.Shader;
-import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.hh.ghoststory.render.shaders.ShadowMapShader;
-import com.hh.ghoststory.render.shaders.GameShader;
+import com.hh.ghoststory.render.shaders.SceneShader;
+import com.hh.ghoststory.render.shaders.SceneShaderProvider;
+import com.hh.ghoststory.render.shaders.ShadowMapShaderProvider;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
-import com.hh.ghoststory.lib.utility.ShaderUtil;
 
 /**
  * Created by nils on 7/23/15.
@@ -21,7 +17,6 @@ public class ShadowRenderer {
     public DualCameraScreen screen;
 	public FrameBuffer frameBufferShadows;
 	public ModelBatch modelBatch;
-	public ShaderProgram shaderProgramShadows;
 	public ModelBatch modelBatchShadows;
 
     public ShadowRenderer(DualCameraScreen screen) {
@@ -31,21 +26,8 @@ public class ShadowRenderer {
 
 	private void init() {
 		frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-		shaderProgramShadows = ShaderUtil.getShader("shadow");
-
-		modelBatch = new ModelBatch(new DefaultShaderProvider() {
-			@Override
-			protected Shader createShader(final Renderable renderable) {
-				return new GameShader(renderable);
-			}
-		});
-
-		modelBatchShadows = new ModelBatch(new DefaultShaderProvider() {
-			@Override
-			protected Shader createShader(final Renderable renderable) {
-				return new ShadowMapShader(renderable, shaderProgramShadows, screen.shadowCasters);
-			}
-		});
+		modelBatch = new ModelBatch(new SceneShaderProvider());
+		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider(screen.shadowCasters));
 	}
 
     public void render() {
@@ -77,7 +59,7 @@ public class ShadowRenderer {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
-		frameBufferShadows.getColorBufferTexture().bind(GameShader.textureNum);
+		frameBufferShadows.getColorBufferTexture().bind(SceneShader.textureNum);
 
 		modelBatch.begin(screen.camera);
 		modelBatch.render(screen.instances, screen.environment);
