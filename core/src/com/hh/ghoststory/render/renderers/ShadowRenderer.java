@@ -1,19 +1,25 @@
 package com.hh.ghoststory.render.renderers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.hh.ghoststory.lib.MessageType;
 import com.hh.ghoststory.render.shaders.SceneShader;
 import com.hh.ghoststory.render.shaders.SceneShaderProvider;
 import com.hh.ghoststory.render.shaders.ShadowMapShaderProvider;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
 
+import static com.hh.ghoststory.lib.MessageType.*;
+
 /**
  * Created by nils on 7/23/15.
  */
-public class ShadowRenderer {
+public class ShadowRenderer implements Telegraph {
     public DualCameraScreen screen;
 	public FrameBuffer frameBufferShadows;
 	public ModelBatch modelBatch;
@@ -25,7 +31,8 @@ public class ShadowRenderer {
     }
 
 	private void init() {
-		frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		MessageDispatcher.getInstance().addListener(this, MessageType.UPDATE_BUFFER.val());
+		initShadowBuffer();
 		modelBatch = new ModelBatch(new SceneShaderProvider());
 		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider(screen.shadowCasters));
 	}
@@ -66,9 +73,21 @@ public class ShadowRenderer {
 		modelBatch.end();
 	}
 
-    public void updateShadowBuffer() {
-        frameBufferShadows.dispose();
+    public void initShadowBuffer() {
+	    if (frameBufferShadows != null) frameBufferShadows.dispose();
+	    System.out.println("init the buffer");
         frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
 
+	@Override
+	public boolean handleMessage(Telegram msg) {
+		switch (get(msg.message)) {
+			case UPDATE_BUFFER:
+				initShadowBuffer();
+				break;
+			default:
+				break;
+		}
+		return true;
+	}
 }

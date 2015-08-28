@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.lib.MessageType;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.lib.utility.TestLoader;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
@@ -29,7 +30,6 @@ public class PlayScreen extends DualCameraScreen implements Telegraph {
 	public PlayScreen(GhostStory game) {
 		super(game);
 		setClear(0.7f, 0.1f, 1f, 1);
-
 		// load assets. These should be pulled in through a config.
 		assetManager.load("models/ghost_red.g3dj", Model.class);
 		assetManager.load("models/scene.g3dj", Model.class);
@@ -113,8 +113,8 @@ public class PlayScreen extends DualCameraScreen implements Telegraph {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		MessageDispatcher.getInstance().dispatchMessage(this, 1);
-		renderer.updateShadowBuffer();
+		MessageDispatcher.getInstance().dispatchMessage(this, MessageType.UPDATE_BUFFER.val());
+//		renderer.initShadowBuffer();
 	}
 
 	@Override
