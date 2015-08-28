@@ -2,27 +2,33 @@ package com.hh.ghoststory.screen.controllers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
+import com.hh.ghoststory.screen.core.AbstractScreen;
 
 /**
  * Created by nils on 8/27/15.
  */
-public class CameraController {
-	private Screen screen;
+public class CameraController implements Telegraph {
+	private AbstractScreen screen;
 	private PerspectiveCamera perspective;
 	private OrthographicCamera orthographic;
 	private Camera active;
+	private MessageDispatcher messageDispatcher;
 
 	/**
 	 * Probably the best constructor to use.
 	 * @param screen
 	 * @param camera
 	 */
-	public CameraController(Screen screen, Camera camera) {
+	public CameraController(AbstractScreen screen, Camera camera, MessageDispatcher messageDispatcher) {
 		this.screen = screen;
+		this.messageDispatcher = messageDispatcher;
 		setActiveCamera(camera);
 	}
 
@@ -30,8 +36,8 @@ public class CameraController {
 	 * Sets the screen and creates a new default camera (perspecive)
 	 * @param screen
 	 */
-	public CameraController(Screen screen) {
-		this(screen, new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+	public CameraController(AbstractScreen screen) {
+		this(screen, new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()), screen.messageDispatcher);
 	}
 
 	/**
@@ -191,5 +197,10 @@ public class CameraController {
 //		camera.near = 1;
 //		camera.far = 300;
 		return camera;
+	}
+
+	@Override
+	public boolean handleMessage(Telegram msg) {
+		return false;
 	}
 }

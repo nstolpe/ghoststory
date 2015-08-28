@@ -28,7 +28,7 @@ public class ShadowRenderer implements Telegraph {
     }
 
 	private void init() {
-		screen.messageDispatcher.addListener(this, MessageType.UPDATE_BUFFER.val());
+		screen.messageDispatcher.addListener(this, MessageType.INIT_SHADOW_BUFFER.val());
 		initShadowBuffer();
 		modelBatch = new ModelBatch(new SceneShaderProvider());
 		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider(screen.shadowCasters));
@@ -80,7 +80,7 @@ public class ShadowRenderer implements Telegraph {
 	public boolean handleMessage(Telegram msg) {
 		MessageType type = MessageType.get(msg.message);
 		switch (type) {
-			case UPDATE_BUFFER:
+			case INIT_SHADOW_BUFFER:
 				initShadowBuffer();
 				break;
 			default:

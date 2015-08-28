@@ -110,7 +110,7 @@ public class PlayScreen extends DualCameraScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		messageDispatcher.dispatchMessage(this, MessageType.UPDATE_BUFFER.val());
+		messageDispatcher.dispatchMessage(this, MessageType.INIT_SHADOW_BUFFER.val());
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package com.hh.ghoststory.screen.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -15,7 +17,7 @@ import com.hh.ghoststory.scene.lights.PointShadowCaster;
 /**
  * The base class for all game screens.
  */
-public abstract class AbstractScreen implements Screen {
+public abstract class AbstractScreen implements Screen, Telegraph {
 	protected final GhostStory game;
 	public Camera camera;
 	protected float screenWidth;
@@ -25,6 +27,7 @@ public abstract class AbstractScreen implements Screen {
 	public float clearGreen = 0f;
 	public float clearAlpha = 1f;
 	public Array<PointShadowCaster> shadowCasters = new Array<PointShadowCaster>();
+	public MessageDispatcher messageDispatcher = new MessageDispatcher();
 
 	protected BitmapFont font = new BitmapFont(
 			Gdx.files.internal("fonts/crimson.fnt"),

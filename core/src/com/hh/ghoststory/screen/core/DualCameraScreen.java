@@ -1,8 +1,6 @@
 package com.hh.ghoststory.screen.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.msg.MessageDispatcher;
-import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -12,13 +10,13 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.lib.utility.ClassFunction;
+import com.hh.ghoststory.scene.Lighting;
 
 /**
  * Created by nils on 7/17/15.
  */
-public abstract class DualCameraScreen extends AbstractScreen implements Telegraph {
+public abstract class DualCameraScreen extends AbstractScreen {
 	protected PerspectiveCamera perspectiveCamera = null;
 	protected OrthographicCamera orthographicCamera = null;
 	protected CameraInputController camController;
@@ -26,7 +24,6 @@ public abstract class DualCameraScreen extends AbstractScreen implements Telegra
 	public Array<ModelInstance> instances = new Array<ModelInstance>();
     protected boolean loading;
 	public Environment environment = new Lighting();
-	public MessageDispatcher messageDispatcher = new MessageDispatcher();
 
 	public DualCameraScreen(GhostStory game) {
 		this(game, new PerspectiveCamera());

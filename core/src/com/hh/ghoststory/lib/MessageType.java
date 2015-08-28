@@ -7,7 +7,16 @@ import java.util.Map;
  * Created by nils on 8/28/15.
  */
 public enum MessageType {
-	UPDATE_BUFFER(1);
+	// ShadowRenderer
+	INIT_SHADOW_BUFFER(0),
+
+	// CameraController
+	GET_ACTIVE_CAMERA(1),
+	GET_CAMERA_POSITION(2),
+	GET_CAMERA_DIRECTION(3),
+	GET_PICK_RAY(4),
+	POSITION_CAMERA(5),
+	TRANSLATE_CAMERA(6);
 
 	private int i;
 	private static final Map lookup = new HashMap();
