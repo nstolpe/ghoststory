@@ -1,6 +1,7 @@
 package com.hh.ghoststory.render.renderers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,9 +22,15 @@ public class ShadowRenderer implements Telegraph {
 	public FrameBuffer frameBufferShadows;
 	public ModelBatch modelBatch;
 	public ModelBatch modelBatchShadows;
+	private MessageDispatcher messageDispatcher;
 
     public ShadowRenderer(DualCameraScreen screen) {
+	    this(screen, screen.messageDispatcher);
+    }
+
+    public ShadowRenderer(DualCameraScreen screen, MessageDispatcher messageDispatcher) {
         this.screen = screen;
+	    this.messageDispatcher = messageDispatcher;
 	    init();
     }
 
