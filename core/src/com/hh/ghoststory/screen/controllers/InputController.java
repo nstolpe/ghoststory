@@ -58,6 +58,8 @@ public class InputController extends GestureDetector {
 	/** Whether to update the target on forward */
 	public boolean forwardTarget = true;
 	/** Whether to update the target on scroll */
+	public boolean lateralTarget = true;
+	public boolean zoomTarget = true;
 	public boolean scrollTarget = false;
 	public int forwardKey = Keys.W;
 	protected boolean forwardPressed;
@@ -160,18 +162,20 @@ public class InputController extends GestureDetector {
 			if (leftPressed) {
 				Vector3 left = new Vector3().set(camera.direction).crs(camera.up).nor();
 				camera.translate(tmpV1.set(left).scl(-delta * translateUnits));
-//				if (forwardTarget) target.add(tmpV1);
+				if (lateralTarget) target.add(tmpV1);
 			}
 			if (rightPressed) {
 				Vector3 right = new Vector3().set(camera.direction).crs(camera.up).nor().scl(-1f);
 				camera.translate(tmpV1.set(right).scl(-delta * translateUnits));
-//				if (forwardTarget) target.add(tmpV1);
+				if (lateralTarget) target.add(tmpV1);
 			}
 			if (zoomInPressed) {
 				camera.translate(tmpV1.set(camera.direction).scl(delta * translateUnits));
+				if (zoomTarget) target.add(tmpV1);
 			}
 			if (zoomOutPressed) {
 				camera.translate(tmpV1.set(camera.direction).scl(-delta * translateUnits));
+				if (zoomTarget) target.add(tmpV1);
 			}
 			if (autoUpdate) camera.update();
 		}
