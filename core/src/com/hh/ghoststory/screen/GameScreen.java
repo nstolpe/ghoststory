@@ -4,6 +4,7 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenAccessor;
 import aurelienribon.tweenengine.TweenEquations;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -307,5 +308,10 @@ public class GameScreen extends AbstractScreen {
 	// 2 uses in InputHandler
 	public void killTween(Object target, int tweenType) {
 		tweenHandler.tweenManager.killTarget(target, tweenType);
+	}
+
+	@Override
+	public boolean handleMessage(Telegram msg) {
+		return false;
 	}
 }

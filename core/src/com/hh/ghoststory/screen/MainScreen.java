@@ -6,6 +6,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -132,5 +133,10 @@ public class MainScreen extends AbstractScreen {
 
 		startButton.button.addListener(startButtonListener);
 		createButton.button.addListener(createButtonListener);
+	}
+
+	@Override
+	public boolean handleMessage(Telegram msg) {
+		return false;
 	}
 }
