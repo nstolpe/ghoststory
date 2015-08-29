@@ -110,6 +110,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 		shaderProgram.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
 		shaderProgram.end();
 
+		// pass in the camera from screen.
 		modelBatch.begin(screen.getActiveCamera());
 		for (ModelInstance model : modelInstances) modelBatch.render(model);
 		modelBatch.end();
@@ -123,6 +124,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 		Gdx.gl.glClearColor(0.4f, 0.4f, 0.4f, 0.4f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
+		// pass in the camera from screen.
 		modelBatchShadows.begin(screen.getActiveCamera());
 		for (ModelInstance model : modelInstances) modelBatchShadows.render(model);
 		modelBatchShadows.end();

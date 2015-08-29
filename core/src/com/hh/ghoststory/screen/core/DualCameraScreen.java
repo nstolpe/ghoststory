@@ -17,13 +17,15 @@ import com.hh.ghoststory.scene.Lighting;
  * Created by nils on 7/17/15.
  */
 public abstract class DualCameraScreen extends AbstractScreen {
-	protected PerspectiveCamera perspectiveCamera = null;
-	protected OrthographicCamera orthographicCamera = null;
-	protected CameraInputController camController;
+	protected PerspectiveCamera perspective;
+	protected OrthographicCamera orthographic;
+	public Camera active;
 	protected AssetManager assetManager = new AssetManager();
 	public Array<ModelInstance> instances = new Array<ModelInstance>();
     protected boolean loading;
 	public Environment environment = new Lighting();
+
+	CameraInputController camController;
 
 	public DualCameraScreen(GhostStory game) {
 		this(game, new PerspectiveCamera());
@@ -31,15 +33,16 @@ public abstract class DualCameraScreen extends AbstractScreen {
 
 	public DualCameraScreen(GhostStory game, Camera camera) {
 		super(game);
-		setActiveCamera(camera);
+		activateCamera(camera);
 	}
+
 	@Override
 	public void resize(int width, int height) {
-		camera.viewportWidth = width;
-		camera.viewportHeight = height;
+		active.viewportWidth = width;
+		active.viewportHeight = height;
 
-		if (camera instanceof OrthographicCamera)
-			activateOrthographicCamera((OrthographicCamera) camera);
+		if (active instanceof OrthographicCamera)
+			activateOrthographicCamera((OrthographicCamera) active);
 	}
 
 	/**
@@ -57,11 +60,18 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 *
 	 * @param camera
 	 */
-	public void setActiveCamera(Camera camera) {
-		this.camera = camera;
-		camController = new CameraInputController(this.camera);
+	public void activateCamera(Camera camera) {
+		if (camera instanceof PerspectiveCamera)
+			perspective = (PerspectiveCamera) camera;
+		else if (camera instanceof OrthographicCamera)
+			orthographic = (OrthographicCamera) camera;
+		else
+			return;
+
+		active = camera;
+
+		camController = new CameraInputController(this.active);
 		Gdx.input.setInputProcessor(camController);
-		ClassFunction.call(this, "activate" + camera.getClass().getSimpleName(), camera);
 	}
 
 	/**
@@ -86,8 +96,8 @@ public abstract class DualCameraScreen extends AbstractScreen {
 		camera.near = 1;
 		camera.far = 300;
 
-		if (orthographicCamera != camera)
-			orthographicCamera = camera;
+//		if (orthographicCamera != camera)
+//			orthographicCamera = camera;
 	}
 
 	/**
@@ -113,20 +123,20 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 *
 	 * @return
 	 */
-	public OrthographicCamera getOrthographicCamera() {
-		if (orthographicCamera == null)
-			activateOrthographicCamera(new OrthographicCamera());
-		return orthographicCamera;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	public PerspectiveCamera getPerspectiveCamera() {
-		if (perspectiveCamera == null)
-			activatePerspectiveCamera(new PerspectiveCamera());
-		return perspectiveCamera;
-	}
+//	public OrthographicCamera getOrthographicCamera() {
+//		if (orthographicCamera == null)
+//			activateOrthographicCamera(new OrthographicCamera());
+//		return orthographicCamera;
+//	}
+//
+//	/**
+//	 *
+//	 * @return
+//	 */
+//	public PerspectiveCamera getPerspectiveCamera() {
+//		if (perspectiveCamera == null)
+//			activatePerspectiveCamera(new PerspectiveCamera());
+//		return perspectiveCamera;
+//	}
 	/** End Camera Section */
 }

@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.hh.ghoststory.lib.MessageType;
+import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.render.shaders.SceneShader;
 import com.hh.ghoststory.render.shaders.SceneShaderProvider;
 import com.hh.ghoststory.render.shaders.ShadowMapShaderProvider;
@@ -35,44 +36,44 @@ public class ShadowRenderer implements Telegraph {
     }
 
 	private void init() {
-		screen.messageDispatcher.addListener(this, MessageType.INIT_SHADOW_BUFFER.val());
+		screen.messageDispatcher.addListener(this, MessageTypes.Screen.INIT_SHADOW_BUFFER);
 		initShadowBuffer();
 		modelBatch = new ModelBatch(new SceneShaderProvider());
 		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider(screen.shadowCasters));
 	}
 
-    public void render() {
+    public void render(Camera camera) {
         Gdx.gl.glClearColor(screen.clearRed, screen.clearGreen, screen.clearBlue, screen.clearAlpha);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 	    renderDepth();
-	    renderShadows();
-	    renderScene();
+	    renderShadows(camera);
+	    renderScene(camera);
     }
 	public void renderDepth() {
 		for (int i = 0; i < screen.shadowCasters.size; i++)
 			screen.shadowCasters.get(i).render(screen.instances);
 	}
-	public void renderShadows() {
+	public void renderShadows(Camera camera) {
 		frameBufferShadows.begin();
 
 		Gdx.gl.glClearColor(0.4f, 0.4f, 0.4f, 0.4f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		modelBatchShadows.begin(screen.camera);
+		modelBatchShadows.begin(camera);
 		modelBatchShadows.render(screen.instances);
 		modelBatchShadows.end();
 //		ScreenshotFactory.saveScreenshot(frameBufferShadows.getWidth(), frameBufferShadows.getHeight(), "shadows");
 		frameBufferShadows.end();
 	}
 
-	public void renderScene() {
+	public void renderScene(Camera camera) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
 		frameBufferShadows.getColorBufferTexture().bind(SceneShader.textureNum);
 
-		modelBatch.begin(screen.camera);
+		modelBatch.begin(camera);
 		modelBatch.render(screen.instances, screen.environment);
 		modelBatch.end();
 	}
@@ -85,14 +86,14 @@ public class ShadowRenderer implements Telegraph {
 
 	@Override
 	public boolean handleMessage(Telegram msg) {
-		MessageType type = MessageType.get(msg.message);
-		switch (type) {
-			case INIT_SHADOW_BUFFER:
+		switch (msg.message) {
+			case MessageTypes.Screen.INIT_SHADOW_BUFFER:
 				initShadowBuffer();
 				break;
 			default:
 				break;
 		}
+		// should also be able to return false.
 		return true;
 	}
 }

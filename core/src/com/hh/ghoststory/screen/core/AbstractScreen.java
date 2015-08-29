@@ -19,7 +19,6 @@ import com.hh.ghoststory.scene.lights.PointShadowCaster;
  */
 public abstract class AbstractScreen implements Screen, Telegraph {
 	protected final GhostStory game;
-	public Camera camera;
 	protected float screenWidth;
 	protected float screenHeight;
 	public float clearRed = 0f;

@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.lib.MessageType;
+import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.lib.utility.TestLoader;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
@@ -63,8 +63,8 @@ public class PlayScreen extends DualCameraScreen {
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-		camera.update();
-		renderer.render();
+		active.update();
+		renderer.render(active);
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class PlayScreen extends DualCameraScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		messageDispatcher.dispatchMessage(this, MessageType.INIT_SHADOW_BUFFER.val());
+		messageDispatcher.dispatchMessage(this, MessageTypes.Screen.INIT_SHADOW_BUFFER);
 	}
 
 	@Override

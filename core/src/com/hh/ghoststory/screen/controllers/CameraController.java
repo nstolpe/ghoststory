@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
+import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.screen.core.AbstractScreen;
 
 /**
@@ -200,6 +201,22 @@ public class CameraController implements Telegraph {
 
 	@Override
 	public boolean handleMessage(Telegram msg) {
-		return false;
+		switch (msg.message) {
+
+			case MessageTypes.Screen.GET_CAMERA_POSITION:
+				break;
+			case MessageTypes.Screen.GET_CAMERA_DIRECTION:
+				break;
+			case MessageTypes.Screen.GET_PICK_RAY:
+				break;
+			case MessageTypes.POSITION_CAMERA:
+				break;
+			case MessageTypes.Screen.TRANSLATE_CAMERA:
+				break;
+			default:
+				break;
+		}
+		// should also be able to return false.
+		return true;
 	}
 }
