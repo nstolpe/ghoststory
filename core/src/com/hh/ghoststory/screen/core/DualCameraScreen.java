@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.screen.controllers.InputController;
+import com.hh.ghoststory.screen.controllers.InputGestureListener;
 
 /**
  * Created by nils on 7/17/15.
@@ -47,7 +48,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 */
 	public void setInput() {
 		// this should change, won't be using CameraInputController, but should grab some of its code.
-		inputController = new InputController(active, this);
+		inputController = new InputController(new InputGestureListener(this), this);
 		Gdx.input.setInputProcessor(inputController);
 	}
 

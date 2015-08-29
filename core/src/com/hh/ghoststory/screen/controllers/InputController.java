@@ -19,25 +19,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.hh.ghoststory.screen.core.AbstractScreen;
+import com.hh.ghoststory.screen.core.DualCameraScreen;
 
 public class InputController extends GestureDetector {
 	private InputMultiplexer multiplexer = new InputMultiplexer();
-	private AbstractScreen screen;
-	/** The button for rotating the camera. */
+	private DualCameraScreen screen;
+	/** The button for rotating the screen.active. */
 	public int rotateButton = Input.Buttons.LEFT;
 	/** The angle to rotate when moved the full width or height of the screen. */
 	public float rotateAngle = 360f;
-	/** The button for translating the camera along the up/right plane */
+	/** The button for translating the screen.active along the up/right plane */
 	public int translateButton = Input.Buttons.RIGHT;
-	/** The units to translate the camera when moved the full width or height of the screen. */
+	/** The units to translate the screen.active when moved the full width or height of the screen. */
 	public float translateUnits = 10f; // FIXME auto calculate this based on the target
-	/** The button for translating the camera along the direction axis */
+	/** The button for translating the screen.active along the direction axis */
 	public int forwardButton = Input.Buttons.MIDDLE;
 	/** The key which must be pressed to activate rotate, translate and forward or 0 to always activate. */
 	public int activateKey = 0;
@@ -49,7 +50,7 @@ public class InputController extends GestureDetector {
 	public float scrollFactor = -0.1f;
 	/** World units per screen size */
 	public float pinchZoomFactor = 10f;
-	/** Whether to update the camera after it has been changed. */
+	/** Whether to update the screen.active after it has been changed. */
 	public boolean autoUpdate = true;
 	/** The target to rotate around. */
 	public Vector3 target = new Vector3();
@@ -78,106 +79,54 @@ public class InputController extends GestureDetector {
 	public int zoomOutKey = Keys.X;
 	protected boolean zoomOutPressed;
 
-	/** The camera. */
-	public Camera camera;
 	/** The current (first) button being pressed. */
 	protected int button = -1;
 
 	private float startX, startY;
 	private final Vector3 tmpV1 = new Vector3();
 	private final Vector3 tmpV2 = new Vector3();
+	protected final InputGestureListener gestureListener;
 
-	protected static class CameraGestureListener extends GestureAdapter {
-		public InputController controller;
-		private float previousZoom;
-
-		@Override
-		public boolean touchDown (float x, float y, int pointer, int button) {
-			previousZoom = 0;
-			return false;
-		}
-
-		@Override
-		public boolean tap (float x, float y, int count, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean longPress (float x, float y) {
-			return false;
-		}
-
-		@Override
-		public boolean fling (float velocityX, float velocityY, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean pan (float x, float y, float deltaX, float deltaY) {
-			return false;
-		}
-
-		@Override
-		public boolean zoom (float initialDistance, float distance) {
-			float newZoom = distance - initialDistance;
-			float amount = newZoom - previousZoom;
-			previousZoom = newZoom;
-			float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-			return controller.pinchZoom(amount / ((w > h) ? h : w));
-		}
-
-		@Override
-		public boolean pinch (Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-			return false;
-		}
-	};
-
-	protected final CameraGestureListener gestureListener;
-
-	protected InputController(final CameraGestureListener gestureListener, final Camera camera, AbstractScreen screen) {
+	public InputController(final InputGestureListener gestureListener, DualCameraScreen screen) {
 		super(gestureListener);
 		this.gestureListener = gestureListener;
 		this.gestureListener.controller = this;
-		this.camera = camera;
 		this.screen = screen;
-	}
-
-	public InputController(final Camera camera, AbstractScreen screen) {
-		this(new CameraGestureListener(), camera, screen);
 	}
 
 	public void update () {
 		if (rotateRightPressed || rotateLeftPressed || forwardPressed || backwardPressed || leftPressed || rightPressed || zoomInPressed || zoomOutPressed) {
 			final float delta = Gdx.graphics.getDeltaTime();
-			if (rotateRightPressed) camera.rotate(camera.up, -delta * rotateAngle);
-			if (rotateLeftPressed) camera.rotate(camera.up, delta * rotateAngle);
+			if (rotateRightPressed) screen.active.rotate(screen.active.up, -delta * rotateAngle);
+			if (rotateLeftPressed) screen.active.rotate(screen.active.up, delta * rotateAngle);
+			// forward and backward are not quite right. try it when looking straight down.
 			if (forwardPressed) {
-				camera.translate(tmpV1.set(camera.direction.x, 0, camera.direction.z).scl(delta * translateUnits));
+				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).scl(delta * translateUnits));
 				if (forwardTarget) target.add(tmpV1);
 			}
 			if (backwardPressed) {
-				camera.translate(tmpV1.set(camera.direction.x, 0, camera.direction.z).scl(-delta * translateUnits));
+				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).scl(-delta * translateUnits));
 				if (forwardTarget) target.add(tmpV1);
 			}
 			if (leftPressed) {
-				Vector3 left = new Vector3().set(camera.direction).crs(camera.up).nor();
-				camera.translate(tmpV1.set(left).scl(-delta * translateUnits));
+				Vector3 left = new Vector3().set(screen.active.direction).crs(screen.active.up).nor();
+				screen.active.translate(tmpV1.set(left).scl(-delta * translateUnits));
 				if (lateralTarget) target.add(tmpV1);
 			}
 			if (rightPressed) {
-				Vector3 right = new Vector3().set(camera.direction).crs(camera.up).nor().scl(-1f);
-				camera.translate(tmpV1.set(right).scl(-delta * translateUnits));
+				Vector3 right = new Vector3().set(screen.active.direction).crs(screen.active.up).nor().scl(-1f);
+				screen.active.translate(tmpV1.set(right).scl(-delta * translateUnits));
 				if (lateralTarget) target.add(tmpV1);
 			}
 			if (zoomInPressed) {
-				camera.translate(tmpV1.set(camera.direction).scl(delta * translateUnits));
+				screen.active.translate(tmpV1.set(screen.active.direction).scl(delta * translateUnits));
 				if (zoomTarget) target.add(tmpV1);
 			}
 			if (zoomOutPressed) {
-				camera.translate(tmpV1.set(camera.direction).scl(-delta * translateUnits));
+				screen.active.translate(tmpV1.set(screen.active.direction).scl(-delta * translateUnits));
 				if (zoomTarget) target.add(tmpV1);
 			}
-			if (autoUpdate) camera.update();
+			if (autoUpdate) screen.active.update();
 		}
 	}
 
@@ -208,18 +157,18 @@ public class InputController extends GestureDetector {
 
 	protected boolean process (float deltaX, float deltaY, int button) {
 		if (button == rotateButton) {
-			tmpV1.set(camera.direction).crs(camera.up).y = 0f;
-			camera.rotateAround(target, tmpV1.nor(), deltaY * rotateAngle);
-			camera.rotateAround(target, Vector3.Y, deltaX * -rotateAngle);
+			tmpV1.set(screen.active.direction).crs(screen.active.up).y = 0f;
+			screen.active.rotateAround(target, tmpV1.nor(), deltaY * rotateAngle);
+			screen.active.rotateAround(target, Vector3.Y, deltaX * -rotateAngle);
 		} else if (button == translateButton) {
-			camera.translate(tmpV1.set(camera.direction).crs(camera.up).nor().scl(-deltaX * translateUnits));
-			camera.translate(tmpV2.set(camera.up).scl(-deltaY * translateUnits));
+			screen.active.translate(tmpV1.set(screen.active.direction).crs(screen.active.up).nor().scl(-deltaX * translateUnits));
+			screen.active.translate(tmpV2.set(screen.active.up).scl(-deltaY * translateUnits));
 			if (translateTarget) target.add(tmpV1).add(tmpV2);
 		} else if (button == forwardButton) {
-			camera.translate(tmpV1.set(camera.direction).scl(deltaY * translateUnits));
+			screen.active.translate(tmpV1.set(screen.active.direction).scl(deltaY * translateUnits));
 			if (forwardTarget) target.add(tmpV1);
 		}
-		if (autoUpdate) camera.update();
+		if (autoUpdate) screen.active.update();
 		return true;
 	}
 
@@ -241,9 +190,9 @@ public class InputController extends GestureDetector {
 
 	public boolean zoom (float amount) {
 		if (!alwaysScroll && activateKey != 0 && !activatePressed) return false;
-		camera.translate(tmpV1.set(camera.direction).scl(amount));
+		screen.active.translate(tmpV1.set(screen.active.direction).scl(amount));
 		if (scrollTarget) target.add(tmpV1);
-		if (autoUpdate) camera.update();
+		if (autoUpdate) screen.active.update();
 		return true;
 	}
 
