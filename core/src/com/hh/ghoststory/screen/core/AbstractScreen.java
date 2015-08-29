@@ -17,7 +17,7 @@ import com.hh.ghoststory.scene.lights.PointShadowCaster;
 /**
  * The base class for all game screens.
  */
-public abstract class AbstractScreen implements Screen, Telegraph {
+public abstract class AbstractScreen implements Screen {
 	protected final GhostStory game;
 	protected float screenWidth;
 	protected float screenHeight;
@@ -36,8 +36,8 @@ public abstract class AbstractScreen implements Screen, Telegraph {
 
 	public AbstractScreen(GhostStory game) {
 		this.game = game;
-		this.screenWidth = Gdx.graphics.getWidth();
-		this.screenHeight = Gdx.graphics.getHeight();
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
 	}
 
 	@Override

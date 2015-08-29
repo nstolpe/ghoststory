@@ -2,19 +2,16 @@ package com.hh.ghoststory.screen.controllers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
-import com.badlogic.gdx.ai.msg.Telegram;
-import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
-import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.screen.core.AbstractScreen;
 
 /**
  * Created by nils on 8/27/15.
  */
-public class CameraController implements Telegraph {
+public class CameraController {
 	private AbstractScreen screen;
 	private PerspectiveCamera perspective;
 	private OrthographicCamera orthographic;
@@ -41,6 +38,7 @@ public class CameraController implements Telegraph {
 	}
 
 	/**
+	 * Done
 	 * Sets the active camera and camera of type to the camera passed in.
 	 * @param camera
 	 */
@@ -183,7 +181,7 @@ public class CameraController implements Telegraph {
 	 * @return
 	 */
 	private PerspectiveCamera defaultPerspective() {
-		return  new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		return new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	/**
@@ -197,26 +195,5 @@ public class CameraController implements Telegraph {
 //		camera.near = 1;
 //		camera.far = 300;
 		return camera;
-	}
-
-	@Override
-	public boolean handleMessage(Telegram msg) {
-		switch (msg.message) {
-
-			case MessageTypes.Screen.GET_CAMERA_POSITION:
-				break;
-			case MessageTypes.Screen.GET_CAMERA_DIRECTION:
-				break;
-			case MessageTypes.Screen.GET_PICK_RAY:
-				break;
-			case MessageTypes.POSITION_CAMERA:
-				break;
-			case MessageTypes.Screen.TRANSLATE_CAMERA:
-				break;
-			default:
-				break;
-		}
-		// should also be able to return false.
-		return true;
 	}
 }

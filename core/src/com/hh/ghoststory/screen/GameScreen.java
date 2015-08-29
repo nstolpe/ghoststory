@@ -309,9 +309,4 @@ public class GameScreen extends AbstractScreen {
 	public void killTween(Object target, int tweenType) {
 		tweenHandler.tweenManager.killTarget(target, tweenType);
 	}
-
-	@Override
-	public boolean handleMessage(Telegram msg) {
-		return false;
-	}
 }

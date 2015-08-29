@@ -353,9 +353,4 @@ public class CreateScreen extends AbstractScreen {
 		};
 		subButton.addListener(addListener);
 	}
-
-	@Override
-	public boolean handleMessage(Telegram msg) {
-		return false;
-	}
 }

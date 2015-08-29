@@ -134,9 +134,4 @@ public class MainScreen extends AbstractScreen {
 		startButton.button.addListener(startButtonListener);
 		createButton.button.addListener(createButtonListener);
 	}
-
-	@Override
-	public boolean handleMessage(Telegram msg) {
-		return false;
-	}
 }

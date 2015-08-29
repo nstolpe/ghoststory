@@ -1,7 +1,6 @@
 package com.hh.ghoststory.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.lib.utility.TestLoader;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
@@ -110,11 +108,5 @@ public class PlayScreen extends DualCameraScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		messageDispatcher.dispatchMessage(this, MessageTypes.Screen.INIT_SHADOW_BUFFER);
-	}
-
-	@Override
-	public boolean handleMessage(Telegram msg) {
-		return false;
 	}
 }
