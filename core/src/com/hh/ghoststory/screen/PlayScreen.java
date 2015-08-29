@@ -1,6 +1,7 @@
 package com.hh.ghoststory.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -18,6 +19,7 @@ import com.hh.ghoststory.screen.core.DualCameraScreen;
 public class PlayScreen extends DualCameraScreen {
 	private ShadowRenderer renderer = new ShadowRenderer(this);
 	private Array<AnimationController> animationControllers = new Array<AnimationController>();
+	private InputMultiplexer multiplexer = new InputMultiplexer();
 
 	public PlayScreen(GhostStory game, Camera camera) {
 		super(game, camera);
@@ -62,6 +64,7 @@ public class PlayScreen extends DualCameraScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		active.update();
+		inputController.update();
 		renderer.render(active);
 	}
 
@@ -109,4 +112,10 @@ public class PlayScreen extends DualCameraScreen {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 	}
+//	@Override
+//	public void setInput() {
+//		multiplexer.addProcessor(new CameraInputController(active));
+//		multiplexer.addProcessor(new CameraInputController.CameraGestureListener());
+//		Gdx.input.setInputProcessor(multiplexer);
+//	}
 }

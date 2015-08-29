@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.scene.Lighting;
+import com.hh.ghoststory.screen.controllers.InputController;
 
 /**
  * Created by nils on 7/17/15.
@@ -29,7 +30,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	public enum CameraTypes { P, O }
 
 
-	CameraInputController camController;
+	public InputController inputController;
 
 	/**
 	 * Creates the Screen with a default camera.
@@ -37,12 +38,23 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 */
 	public DualCameraScreen(GhostStory game) {
 		super(game);
-		activatePerspective();
+		activateCamera(defaultPerspective());
+		setInput();
+	}
+
+	/**
+	 * Override this in derived classes, unless you want only mouse camera control.
+	 */
+	public void setInput() {
+		// this should change, won't be using CameraInputController, but should grab some of its code.
+		inputController = new InputController(active, this);
+		Gdx.input.setInputProcessor(inputController);
 	}
 
 	public DualCameraScreen(GhostStory game, Camera camera) {
 		super(game);
 		activateCamera(camera);
+		setInput();
 	}
 
 	/**
@@ -90,10 +102,6 @@ public abstract class DualCameraScreen extends AbstractScreen {
 		}
 
 		active = camera;
-
-		// this should change, won't be using CameraInputController, but should grab some of its code.
-		camController = new CameraInputController(active);
-		Gdx.input.setInputProcessor(camController);
 	}
 
 	/**
