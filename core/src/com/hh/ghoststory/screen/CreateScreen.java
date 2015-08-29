@@ -1,6 +1,7 @@
 package com.hh.ghoststory.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
@@ -351,5 +352,10 @@ public class CreateScreen extends AbstractScreen {
 			}
 		};
 		subButton.addListener(addListener);
+	}
+
+	@Override
+	public boolean handleMessage(Telegram msg) {
+		return false;
 	}
 }
