@@ -47,7 +47,6 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 * Override this in derived classes, unless you want only mouse camera control.
 	 */
 	public void setInput() {
-		// this should change, won't be using CameraInputController, but should grab some of its code.
 		inputController = new InputController(new InputGestureListener(this), this);
 		Gdx.input.setInputProcessor(inputController);
 	}
@@ -244,7 +243,8 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	private PerspectiveCamera defaultPerspective() {
 		PerspectiveCamera camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(10, 10, 10);
-		camera.direction.set(-1, -1, -1);
+//		camera.direction.set(-1, -1, -1);
+		camera.lookAt(10,0,10);
 		camera.near = 1;
 		return camera;
 	}

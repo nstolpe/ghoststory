@@ -31,11 +31,11 @@ public class InputController extends GestureDetector {
 	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private DualCameraScreen screen;
 	/** The button for rotating the screen.active. */
-	public int rotateButton = Input.Buttons.LEFT;
+	public int rotateButton = Input.Buttons.RIGHT;
 	/** The angle to rotate when moved the full width or height of the screen. */
 	public float rotateAngle = 360f;
 	/** The button for translating the screen.active along the up/right plane */
-	public int translateButton = Input.Buttons.RIGHT;
+	public int translateButton = Input.Buttons.LEFT;
 	/** The units to translate the screen.active when moved the full width or height of the screen. */
 	public float translateUnits = 10f; // FIXME auto calculate this based on the target
 	/** The button for translating the screen.active along the direction axis */
@@ -97,15 +97,19 @@ public class InputController extends GestureDetector {
 	public void update () {
 		if (rotateRightPressed || rotateLeftPressed || forwardPressed || backwardPressed || leftPressed || rightPressed || zoomInPressed || zoomOutPressed) {
 			final float delta = Gdx.graphics.getDeltaTime();
-			if (rotateRightPressed) screen.active.rotate(screen.active.up, -delta * rotateAngle);
-			if (rotateLeftPressed) screen.active.rotate(screen.active.up, delta * rotateAngle);
-			// forward and backward are not quite right. try it when looking straight down.
+//			if (rotateRightPressed) screen.active.rotate(screen.active.up, -delta * rotateAngle);
+//			if (rotateLeftPressed) screen.active.rotate(screen.active.up, delta * rotateAngle);
 			if (forwardPressed) {
-				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).scl(delta * translateUnits));
+				if (screen.active.direction.equals(new Vector3(0,-1,0))) screen.active.rotate(new Vector3(-1,0,0), -1);
+
+				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).nor().scl(delta * translateUnits));
+
 				if (forwardTarget) target.add(tmpV1);
 			}
 			if (backwardPressed) {
-				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).scl(-delta * translateUnits));
+				if (screen.active.direction.equals(new Vector3(0,-1,0))) screen.active.rotate(new Vector3(-1,0,0), 1);
+
+				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).nor().scl(-delta * translateUnits));
 				if (forwardTarget) target.add(tmpV1);
 			}
 			if (leftPressed) {
