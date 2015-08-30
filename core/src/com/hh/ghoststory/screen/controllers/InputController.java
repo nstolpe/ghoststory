@@ -21,10 +21,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.Ray;
-import com.hh.ghoststory.screen.core.AbstractScreen;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
 
 public class InputController extends GestureDetector {
@@ -35,11 +32,11 @@ public class InputController extends GestureDetector {
 	/** The angle to rotate when moved the full width or height of the screen. */
 	public float rotateAngle = 360f;
 	/** The button for translating the screen.active along the up/right plane */
-	public int translateButton = Input.Buttons.LEFT;
+	public int translateButton = Input.Buttons.MIDDLE;
 	/** The units to translate the screen.active when moved the full width or height of the screen. */
 	public float translateUnits = 10f; // FIXME auto calculate this based on the target
 	/** The button for translating the screen.active along the direction axis */
-	public int forwardButton = Input.Buttons.MIDDLE;
+	public int interactButton = Input.Buttons.LEFT;
 	/** The key which must be pressed to activate rotate, translate and forward or 0 to always activate. */
 	public int activateKey = 0;
 	/** Indicates if the activateKey is currently being pressed. */
@@ -61,6 +58,7 @@ public class InputController extends GestureDetector {
 	/** Whether to update the target on scroll */
 	public boolean lateralTarget = true;
 	public boolean zoomTarget = true;
+	/** Whether to update the target on scroll */
 	public boolean scrollTarget = false;
 	public int forwardKey = Keys.W;
 	protected boolean forwardPressed;
@@ -168,8 +166,12 @@ public class InputController extends GestureDetector {
 			screen.active.translate(tmpV1.set(screen.active.direction).crs(screen.active.up).nor().scl(-deltaX * translateUnits));
 			screen.active.translate(tmpV2.set(screen.active.up).scl(-deltaY * translateUnits));
 			if (translateTarget) target.add(tmpV1).add(tmpV2);
-		} else if (button == forwardButton) {
-			screen.active.translate(tmpV1.set(screen.active.direction).scl(deltaY * translateUnits));
+		} else if (button == interactButton) {
+			/**
+			 * @TODO Make the interact button interact here. No zooming.
+			 */
+//		zoom code.
+//			screen.active.translate(tmpV1.set(screen.active.direction).scl(deltaY * translateUnits));
 			if (forwardTarget) target.add(tmpV1);
 		}
 		if (autoUpdate) screen.active.update();
