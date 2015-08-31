@@ -239,4 +239,8 @@ public class InputController extends GestureDetector {
 
 		return false;
 	}
+	@Override
+	public boolean mouseMoved (int screenX, int screenY) {
+		return false;
+	}
 }

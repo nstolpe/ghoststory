@@ -1,7 +1,15 @@
 package com.hh.ghoststory.screen.controllers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Attribute;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector2;
@@ -17,32 +25,52 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 	private final DualCameraScreen screen;
 	public InputController controller;
 	private float previousZoom;
-	private Vector3 position = new Vector3();
+	private Material cachedMat;
+	private ModelInstance activeInstance;
 
 	public InputGestureListener (DualCameraScreen screen) {
 		this.screen = screen;
 	}
 	@Override
 	public boolean touchDown (float x, float y, int pointer, int button) {
-//			Material mat = character.materials.get(0).copy();
-//			character.materials.get(0).set(ColorAttribute.createDiffuse(Color.BLACK));
-//			character.materials.get(0).set(mat);
-		Ray ray = screen.active.getPickRay(x, y);
-		int result = -1;
-//		float distance = -1;
-//		for (int i = 0; i < screen.instances.size; ++i) {
-//			final ModelInstance instance = screen.instances.get(i);
-//			instance.transform.getTranslation(position);
-//			BoundingBox box = instance.calculateBoundingBox(new BoundingBox());
-//			position.add(box.getCenter(new Vector3()));
-//			float dist2 = ray.origin.dst2(position);
-//			if (distance >= 0f && dist2 > distance) continue;
-//			if (Intersector.intersectRaySphere(ray, position, instance.radius, null)) {
-//				result = i;
-//				distance = dist2;
-//			}
-//		}
-//		return result;
+		if (button == Input.Buttons.LEFT) {
+			Ray ray = screen.active.getPickRay(x, y);
+			Vector3 position = new Vector3();
+			Vector3 center = new Vector3();
+			Vector3 dimensions = new Vector3();
+			float radius;
+			float distance = -1;
+
+			if (activeInstance != null && cachedMat != null) {
+				activeInstance.materials.get(0).set(cachedMat);
+				activeInstance = null;
+			}
+
+			for (int i = 0; i < screen.instances.size; ++i) {
+				final ModelInstance instance = screen.instances.get(i);
+				instance.transform.getTranslation(position);
+				BoundingBox box = instance.calculateBoundingBox(new BoundingBox());
+				position.add(box.getCenter(new Vector3()));
+				box.getCenter(center);
+				box.getDimensions(dimensions);
+				radius = dimensions.len() / 2f;
+				Texture tex = new Texture(Gdx.files.internal("models/ghost_texture_blue.png"), true);
+				tex.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.Nearest);
+				float dist2 = ray.origin.dst2(position);
+
+				if (distance >= 0f && dist2 > distance) continue;
+
+				if (Intersector.intersectRaySphere(ray, position, radius, null)) {
+					cachedMat = instance.materials.get(0).copy();
+					activeInstance = instance;
+	//				instance.materials.get(0).set(ColorAttribute.createDiffuse(Color.LIGHT_GRAY), ColorAttribute.createAmbient(Color.LIGHT_GRAY));
+					instance.materials.get(0).set(new TextureAttribute(TextureAttribute.Diffuse, tex), new ColorAttribute(ColorAttribute.Specular, Color.GOLD));
+
+					distance = dist2;
+				}
+			}
+		}
+
 		previousZoom = 0;
 		return false;
 	}
