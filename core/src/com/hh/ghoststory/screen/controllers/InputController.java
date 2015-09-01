@@ -37,12 +37,6 @@ public class InputController extends GestureDetector {
 	public float translateUnits = 10f; // FIXME auto calculate this based on the target
 	/** The button for translating the screen.active along the direction axis */
 	public int interactButton = Input.Buttons.LEFT;
-	/** The key which must be pressed to activate rotate, translate and forward or 0 to always activate. */
-	public int activateKey = 0;
-	/** Indicates if the activateKey is currently being pressed. */
-	protected boolean activatePressed;
-	/** Whether scrolling requires the activeKey to be pressed (false) or always allow scrolling (true). */
-	public boolean alwaysScroll = true;
 	/** The weight for each scrolled amount. */
 	public float scrollFactor = -0.1f;
 	/** World units per screen size */
@@ -98,6 +92,7 @@ public class InputController extends GestureDetector {
 //			if (rotateRightPressed) screen.active.rotate(screen.active.up, -delta * rotateAngle);
 //			if (rotateLeftPressed) screen.active.rotate(screen.active.up, delta * rotateAngle);
 			if (forwardPressed) {
+				// check to correct for lock when looking straight down.
 				if (screen.active.direction.equals(new Vector3(0,-1,0))) screen.active.rotate(new Vector3(-1,0,0), -1);
 
 				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).nor().scl(delta * translateUnits));
@@ -105,6 +100,7 @@ public class InputController extends GestureDetector {
 				if (forwardTarget) target.add(tmpV1);
 			}
 			if (backwardPressed) {
+				// check to correct for lock when looking straight down.
 				if (screen.active.direction.equals(new Vector3(0,-1,0))) screen.active.rotate(new Vector3(-1,0,0), 1);
 
 				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).nor().scl(-delta * translateUnits));
@@ -135,18 +131,30 @@ public class InputController extends GestureDetector {
 	private int touched;
 	private boolean multiTouch;
 
+	/**
+	 * @TODO This is happening in the gesture listener too. Let's consolidate the classes.
+	 *       If this code is disabled though, no mouse buttons work. Let one handle it.
+	 *       One should probably just have to return true for the other to handle it.
+	 *       See which is first, then see if true or fals hands it off to the other.
+	 *
+	 * @param screenX
+	 * @param screenY
+	 * @param pointer
+	 * @param button
+	 * @return
+	 */
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		touched |= (1 << pointer);
 		multiTouch = !MathUtils.isPowerOfTwo(touched);
 		if (multiTouch)
 			this.button = -1;
-		else if (this.button < 0 && (activateKey == 0 || activatePressed)) {
+		else if (this.button < 0) {
 			startX = screenX;
 			startY = screenY;
 			this.button = button;
 		}
-		return super.touchDown(screenX, screenY, pointer, button) || (activateKey == 0 || activatePressed);
+		return super.touchDown(screenX, screenY, pointer, button);
 	}
 
 	@Override
@@ -154,7 +162,7 @@ public class InputController extends GestureDetector {
 		touched &= -1 ^ (1 << pointer);
 		multiTouch = !MathUtils.isPowerOfTwo(touched);
 		if (button == this.button) this.button = -1;
-		return super.touchUp(screenX, screenY, pointer, button) || activatePressed;
+		return super.touchUp(screenX, screenY, pointer, button);
 	}
 
 	protected boolean process(float deltaX, float deltaY, int button) {
@@ -167,11 +175,11 @@ public class InputController extends GestureDetector {
 			screen.active.translate(tmpV2.set(screen.active.up).scl(-deltaY * translateUnits));
 			if (translateTarget) target.add(tmpV1).add(tmpV2);
 		} else if (button == interactButton) {
-			/**
-			 * @TODO Make the interact button interact here. No zooming.
-			 * zoom code.
-			 * screen.active.translate(tmpV1.set(screen.active.direction).scl(deltaY * translateUnits));
-			 */
+		/**
+		 * @TODO Make the interact button interact here. No zooming.
+		 * zoom code.
+		 * screen.active.translate(tmpV1.set(screen.active.direction).scl(deltaY * translateUnits));
+		 */
 		}
 		if (autoUpdate) screen.active.update();
 		return true;
@@ -194,7 +202,6 @@ public class InputController extends GestureDetector {
 	}
 
 	public boolean zoom(float amount) {
-		if (!alwaysScroll && activateKey != 0 && !activatePressed) return false;
 		screen.active.translate(tmpV1.set(screen.active.direction).scl(amount));
 		if (scrollTarget) target.add(tmpV1);
 		if (autoUpdate) screen.active.update();
@@ -205,10 +212,13 @@ public class InputController extends GestureDetector {
 		return zoom(pinchZoomFactor * amount);
 	}
 
+	/**
+	 * Gets the input key and sets various values based on it.
+	 * @param keycode
+	 * @return
+	 */
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == activateKey) activatePressed = true;
-
 		if (keycode == forwardKey)              forwardPressed = true;
 		else if (keycode == backwardKey)       backwardPressed = true;
 		else if (keycode == leftKey)               leftPressed = true;
@@ -221,12 +231,13 @@ public class InputController extends GestureDetector {
 		return false;
 	}
 
+	/**
+	 * Gets the end of an input key and unsets it's pressed variable.
+	 * @param keycode
+	 * @return
+	 */
 	@Override
 	public boolean keyUp(int keycode) {
-		if (keycode == activateKey) {
-			activatePressed = false;
-			button = -1;
-		}
 		if (keycode == forwardKey)              forwardPressed = false;
 		else if (keycode == backwardKey)       backwardPressed = false;
 		else if (keycode == leftKey)               leftPressed = false;
@@ -238,6 +249,14 @@ public class InputController extends GestureDetector {
 
 		return false;
 	}
+
+	/**
+	 * This should be used to highlight scene/interface elements on hover.
+	 * @TODO HOVER
+	 * @param screenX
+	 * @param screenY
+	 * @return
+	 */
 	@Override
 	public boolean mouseMoved (int screenX, int screenY) {
 		return false;
