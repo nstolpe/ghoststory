@@ -122,12 +122,10 @@ public class InputController extends GestureDetector {
 			}
 			if (zoomInPressed) {
 				zoom(delta * translateUnits);
-//				screen.active.translate(tmpV1.set(screen.active.direction).scl(delta * translateUnits));
 				if (zoomTarget) target.add(tmpV1);
 			}
 			if (zoomOutPressed) {
 				zoom(-delta * translateUnits);
-//				screen.active.translate(tmpV1.set(screen.active.direction).scl(-delta * translateUnits));
 				if (zoomTarget) target.add(tmpV1);
 			}
 			if (autoUpdate) screen.active.update();
