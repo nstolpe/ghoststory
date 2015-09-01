@@ -92,7 +92,7 @@ public class InputController extends GestureDetector {
 		this.screen = screen;
 	}
 
-	public void update () {
+	public void update (){
 		if (rotateRightPressed || rotateLeftPressed || forwardPressed || backwardPressed || leftPressed || rightPressed || zoomInPressed || zoomOutPressed) {
 			final float delta = Gdx.graphics.getDeltaTime();
 //			if (rotateRightPressed) screen.active.rotate(screen.active.up, -delta * rotateAngle);
@@ -121,11 +121,13 @@ public class InputController extends GestureDetector {
 				if (lateralTarget) target.add(tmpV1);
 			}
 			if (zoomInPressed) {
-				screen.active.translate(tmpV1.set(screen.active.direction).scl(delta * translateUnits));
+				zoom(delta * translateUnits);
+//				screen.active.translate(tmpV1.set(screen.active.direction).scl(delta * translateUnits));
 				if (zoomTarget) target.add(tmpV1);
 			}
 			if (zoomOutPressed) {
-				screen.active.translate(tmpV1.set(screen.active.direction).scl(-delta * translateUnits));
+				zoom(-delta * translateUnits);
+//				screen.active.translate(tmpV1.set(screen.active.direction).scl(-delta * translateUnits));
 				if (zoomTarget) target.add(tmpV1);
 			}
 			if (autoUpdate) screen.active.update();
@@ -136,7 +138,7 @@ public class InputController extends GestureDetector {
 	private boolean multiTouch;
 
 	@Override
-	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		touched |= (1 << pointer);
 		multiTouch = !MathUtils.isPowerOfTwo(touched);
 		if (multiTouch)
@@ -150,14 +152,14 @@ public class InputController extends GestureDetector {
 	}
 
 	@Override
-	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		touched &= -1 ^ (1 << pointer);
 		multiTouch = !MathUtils.isPowerOfTwo(touched);
 		if (button == this.button) this.button = -1;
 		return super.touchUp(screenX, screenY, pointer, button) || activatePressed;
 	}
 
-	protected boolean process (float deltaX, float deltaY, int button) {
+	protected boolean process(float deltaX, float deltaY, int button) {
 		if (button == rotateButton) {
 			tmpV1.set(screen.active.direction).crs(screen.active.up).y = 0f;
 			screen.active.rotateAround(target, tmpV1.nor(), deltaY * rotateAngle);
@@ -169,17 +171,16 @@ public class InputController extends GestureDetector {
 		} else if (button == interactButton) {
 			/**
 			 * @TODO Make the interact button interact here. No zooming.
+			 * zoom code.
+			 * screen.active.translate(tmpV1.set(screen.active.direction).scl(deltaY * translateUnits));
 			 */
-//		zoom code.
-//			screen.active.translate(tmpV1.set(screen.active.direction).scl(deltaY * translateUnits));
-			if (forwardTarget) target.add(tmpV1);
 		}
 		if (autoUpdate) screen.active.update();
 		return true;
 	}
 
 	@Override
-	public boolean touchDragged (int screenX, int screenY, int pointer) {
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		boolean result = super.touchDragged(screenX, screenY, pointer);
 		if (result || this.button < 0) return result;
 		final float deltaX = (screenX - startX) / Gdx.graphics.getWidth();
@@ -190,11 +191,11 @@ public class InputController extends GestureDetector {
 	}
 
 	@Override
-	public boolean scrolled (int amount) {
+	public boolean scrolled(int amount) {
 		return zoom(amount * scrollFactor * translateUnits);
 	}
 
-	public boolean zoom (float amount) {
+	public boolean zoom(float amount) {
 		if (!alwaysScroll && activateKey != 0 && !activatePressed) return false;
 		screen.active.translate(tmpV1.set(screen.active.direction).scl(amount));
 		if (scrollTarget) target.add(tmpV1);
@@ -202,12 +203,12 @@ public class InputController extends GestureDetector {
 		return true;
 	}
 
-	protected boolean pinchZoom (float amount) {
+	protected boolean pinchZoom(float amount) {
 		return zoom(pinchZoomFactor * amount);
 	}
 
 	@Override
-	public boolean keyDown (int keycode) {
+	public boolean keyDown(int keycode) {
 		if (keycode == activateKey) activatePressed = true;
 
 		if (keycode == forwardKey)              forwardPressed = true;
@@ -223,7 +224,7 @@ public class InputController extends GestureDetector {
 	}
 
 	@Override
-	public boolean keyUp (int keycode) {
+	public boolean keyUp(int keycode) {
 		if (keycode == activateKey) {
 			activatePressed = false;
 			button = -1;
