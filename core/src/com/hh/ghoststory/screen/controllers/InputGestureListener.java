@@ -3,9 +3,7 @@ package com.hh.ghoststory.screen.controllers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
@@ -31,6 +29,17 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 	public InputGestureListener (DualCameraScreen screen) {
 		this.screen = screen;
 	}
+
+	/**
+	 * This needs some thought. A lot can happen on touchdown, depending on the target. Seems
+	 * to be only getting the left click.
+	 * Right now, it changes the color of the ghost it hits.
+	 * @param x
+	 * @param y
+	 * @param pointer
+	 * @param button
+	 * @return
+	 */
 	@Override
 	public boolean touchDown (float x, float y, int pointer, int button) {
 		if (button == Input.Buttons.LEFT) {
