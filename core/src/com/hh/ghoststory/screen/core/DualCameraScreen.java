@@ -47,7 +47,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 * Override this in derived classes, unless you want only mouse camera control.
 	 */
 	public void setInput() {
-		inputController = new InputController(new InputGestureListener(this), this);
+		inputController = new InputController(this);
 		Gdx.input.setInputProcessor(inputController);
 	}
 
