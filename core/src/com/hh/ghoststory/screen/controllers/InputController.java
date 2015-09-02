@@ -132,10 +132,8 @@ public class InputController extends GestureDetector {
 	private boolean multiTouch;
 
 	/**
-	 * @TODO This is happening in the gesture listener too. Let's consolidate the classes.
-	 *       If this code is disabled though, no mouse buttons work. Let one handle it.
-	 *       One should probably just have to return true for the other to handle it.
-	 *       See which is first, then see if true or fals hands it off to the other.
+	 * touchDown is firstcalled here, from Lwjgl. Then it hit GestureDetector w/ super.
+	 * GD hits another touchdown message, which eventually calls the listener touchdown.
 	 *
 	 * @param screenX
 	 * @param screenY
