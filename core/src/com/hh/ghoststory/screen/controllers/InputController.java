@@ -136,6 +136,7 @@ public class InputController extends GestureDetector {
 	/**
 	 * touchDown is firstcalled here, from Lwjgl. Then it hit GestureDetector w/ super.
 	 * GD hits another touchdown message, which eventually calls the listener touchdown.
+     * Handling button here might be good for touch pads.
 	 *
 	 * @param screenX
 	 * @param screenY

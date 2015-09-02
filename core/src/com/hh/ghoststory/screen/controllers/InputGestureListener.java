@@ -33,7 +33,7 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 	/**
 	 * This needs some thought. A lot can happen on touchdown, depending on the target. Seems
 	 * to be only getting the left click.
-	 * Right now, it changes the color of the ghost it hits.
+	 * Right now, it changes the color of the ghost it hits. It might also be better on touchUp
 	 * @param x
 	 * @param y
 	 * @param pointer
