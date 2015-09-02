@@ -1,4 +1,4 @@
-package com.hh.ghoststory.screen.controllers;
+package com.hh.ghoststory.screen.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,14 +19,14 @@ import com.hh.ghoststory.screen.core.DualCameraScreen;
 /**
  * Created by nils on 8/29/15.
  */
-public class InputGestureListener extends GestureDetector.GestureAdapter {
+public class PlayListener extends GestureDetector.GestureAdapter {
 	private final DualCameraScreen screen;
-	public InputController controller;
+	public PlayDetector controller;
 	private float previousZoom;
 	private Material cachedMat;
 	private ModelInstance activeInstance;
 
-	public InputGestureListener (DualCameraScreen screen) {
+	public PlayListener(DualCameraScreen screen) {
 		this.screen = screen;
 	}
 
@@ -105,7 +105,7 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 	}
 
 	/**
-	 * Eventually passes zoom to the InputController.zoom function.
+	 * Eventually passes zoom to the PlayDetector.zoom function.
 	 * @TODO Evaluate. This hasn't triggered due to no touch. Eventually uses the controller, so final can go to screen.
 	 * @param initialDistance
 	 * @param distance

@@ -7,14 +7,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.scene.Lighting;
-import com.hh.ghoststory.screen.controllers.InputController;
-import com.hh.ghoststory.screen.controllers.InputGestureListener;
+import com.hh.ghoststory.screen.input.PlayDetector;
 
 /**
  * Created by nils on 7/17/15.
@@ -31,7 +29,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	public enum CameraTypes { P, O }
 
 
-	public InputController inputController;
+	public PlayDetector playDetector;
 
 	/**
 	 * Creates the Screen with a default camera.
@@ -54,8 +52,8 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 * Override this in derived classes, unless you want only mouse camera control.
 	 */
 	public void setInput() {
-		inputController = new InputController(this);
-		Gdx.input.setInputProcessor(inputController);
+		playDetector = new PlayDetector(this);
+		Gdx.input.setInputProcessor(playDetector);
 	}
 
 	public DualCameraScreen(GhostStory game, Camera camera) {

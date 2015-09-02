@@ -15,6 +15,7 @@ import com.hh.ghoststory.screen.core.DualCameraScreen;
 
 /**
  * Created by nils on 7/14/15.
+ * Screen for interaction with the game world. Not inventory, not save menus, not stats, just the gameworld.
  */
 public class PlayScreen extends DualCameraScreen {
 	private ShadowRenderer renderer = new ShadowRenderer(this);
@@ -64,7 +65,7 @@ public class PlayScreen extends DualCameraScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		active.update();
-		inputController.update();
+		playDetector.update();
 		renderer.render(active);
 	}
 

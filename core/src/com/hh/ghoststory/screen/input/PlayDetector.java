@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.hh.ghoststory.screen.controllers;
+package com.hh.ghoststory.screen.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -23,7 +23,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
 
-public class InputController extends GestureDetector {
+public class PlayDetector extends GestureDetector {
 	private DualCameraScreen screen;
 	/** The button for rotating the screen.active(). */
 	public int rotateButton = Input.Buttons.RIGHT;
@@ -75,17 +75,17 @@ public class InputController extends GestureDetector {
 	private float startX, startY;
 	private final Vector3 tmpV1 = new Vector3();
 	private final Vector3 tmpV2 = new Vector3();
-	protected final InputGestureListener gestureListener;
+	protected final PlayListener gestureListener;
 
-	public InputController(final InputGestureListener GestureListener, DualCameraScreen screen) {
+	public PlayDetector(final PlayListener GestureListener, DualCameraScreen screen) {
 		super(GestureListener);
 		this.gestureListener = GestureListener;
 		this.gestureListener.controller = this;
 		this.screen = screen;
 	}
 
-	public InputController(DualCameraScreen screen) {
-		this(new InputGestureListener(screen), screen);
+	public PlayDetector(DualCameraScreen screen) {
+		this(new PlayListener(screen), screen);
 	}
 
 	public void update (){
