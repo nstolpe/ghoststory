@@ -25,9 +25,11 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 	private float previousZoom;
 	private Material cachedMat;
 	private ModelInstance activeInstance;
+	public Vector3 foo;
 
 	public InputGestureListener (DualCameraScreen screen) {
 		this.screen = screen;
+		this.foo = screen.foo;
 	}
 
 	/**
@@ -42,6 +44,7 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 	 */
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
+		screen.foo = screen.poo;
 		if (button == Input.Buttons.LEFT) {
 			Ray ray = screen.active.getPickRay(x, y);
 			Vector3 position = new Vector3();
@@ -104,6 +107,13 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 		return false;
 	}
 
+	/**
+	 * Eventually passes zoom to the InputController.zoom function.
+	 * @TODO Evaluate. This hasn't triggered due to no touch. Eventually uses the controller, so final can go to screen.
+	 * @param initialDistance
+	 * @param distance
+	 * @return
+	 */
 	@Override
 	public boolean zoom(float initialDistance, float distance) {
 		float newZoom = distance - initialDistance;

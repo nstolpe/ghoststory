@@ -18,14 +18,12 @@ package com.hh.ghoststory.screen.controllers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
 
 public class InputController extends GestureDetector {
-	private InputMultiplexer multiplexer = new InputMultiplexer();
 	private DualCameraScreen screen;
 	/** The button for rotating the screen.active. */
 	public int rotateButton = Input.Buttons.RIGHT;
@@ -79,11 +77,15 @@ public class InputController extends GestureDetector {
 	private final Vector3 tmpV2 = new Vector3();
 	protected final InputGestureListener gestureListener;
 
-	public InputController(final InputGestureListener gestureListener, DualCameraScreen screen) {
-		super(gestureListener);
-		this.gestureListener = gestureListener;
+	public InputController(final InputGestureListener GestureListener, DualCameraScreen screen) {
+		super(GestureListener);
+		this.gestureListener = GestureListener;
 		this.gestureListener.controller = this;
 		this.screen = screen;
+	}
+
+	public InputController(DualCameraScreen screen) {
+		this(new InputGestureListener(screen), screen);
 	}
 
 	public void update (){
@@ -194,11 +196,24 @@ public class InputController extends GestureDetector {
 		return process(deltaX, deltaY, button);
 	}
 
+	/**
+	 * Goes directly to zoom.
+	 * @param amount
+	 * @return
+	 */
 	@Override
 	public boolean scrolled(int amount) {
 		return zoom(amount * scrollFactor * translateUnits);
 	}
 
+	/**
+	 * 1st from keyboard zoom also, called in update()
+	 * Maybe move this to the screen? It's the last in chain from scrolled at least?
+	 *
+	 * Or just set camera field to screen.active
+ 	 * @param amount
+	 * @return
+	 */
 	public boolean zoom(float amount) {
 		screen.active.translate(tmpV1.set(screen.active.direction).scl(amount));
 		if (scrollTarget) target.add(tmpV1);
@@ -206,6 +221,9 @@ public class InputController extends GestureDetector {
 		return true;
 	}
 
+	/**
+	 * @TODO evaluate this, haven't seen on touchscreen yet
+	 */
 	protected boolean pinchZoom(float amount) {
 		return zoom(pinchZoomFactor * amount);
 	}
