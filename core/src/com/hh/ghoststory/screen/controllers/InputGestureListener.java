@@ -25,11 +25,9 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 	private float previousZoom;
 	private Material cachedMat;
 	private ModelInstance activeInstance;
-	public Vector3 foo;
 
 	public InputGestureListener (DualCameraScreen screen) {
 		this.screen = screen;
-		this.foo = screen.foo;
 	}
 
 	/**
@@ -44,9 +42,8 @@ public class InputGestureListener extends GestureDetector.GestureAdapter {
 	 */
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
-		screen.foo = screen.poo;
 		if (button == Input.Buttons.LEFT) {
-			Ray ray = screen.active.getPickRay(x, y);
+			Ray ray = screen.active().getPickRay(x, y);
 			Vector3 position = new Vector3();
 			Vector3 center = new Vector3();
 			Vector3 dimensions = new Vector3();

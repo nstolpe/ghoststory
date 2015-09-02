@@ -25,21 +25,21 @@ import com.hh.ghoststory.screen.core.DualCameraScreen;
 
 public class InputController extends GestureDetector {
 	private DualCameraScreen screen;
-	/** The button for rotating the screen.active. */
+	/** The button for rotating the screen.active(). */
 	public int rotateButton = Input.Buttons.RIGHT;
 	/** The angle to rotate when moved the full width or height of the screen. */
 	public float rotateAngle = 360f;
-	/** The button for translating the screen.active along the up/right plane */
+	/** The button for translating the screen.active() along the up/right plane */
 	public int translateButton = Input.Buttons.MIDDLE;
-	/** The units to translate the screen.active when moved the full width or height of the screen. */
+	/** The units to translate the screen.active() when moved the full width or height of the screen. */
 	public float translateUnits = 10f; // FIXME auto calculate this based on the target
-	/** The button for translating the screen.active along the direction axis */
+	/** The button for translating the screen.active() along the direction axis */
 	public int interactButton = Input.Buttons.LEFT;
 	/** The weight for each scrolled amount. */
 	public float scrollFactor = -0.1f;
 	/** World units per screen size */
 	public float pinchZoomFactor = 10f;
-	/** Whether to update the screen.active after it has been changed. */
+	/** Whether to update the screen.active() after it has been changed. */
 	public boolean autoUpdate = true;
 	/** The target to rotate around. */
 	public Vector3 target = new Vector3();
@@ -91,31 +91,31 @@ public class InputController extends GestureDetector {
 	public void update (){
 		if (rotateRightPressed || rotateLeftPressed || forwardPressed || backwardPressed || leftPressed || rightPressed || zoomInPressed || zoomOutPressed) {
 			final float delta = Gdx.graphics.getDeltaTime();
-//			if (rotateRightPressed) screen.active.rotate(screen.active.up, -delta * rotateAngle);
-//			if (rotateLeftPressed) screen.active.rotate(screen.active.up, delta * rotateAngle);
+//			if (rotateRightPressed) screen.active().rotate(screen.active().up, -delta * rotateAngle);
+//			if (rotateLeftPressed) screen.active().rotate(screen.active().up, delta * rotateAngle);
 			if (forwardPressed) {
 				// check to correct for lock when looking straight down.
-				if (screen.active.direction.equals(new Vector3(0,-1,0))) screen.active.rotate(new Vector3(-1,0,0), -1);
+				if (screen.active().direction.equals(new Vector3(0,-1,0))) screen.active().rotate(new Vector3(-1,0,0), -1);
 
-				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).nor().scl(delta * translateUnits));
+				screen.active().translate(tmpV1.set(screen.active().direction.x, 0, screen.active().direction.z).nor().scl(delta * translateUnits));
 
 				if (forwardTarget) target.add(tmpV1);
 			}
 			if (backwardPressed) {
 				// check to correct for lock when looking straight down.
-				if (screen.active.direction.equals(new Vector3(0,-1,0))) screen.active.rotate(new Vector3(-1,0,0), 1);
+				if (screen.active().direction.equals(new Vector3(0,-1,0))) screen.active().rotate(new Vector3(-1,0,0), 1);
 
-				screen.active.translate(tmpV1.set(screen.active.direction.x, 0, screen.active.direction.z).nor().scl(-delta * translateUnits));
+				screen.active().translate(tmpV1.set(screen.active().direction.x, 0, screen.active().direction.z).nor().scl(-delta * translateUnits));
 				if (forwardTarget) target.add(tmpV1);
 			}
 			if (leftPressed) {
-				Vector3 left = new Vector3().set(screen.active.direction).crs(screen.active.up).nor();
-				screen.active.translate(tmpV1.set(left).scl(-delta * translateUnits));
+				Vector3 left = new Vector3().set(screen.active().direction).crs(screen.active().up).nor();
+				screen.active().translate(tmpV1.set(left).scl(-delta * translateUnits));
 				if (lateralTarget) target.add(tmpV1);
 			}
 			if (rightPressed) {
-				Vector3 right = new Vector3().set(screen.active.direction).crs(screen.active.up).nor().scl(-1f);
-				screen.active.translate(tmpV1.set(right).scl(-delta * translateUnits));
+				Vector3 right = new Vector3().set(screen.active().direction).crs(screen.active().up).nor().scl(-1f);
+				screen.active().translate(tmpV1.set(right).scl(-delta * translateUnits));
 				if (lateralTarget) target.add(tmpV1);
 			}
 			if (zoomInPressed) {
@@ -126,7 +126,7 @@ public class InputController extends GestureDetector {
 				zoom(-delta * translateUnits);
 				if (zoomTarget) target.add(tmpV1);
 			}
-			if (autoUpdate) screen.active.update();
+			if (autoUpdate) screen.active().update();
 		}
 	}
 
@@ -165,23 +165,30 @@ public class InputController extends GestureDetector {
 		return super.touchUp(screenX, screenY, pointer, button);
 	}
 
+	/**
+	 * Handles mouse button input.
+	 * @param deltaX
+	 * @param deltaY
+	 * @param button
+	 * @return
+	 */
 	protected boolean process(float deltaX, float deltaY, int button) {
 		if (button == rotateButton) {
-			tmpV1.set(screen.active.direction).crs(screen.active.up).y = 0f;
-			screen.active.rotateAround(target, tmpV1.nor(), deltaY * rotateAngle);
-			screen.active.rotateAround(target, Vector3.Y, deltaX * -rotateAngle);
+			tmpV1.set(screen.active().direction).crs(screen.active().up).y = 0f;
+			screen.active().rotateAround(target, tmpV1.nor(), deltaY * rotateAngle);
+			screen.active().rotateAround(target, Vector3.Y, deltaX * -rotateAngle);
 		} else if (button == translateButton) {
-			screen.active.translate(tmpV1.set(screen.active.direction).crs(screen.active.up).nor().scl(-deltaX * translateUnits));
-			screen.active.translate(tmpV2.set(screen.active.up).scl(-deltaY * translateUnits));
+			screen.active().translate(tmpV1.set(screen.active().direction).crs(screen.active().up).nor().scl(-deltaX * translateUnits));
+			screen.active().translate(tmpV2.set(screen.active().up).scl(-deltaY * translateUnits));
 			if (translateTarget) target.add(tmpV1).add(tmpV2);
 		} else if (button == interactButton) {
 		/**
 		 * @TODO Make the interact button interact here. No zooming.
 		 * zoom code.
-		 * screen.active.translate(tmpV1.set(screen.active.direction).scl(deltaY * translateUnits));
+		 * screen.active().translate(tmpV1.set(screen.active().direction).scl(deltaY * translateUnits));
 		 */
 		}
-		if (autoUpdate) screen.active.update();
+		if (autoUpdate) screen.active().update();
 		return true;
 	}
 
@@ -210,14 +217,14 @@ public class InputController extends GestureDetector {
 	 * 1st from keyboard zoom also, called in update()
 	 * Maybe move this to the screen? It's the last in chain from scrolled at least?
 	 *
-	 * Or just set camera field to screen.active
+	 * Or just set camera field to screen.active()
  	 * @param amount
 	 * @return
 	 */
 	public boolean zoom(float amount) {
-		screen.active.translate(tmpV1.set(screen.active.direction).scl(amount));
+		screen.active().translate(tmpV1.set(screen.active().direction).scl(amount));
 		if (scrollTarget) target.add(tmpV1);
-		if (autoUpdate) screen.active.update();
+		if (autoUpdate) screen.active().update();
 		return true;
 	}
 

@@ -22,7 +22,7 @@ import com.hh.ghoststory.screen.controllers.InputGestureListener;
 public abstract class DualCameraScreen extends AbstractScreen {
 	protected PerspectiveCamera perspective;
 	protected OrthographicCamera orthographic;
-	public Camera active;
+	protected Camera active;
 	protected AssetManager assetManager = new AssetManager();
 	public Array<ModelInstance> instances = new Array<ModelInstance>();
     protected boolean loading;
@@ -43,6 +43,13 @@ public abstract class DualCameraScreen extends AbstractScreen {
 		setInput();
 	}
 
+	/**
+	 * A way for input handlers to access the active camera until camera controlling functions moved here. If they are.
+	 * @return
+	 */
+	public Camera active() {
+		return active;
+	}
 	/**
 	 * Override this in derived classes, unless you want only mouse camera control.
 	 */
