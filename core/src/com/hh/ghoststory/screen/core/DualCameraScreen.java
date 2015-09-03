@@ -1,7 +1,5 @@
 package com.hh.ghoststory.screen.core;
 
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -33,7 +31,6 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	protected OrthographicCamera orthographic;
 	protected Camera active;
 	protected AssetManager assetManager = new AssetManager();
-//	public Array<ModelInstance> instances = new Array<ModelInstance>();
     protected boolean loading;
 	public Environment environment = new Lighting();
 
@@ -41,7 +38,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 
     public Entity scene;
     public Array<ModelInstance> instances = new Array<ModelInstance>();
-    public ImmutableArray<Entity> blinstances;
+    public ImmutableArray<Entity> foobar;
     public ImmutableArray<ShadowCaster> lights;
 
 	public PlayDetector playDetector;
@@ -59,10 +56,10 @@ public abstract class DualCameraScreen extends AbstractScreen {
 
     protected void init() {
         scene = game.engine.getEntitiesFor(Family.all(SceneComponent.class).get()).get(0);
-        blinstances = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class).get());
+        foobar = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class).get());
 
         assetManager.load("models/" + Mappers.geometry.get(scene).file, Model.class);
-        for (Entity instance : blinstances)
+        for (Entity instance : foobar)
             assetManager.load("models/" + Mappers.geometry.get(instance).file, Model.class);
     }
 	/**

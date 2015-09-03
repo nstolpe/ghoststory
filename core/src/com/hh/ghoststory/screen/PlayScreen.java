@@ -1,5 +1,8 @@
 package com.hh.ghoststory.screen;
 
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
@@ -7,8 +10,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.components.*;
 import com.hh.ghoststory.lib.utility.Config;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
@@ -68,8 +73,18 @@ public class PlayScreen extends DualCameraScreen {
 	@Override
 	public void doneLoading() {
 		super.doneLoading();
-		Array<ModelInstance> mobGhosts = Config.getGhostModels(assetManager);
-		ModelInstance scene = Config.getSceneModel(assetManager);
+        ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, RenderComponent.class, PositionComponent.class).get());
+
+        for (Entity renderable : renderables) {
+            ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(renderable).file, Model.class));
+            Vector3 position = Mappers.position.get(renderable).position;
+//            instance.transform.setTranslation(characterPositions[i]);
+            renderable.add(new InstanceComponent().instance(instance));
+            instances.add(Mappers.instance.get(renderable).instance);
+        }
+
+        Array <ModelInstance> mobGhosts = Config.getGhostModels(assetManager);
+//		ModelInstance scene = Config.getSceneModel(assetManager);
 
 		// keep this here for now. start moving stuff to config before splitting off animations.
 		for (int i = 0; i < mobGhosts.size; i++) {
@@ -79,8 +94,7 @@ public class PlayScreen extends DualCameraScreen {
 			animationControllers.add(ac);
 		}
 
-		instances.add(scene);
-		instances.addAll(mobGhosts);
+//		instances.addAll(mobGhosts);
 	}
 	@Override
 	public void hide() {

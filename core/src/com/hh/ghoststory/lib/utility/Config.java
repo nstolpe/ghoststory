@@ -50,7 +50,9 @@ public class Config {
             .add(new SceneComponent())
             .add(new IDComponent().id("scene"))
             .add(new NameComponent().name("Development Scene"))
+            .add(new PositionComponent().position(new Vector3(0, 0, 0)))
             .add(new GeometryComponent().file("scene.g3dj"))
+            .add(new RenderComponent())
             .add(new AmbientComponent().colorAttribute(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f)));
 	// fake values that should have been pulled in through config
 	// create all entities through the config.
@@ -60,70 +62,76 @@ public class Config {
 		{
 			// ghost 1
 			add(new Entity()
-				.add(new IDComponent().id("red_ghost"))
-				.add(new NameComponent().name("Red Ghost One"))
-				.add(new GeometryComponent().file("ghost_red.g3dj"))
-				.add(new PositionComponent().position(new Vector3(5, 0, 5)))
-				.add(new AnimationComponent().animations(
-                    new Array<ObjectMap<String, Object>>() {
-                        {
-                            add(new ObjectMap<String, Object>() {
-                                {
-                                    put("id", "float");
-                                    put("offset", 0);
-                                    put("duration", -1);
-                                    put("loopcount", -1);
-                                    put("speed", 1.0);
-                                    put("listener", null);
-                                }
-                            });
-                        }
-                    })
-				));
+                    .add(new IDComponent().id("red_ghost"))
+                    .add(new NameComponent().name("Red Ghost One"))
+                    .add(new GeometryComponent().file("ghost_red.g3dj"))
+                    .add(new PositionComponent().position(new Vector3(5, 0, 5)))
+                    .add(new AnimationComponent().animations(
+                                    new Array<ObjectMap<String, Object>>() {
+                                        {
+                                            add(new ObjectMap<String, Object>() {
+                                                {
+                                                    put("id", "float");
+                                                    put("offset", 0);
+                                                    put("duration", -1);
+                                                    put("loopcount", -1);
+                                                    put("speed", 1.0);
+                                                    put("listener", null);
+                                                }
+                                            });
+                                        }
+                                    })
+                    )
+                    .add(new RenderComponent())
+            );
 			// ghost 2
 			add(new Entity()
-				.add(new IDComponent().id("red_ghost"))
-				.add(new NameComponent().name("Red Ghost Two"))
-				.add(new GeometryComponent().file("ghost_red.g3dj"))
-				.add(new PositionComponent().position(new Vector3(5, 0, 5)))
-				.add(new AnimationComponent().animations(
-                    new Array<ObjectMap<String, Object>>() {
-                        {
-                            add(new ObjectMap<String, Object>() {
-                                {
-                                    put("id", "float");
-                                    put("offset", 0);
-                                    put("duration", -1);
-                                    put("loopcount", -1);
-                                    put("speed", 1.5);
-                                    put("listener", null);
-                                }
-                            });
-                        }
-                    })
-                ));
+                    .add(new IDComponent().id("red_ghost"))
+                    .add(new NameComponent().name("Red Ghost Two"))
+                    .add(new GeometryComponent().file("ghost_red.g3dj"))
+                    .add(new PositionComponent().position(new Vector3(5, 0, 5)))
+                    .add(new AnimationComponent().animations(
+                                    new Array<ObjectMap<String, Object>>() {
+                                        {
+                                            add(new ObjectMap<String, Object>() {
+                                                {
+                                                    put("id", "float");
+                                                    put("offset", 0);
+                                                    put("duration", -1);
+                                                    put("loopcount", -1);
+                                                    put("speed", 1.5);
+                                                    put("listener", null);
+                                                }
+                                            });
+                                        }
+                                    })
+                    )
+                    .add(new RenderComponent())
+            );
 			// ghost 3
 			add(new Entity()
-				.add(new IDComponent().id("red_ghost"))
-				.add(new NameComponent().name("Red Ghost Three"))
-				.add(new GeometryComponent().file("ghost_red.g3dj"))
-				.add(new PositionComponent().position(new Vector3(5, 0, 5)))
-				.add(new AnimationComponent().animations(
-                    new Array<ObjectMap<String, Object>>() {
-                        {
-                            add(new ObjectMap<String, Object>() {
-                                {
-                                    put("id", "float");
-                                    put("offset", 0);
-                                    put("duration", -1);
-                                    put("loopcount", -1);
-                                    put("speed", 0.5);
-                                    put("listener", null);
-                                }
-                            });
-                        }
-                    })
-                ));
+                    .add(new IDComponent().id("red_ghost"))
+                    .add(new NameComponent().name("Red Ghost Three"))
+                    .add(new GeometryComponent().file("ghost_red.g3dj"))
+                    .add(new PositionComponent().position(new Vector3(5, 0, 5)))
+                    .add(new AnimationComponent().animations(
+                                    new Array<ObjectMap<String, Object>>() {
+                                        {
+                                            add(new ObjectMap<String, Object>() {
+                                                {
+                                                    put("id", "float");
+                                                    put("offset", 0);
+                                                    put("duration", -1);
+                                                    put("loopcount", -1);
+                                                    put("speed", 0.5);
+                                                    put("listener", null);
+                                                }
+                                            });
+                                        }
+                                    })
+                    )
+                    .add(new RenderComponent())
+            );
         }
     };
     public Array<Entity> lights = new Array<Entity>() {
@@ -143,7 +151,7 @@ public class Config {
 			add(new Entity()
                 .add(new IDComponent().id("light"))
                 .add(new NameComponent().name("Light two"))
-                .add(new PositionComponent().position(new Vector3()))
+                .add(new PositionComponent().position(new Vector3(14, 6, 6)))
                 .add(new ColorComponent().color(new Color(0.3f, 0.3f, 1f, 1f)))
                 .add(new IntensityComponent().intensity(10))
                 .add(new LightTypeComponent().type(LightTypeComponent.POINT))

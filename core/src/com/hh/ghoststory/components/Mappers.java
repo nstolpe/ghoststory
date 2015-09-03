@@ -11,6 +11,7 @@ public class Mappers {
     public static final ComponentMapper<ColorComponent> color = ComponentMapper.getFor(ColorComponent.class);
     public static final ComponentMapper<GeometryComponent> geometry = ComponentMapper.getFor(GeometryComponent.class);
     public static final ComponentMapper<IDComponent> id = ComponentMapper.getFor(IDComponent.class);
+    public static final ComponentMapper<InstanceComponent> instance = ComponentMapper.getFor(InstanceComponent.class);
     public static final ComponentMapper<IntensityComponent> intensity = ComponentMapper.getFor(IntensityComponent.class);
     public static final ComponentMapper<LightingComponent> lighting = ComponentMapper.getFor(LightingComponent.class);
     public static final ComponentMapper<LightTypeComponent> lightType = ComponentMapper.getFor(LightTypeComponent.class);
