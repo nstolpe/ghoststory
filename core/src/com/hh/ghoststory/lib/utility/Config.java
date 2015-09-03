@@ -36,6 +36,9 @@ public class Config {
 	};
 
 	// fake values that should have been pulled in through config
+	// create all entities through the config.
+	// loop through entities to add models and lights to the scene.
+	// behaviors can be added too, but pc behavior doesn't need to be here (aside from spawn point).
 	public Array<Entity> entities = new Array<Entity>() {
 		{
 			// scene

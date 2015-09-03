@@ -1125,7 +1125,7 @@
 	], 
 	"animations": [
 		{
-			"id": "float",
+			"id": "standard",
 			"bones": [
 				{
 					"boneId": "ghost",
