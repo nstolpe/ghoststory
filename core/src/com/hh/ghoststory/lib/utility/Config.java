@@ -1,5 +1,7 @@
 package com.hh.ghoststory.lib.utility;
 
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -8,15 +10,18 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.hh.ghoststory.components.GameEntity;
 import com.hh.ghoststory.scene.lights.PointShadowCaster;
 import com.hh.ghoststory.scene.lights.core.ShadowCaster;
 
 /**
  * Created by nils on 7/15/15.
  */
-public class TestLoader {
+public class Config {
 	public static PointShadowCaster[] pointShadowCasters = new PointShadowCaster[]{
 			new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 14, 6, 6, 10)),
 			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 5, 0, 10)),
@@ -28,6 +33,85 @@ public class TestLoader {
 			new Vector3(5,0,5),
 			new Vector3(0,0,0),
 			new Vector3(10,0,6),
+	};
+
+	// fake values that should have been pulled in through config
+	public Array<Entity> entities = new Array<Entity>() {
+		{
+			// scene
+			add(new Entity()
+				.add(new GameEntity.IDComponent().id("scene"))
+				.add(new GameEntity.NameComponent().name("Development Scene"))
+				.add(new GameEntity.GeometryComponent().file("scene.g3dj"))
+				.add(new GameEntity.AmbientComponent().colorAttribute(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f))));
+			// ghost 1
+			add(new Entity()
+				.add(new GameEntity.IDComponent().id("red_ghost"))
+				.add(new GameEntity.NameComponent().name("Red Ghost One"))
+				.add(new GameEntity.GeometryComponent().file("ghost_red.g3dj"))
+				.add(new GameEntity.PositionComponent().position(new Vector3(5, 0, 5)))
+				.add(new GameEntity.AnimationComponent().animations(
+					new Array<ObjectMap<String, Object>>() {
+						{
+							add(new ObjectMap<String, Object>() {
+								{
+									put("id", "float");
+									put("offset", 0);
+									put("duration", -1);
+									put("loopcount", -1);
+									put("speed", 1.0);
+									put("listener", null);
+								}
+							});
+						}
+					})
+				));
+			// ghost 2
+			add(new Entity()
+				.add(new GameEntity.IDComponent().id("red_ghost"))
+				.add(new GameEntity.NameComponent().name("Red Ghost Two"))
+				.add(new GameEntity.GeometryComponent().file("ghost_red.g3dj"))
+				.add(new GameEntity.PositionComponent().position(new Vector3(5, 0, 5)))
+				.add(new GameEntity.AnimationComponent().animations(
+					new Array<ObjectMap<String, Object>>() {
+						{
+							add(new ObjectMap<String, Object>() {
+								{
+									put("id", "float");
+									put("offset", 0);
+									put("duration", -1);
+									put("loopcount", -1);
+									put("speed", 1.5);
+									put("listener", null);
+								}
+							});
+						}
+					})
+				));
+			// ghost 3
+			add(new Entity()
+				.add(new GameEntity.IDComponent().id("red_ghost"))
+				.add(new GameEntity.NameComponent().name("Red Ghost Three"))
+				.add(new GameEntity.GeometryComponent().file("ghost_red.g3dj"))
+				.add(new GameEntity.PositionComponent().position(new Vector3(5, 0, 5)))
+				.add(new GameEntity.AnimationComponent().animations(
+					new Array<ObjectMap<String, Object>>() {
+						{
+							add(new ObjectMap<String, Object>() {
+								{
+									put("id", "float");
+									put("offset", 0);
+									put("duration", -1);
+									put("loopcount", -1);
+									put("speed", 0.5);
+									put("listener", null);
+								}
+							});
+						}
+					})
+				));
+
+		}
 	};
 
 	public static Array<ModelInstance> getTestModels(AssetManager assetManager) {

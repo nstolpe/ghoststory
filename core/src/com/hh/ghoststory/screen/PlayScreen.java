@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.lib.utility.TestLoader;
+import com.hh.ghoststory.lib.utility.Config;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
 
@@ -28,15 +28,16 @@ public class PlayScreen extends DualCameraScreen {
 	public PlayScreen(GhostStory game) {
 		super(game);
 		setClear(0.7f, 0.1f, 1f, 1);
+
 		// load assets. These should be pulled in through a config.
 		assetManager.load("models/ghost_red.g3dj", Model.class);
+		assetManager.load("models/ghost_blue.g3dj", Model.class);
 		assetManager.load("models/scene.g3dj", Model.class);
-		assetManager.load("models/tile.g3dj", Model.class);
 
-		// TestLoader is for temporary data/assets/whatever. Only used for testing
+		// Config is for temporary data/assets/whatever. Only used for testing
 		// this setup, move stuff to more permanent locations once it's all working.
-		TestLoader.setLights(environment);
-		shadowCasters.addAll(TestLoader.pointShadowCasters);
+		Config.setLights(environment);
+		shadowCasters.addAll(Config.pointShadowCasters);
 
 		loading = true;
 	}
@@ -72,18 +73,14 @@ public class PlayScreen extends DualCameraScreen {
 	@Override
 	public void doneLoading() {
 		super.doneLoading();
-		Array<ModelInstance> mobGhosts = TestLoader.getGhostModels(assetManager);
-		ModelInstance scene = TestLoader.getSceneModel(assetManager);
+		Array<ModelInstance> mobGhosts = Config.getGhostModels(assetManager);
+		ModelInstance scene = Config.getSceneModel(assetManager);
 
+		// keep this here for now. start moving stuff to config before splitting off animations.
 		for (int i = 0; i < mobGhosts.size; i++) {
 			AnimationController ac = new AnimationController(mobGhosts.get(i));
 //			ac.setAnimation("float", -1);
-			ac.setAnimation("float", 0f, -1, -1, i + 1, new AnimationController.AnimationListener() {
-				@Override
-				public void onEnd(AnimationController.AnimationDesc animation) {}
-				@Override
-				public void onLoop(AnimationController.AnimationDesc animation) {}
-			});
+			ac.setAnimation("float", 0f, -1, -1, i + 1, null);
 			animationControllers.add(ac);
 		}
 
