@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.components.*;
 import com.hh.ghoststory.lib.utility.Config;
@@ -53,24 +54,30 @@ public class PlayScreen extends DualCameraScreen {
 		super.render(delta);
 		instances.clear();
 
+		// asset loading has just finished
+		// maybe move all the logic below to an update function.
 		if (loading && assetManager.update()) {
 			doneLoading();
-		} else {
+		// asset loading is finished and post load hooks have completed
+
+		} else if (!loading){
 			ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, RenderComponent.class, PositionComponent.class, InstanceComponent.class).get());
+			// This could go in an entity system.
 			for (Entity renderable : renderables) {
+				// something should have stopped earlier if instance wasn't set on the component.
 				if (Mappers.instance.get(renderable).instance != null) {
 					Vector3 position = Mappers.position.get(renderable).position;
 					ModelInstance instance = Mappers.instance.get(renderable).instance;
 					instance.transform.setTranslation(position);
+
+					// update entities with animation components. Maybe a 2nd loop instead of the check?
+					if (Mappers.animation.has(renderable))
+						Mappers.animation.get(renderable).controller.update(delta);
+
 					instances.add(instance);
 				}
 			}
-			// update animation controllers this can go in the Entity loop soon.
-//			for (ModelInstance instance : instances)
-//				instance.transform.setTranslation(5,5,5);
-//			for (int i =0; i < animationControllers.size; i++) {
-//				animationControllers.get(i).update(delta);
-//			}
+
 			messageDispatcher.update(delta);
 		}
 
@@ -82,6 +89,9 @@ public class PlayScreen extends DualCameraScreen {
 		renderer.render(active, instances);
 	}
 
+	/**
+	 * Do things that need to be done once all assets are loaded, like assign ModelInstances to things.
+	 */
 	@Override
 	public void doneLoading() {
 		super.doneLoading();
@@ -90,19 +100,16 @@ public class PlayScreen extends DualCameraScreen {
         for (Entity renderable : renderables) {
             ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(renderable).file, Model.class));
 	        Mappers.instance.get(renderable).instance(instance);
-            instances.add(Mappers.instance.get(renderable).instance);
+
+	        if (Mappers.animation.has(renderable)) {
+		        AnimationComponent animation = Mappers.animation.get(renderable);
+		        animation.init(instance);
+		        // the normal/default/rest animation should be defined on the entity somewhere.
+		        ObjectMap<String, Object> normal = animation.animations.get("normal");
+		        // this casting sucks.
+		        animation.controller.setAnimation((String) normal.get("id"), (Float) normal.get("offset"), (Float) normal.get("duration"), (Integer) normal.get("loopcount"), (Float)normal.get("speed"), (AnimationController.AnimationListener)normal.get("listneer"));
+	        }
         }
-
-//        Array <ModelInstance> mobGhosts = Config.getGhostModels(assetManager);
-//		ModelInstance scene = Config.getSceneModel(assetManager);
-
-		// keep this here for now. start moving stuff to config before splitting off animations.
-//		for (int i = 0; i < mobGhosts.size; i++) {
-//			AnimationController ac = new AnimationController(mobGhosts.get(i));
-////			ac.setAnimation("normal", -1);
-//			ac.setAnimation("normal", 0f, -1, -1, i + 1, null);
-//			animationControllers.add(ac);
-//		}
 	}
 	@Override
 	public void hide() {

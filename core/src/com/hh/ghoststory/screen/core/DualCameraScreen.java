@@ -31,7 +31,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	protected OrthographicCamera orthographic;
 	protected Camera active;
 	protected AssetManager assetManager = new AssetManager();
-    protected boolean loading;
+    protected boolean loading = true;
 	public Environment environment = new Lighting();
 
 	public enum CameraTypes { P, O }

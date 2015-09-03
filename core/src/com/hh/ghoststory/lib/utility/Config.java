@@ -73,11 +73,11 @@ public class Config {
                                         {
                                             add(new ObjectMap<String, Object>() {
                                                 {
-                                                    put("id", "float");
-                                                    put("offset", 0);
-                                                    put("duration", -1);
+                                                    put("id", "normal");
+                                                    put("offset", 0.0f);
+                                                    put("duration", -1.0f);
                                                     put("loopcount", -1);
-                                                    put("speed", 1.0);
+                                                    put("speed", 1.0f);
                                                     put("listener", null);
                                                 }
                                             });
@@ -98,11 +98,11 @@ public class Config {
                                         {
                                             add(new ObjectMap<String, Object>() {
                                                 {
-                                                    put("id", "float");
-                                                    put("offset", 0);
-                                                    put("duration", -1);
+                                                    put("id", "normal");
+                                                    put("offset", 0.0f);
+                                                    put("duration", -1.0f);
                                                     put("loopcount", -1);
-                                                    put("speed", 1.5);
+                                                    put("speed", 1.5f);
                                                     put("listener", null);
                                                 }
                                             });
@@ -123,11 +123,11 @@ public class Config {
                                         {
                                             add(new ObjectMap<String, Object>() {
                                                 {
-                                                    put("id", "float");
-                                                    put("offset", 0);
-                                                    put("duration", -1);
+                                                    put("id", "normal");
+                                                    put("offset", 0.0f);
+                                                    put("duration", -1.0f);
                                                     put("loopcount", -1);
-                                                    put("speed", 0.5);
+                                                    put("speed", 0.5f);
                                                     put("listener", null);
                                                 }
                                             });

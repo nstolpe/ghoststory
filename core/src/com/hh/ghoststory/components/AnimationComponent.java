@@ -18,6 +18,10 @@ public class AnimationComponent implements Component {
             this.animations.put((String) animation.get("id"), animation);
         return this;
     }
+    public AnimationComponent controller(AnimationController controller) {
+        this.controller = controller;
+        return this;
+    }
 
     public void init(ModelInstance instance) {
         controller = new AnimationController(instance);
