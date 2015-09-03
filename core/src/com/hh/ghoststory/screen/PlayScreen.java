@@ -79,8 +79,8 @@ public class PlayScreen extends DualCameraScreen {
 		// keep this here for now. start moving stuff to config before splitting off animations.
 		for (int i = 0; i < mobGhosts.size; i++) {
 			AnimationController ac = new AnimationController(mobGhosts.get(i));
-//			ac.setAnimation("float", -1);
-			ac.setAnimation("float", 0f, -1, -1, i + 1, null);
+//			ac.setAnimation("normal", -1);
+			ac.setAnimation("normal", 0f, -1, -1, i + 1, null);
 			animationControllers.add(ac);
 		}
 

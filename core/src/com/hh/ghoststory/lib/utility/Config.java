@@ -1,6 +1,5 @@
 package com.hh.ghoststory.lib.utility;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -10,11 +9,10 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.BaseLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
-import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.hh.ghoststory.components.GameEntity;
+import com.hh.ghoststory.components.Components;
 import com.hh.ghoststory.scene.lights.PointShadowCaster;
 import com.hh.ghoststory.scene.lights.core.ShadowCaster;
 
@@ -25,9 +23,9 @@ public class Config {
 	public static PointShadowCaster[] pointShadowCasters = new PointShadowCaster[]{
 			new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 14, 6, 6, 10)),
 			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 5, 0, 10)),
-//			new PointShadowCaster(new PointLight().set(new Color(1f, 0f, 0f, 1f), 4, 5, 4, 1)),
-//			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 6, 20, 6, 1)),
-			new PointShadowCaster(new PointLight().set(new Color(1f, 0.3f, 0.3f, 1f), 6, 5, 4, 10))
+//			new PointShadowCaster(new PointLight().set(new color(1f, 0f, 0f, 1f), 4, 5, 4, 1)),
+//			new PointShadowCaster(new PointLight().set(new color(1f, 1f, 1f, 1f), 6, 20, 6, 1)),
+			new PointShadowCaster(new PointLight().set(new com.badlogic.gdx.graphics.Color(1f, 0.3f, 0.3f, 1f), 6, 5, 4, 10))
 	};
 	public static Vector3[] characterPositions = new Vector3[]{
 			new Vector3(5,0,5),
@@ -43,17 +41,17 @@ public class Config {
 		{
 			// scene
 			add(new Entity()
-				.add(new GameEntity.IDComponent().id("scene"))
-				.add(new GameEntity.NameComponent().name("Development Scene"))
-				.add(new GameEntity.GeometryComponent().file("scene.g3dj"))
-				.add(new GameEntity.AmbientComponent().colorAttribute(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f))));
+				.add(new Components.IDComp().id("scene"))
+				.add(new Components.NameComp().name("Development Scene"))
+				.add(new Components.GeometryComp().file("scene.g3dj"))
+				.add(new Components.AmbientComp().colorAttribute(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f))));
 			// ghost 1
 			add(new Entity()
-				.add(new GameEntity.IDComponent().id("red_ghost"))
-				.add(new GameEntity.NameComponent().name("Red Ghost One"))
-				.add(new GameEntity.GeometryComponent().file("ghost_red.g3dj"))
-				.add(new GameEntity.PositionComponent().position(new Vector3(5, 0, 5)))
-				.add(new GameEntity.AnimationComponent().animations(
+				.add(new Components.IDComp().id("red_ghost"))
+				.add(new Components.NameComp().name("Red Ghost One"))
+				.add(new Components.GeometryComp().file("ghost_red.g3dj"))
+				.add(new Components.PositionComp().position(new Vector3(5, 0, 5)))
+				.add(new Components.AnimationComp().animations(
 					new Array<ObjectMap<String, Object>>() {
 						{
 							add(new ObjectMap<String, Object>() {
@@ -71,11 +69,11 @@ public class Config {
 				));
 			// ghost 2
 			add(new Entity()
-				.add(new GameEntity.IDComponent().id("red_ghost"))
-				.add(new GameEntity.NameComponent().name("Red Ghost Two"))
-				.add(new GameEntity.GeometryComponent().file("ghost_red.g3dj"))
-				.add(new GameEntity.PositionComponent().position(new Vector3(5, 0, 5)))
-				.add(new GameEntity.AnimationComponent().animations(
+				.add(new Components.IDComp().id("red_ghost"))
+				.add(new Components.NameComp().name("Red Ghost Two"))
+				.add(new Components.GeometryComp().file("ghost_red.g3dj"))
+				.add(new Components.PositionComp().position(new Vector3(5, 0, 5)))
+				.add(new Components.AnimationComp().animations(
 					new Array<ObjectMap<String, Object>>() {
 						{
 							add(new ObjectMap<String, Object>() {
@@ -93,11 +91,11 @@ public class Config {
 				));
 			// ghost 3
 			add(new Entity()
-				.add(new GameEntity.IDComponent().id("red_ghost"))
-				.add(new GameEntity.NameComponent().name("Red Ghost Three"))
-				.add(new GameEntity.GeometryComponent().file("ghost_red.g3dj"))
-				.add(new GameEntity.PositionComponent().position(new Vector3(5, 0, 5)))
-				.add(new GameEntity.AnimationComponent().animations(
+				.add(new Components.IDComp().id("red_ghost"))
+				.add(new Components.NameComp().name("Red Ghost Three"))
+				.add(new Components.GeometryComp().file("ghost_red.g3dj"))
+				.add(new Components.PositionComp().position(new Vector3(5, 0, 5)))
+				.add(new Components.AnimationComp().animations(
 					new Array<ObjectMap<String, Object>>() {
 						{
 							add(new ObjectMap<String, Object>() {
@@ -113,6 +111,12 @@ public class Config {
 						}
 					})
 				));
+			// lights
+			add(new Entity()
+					.add(new Components.PositionComp().position(new Vector3()))
+					.add(new Components.ColorComp().color(new Color(0.3f, 0.3f, 1f, 1f)))
+					.add(new Components.IntensityComp().intensity(10))
+			);
 
 		}
 	};
@@ -147,7 +151,7 @@ public class Config {
 		return scene;
 	}
 	public static void setLights(Environment environment) {
-//		travellingLight = new PointLight().set(new Color(0f,1f,0f,1f),6,1,6,1);
+//		travellingLight = new PointLight().set(new ColorComp(0f,1f,0f,1f),6,1,6,1);
 //		colorSwitchLight = new PointLight().set(colorSwitchColor,12,1,10,1);
 		BaseLight[] sources = new BaseLight[pointShadowCasters.length];
 		ShadowCaster[] shadowCasters = new ShadowCaster[pointShadowCasters.length];
