@@ -29,11 +29,6 @@ public class PlayScreen extends DualCameraScreen {
 		super(game);
 		setClear(0.7f, 0.1f, 1f, 1);
 
-		// load assets. These should be pulled in through a config.
-		assetManager.load("models/ghost_red.g3dj", Model.class);
-		assetManager.load("models/ghost_blue.g3dj", Model.class);
-		assetManager.load("models/scene.g3dj", Model.class);
-
 		// Config is for temporary data/assets/whatever. Only used for testing
 		// this setup, move stuff to more permanent locations once it's all working.
 		Config.setLights(environment);

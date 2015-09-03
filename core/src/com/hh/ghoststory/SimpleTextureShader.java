@@ -49,7 +49,7 @@ public class SimpleTextureShader extends BaseShader
 	}
 
 // This might be ok to take out, nothing seems to have died
-// Lighting may work better, original does something w/ lights
+// LightingComponent may work better, original does something w/ lights
 //	@Override
 //	public void render(final Renderable renderable) {
 //		if (!renderable.material.has(BlendingAttribute.Type)) {

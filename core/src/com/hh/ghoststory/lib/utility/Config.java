@@ -1,5 +1,6 @@
 package com.hh.ghoststory.lib.utility;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.hh.ghoststory.components.Components;
+import com.hh.ghoststory.components.*;
 import com.hh.ghoststory.scene.lights.PointShadowCaster;
 import com.hh.ghoststory.scene.lights.core.ShadowCaster;
 
@@ -20,6 +21,17 @@ import com.hh.ghoststory.scene.lights.core.ShadowCaster;
  * Created by nils on 7/15/15.
  */
 public class Config {
+    public Config() {
+
+    }
+
+    public void populateEntities(Engine engine) {
+        engine.addEntity(scene);
+        for (Entity actor : actors)
+            engine.addEntity(actor);
+        for (Entity light : lights)
+            engine.addEntity(light);
+    }
 	public static PointShadowCaster[] pointShadowCasters = new PointShadowCaster[]{
 			new PointShadowCaster(new PointLight().set(new Color(0.3f, 0.3f, 1f, 1f), 14, 6, 6, 10)),
 			new PointShadowCaster(new PointLight().set(new Color(1f, 1f, 1f, 1f), 0, 5, 0, 10)),
@@ -33,130 +45,135 @@ public class Config {
 			new Vector3(10,0,6),
 	};
 
+    // should come from read-in config
+    public Entity scene = new Entity()
+            .add(new SceneComponent())
+            .add(new IDComponent().id("scene"))
+            .add(new NameComponent().name("Development Scene"))
+            .add(new GeometryComponent().file("scene.g3dj"))
+            .add(new AmbientComponent().colorAttribute(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f)));
 	// fake values that should have been pulled in through config
 	// create all entities through the config.
 	// loop through entities to add models and lights to the scene.
 	// behaviors can be added too, but pc behavior doesn't need to be here (aside from spawn point).
-	public Array<Entity> entities = new Array<Entity>() {
+	public Array<Entity> actors = new Array<Entity>() {
 		{
-			// scene
-			add(new Entity()
-				.add(new Components.IDComp().id("scene"))
-				.add(new Components.NameComp().name("Development Scene"))
-				.add(new Components.GeometryComp().file("scene.g3dj"))
-				.add(new Components.AmbientComp().colorAttribute(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f))));
 			// ghost 1
 			add(new Entity()
-				.add(new Components.IDComp().id("red_ghost"))
-				.add(new Components.NameComp().name("Red Ghost One"))
-				.add(new Components.GeometryComp().file("ghost_red.g3dj"))
-				.add(new Components.PositionComp().position(new Vector3(5, 0, 5)))
-				.add(new Components.AnimationComp().animations(
-                                new Array<ObjectMap<String, Object>>() {
-                                    {
-                                        add(new ObjectMap<String, Object>() {
-                                            {
-                                                put("id", "float");
-                                                put("offset", 0);
-                                                put("duration", -1);
-                                                put("loopcount", -1);
-                                                put("speed", 1.0);
-                                                put("listener", null);
-                                            }
-                                        });
-                                    }
-                                })
+				.add(new IDComponent().id("red_ghost"))
+				.add(new NameComponent().name("Red Ghost One"))
+				.add(new GeometryComponent().file("ghost_red.g3dj"))
+				.add(new PositionComponent().position(new Vector3(5, 0, 5)))
+				.add(new AnimationComponent().animations(
+                    new Array<ObjectMap<String, Object>>() {
+                        {
+                            add(new ObjectMap<String, Object>() {
+                                {
+                                    put("id", "float");
+                                    put("offset", 0);
+                                    put("duration", -1);
+                                    put("loopcount", -1);
+                                    put("speed", 1.0);
+                                    put("listener", null);
+                                }
+                            });
+                        }
+                    })
 				));
 			// ghost 2
 			add(new Entity()
-				.add(new Components.IDComp().id("red_ghost"))
-				.add(new Components.NameComp().name("Red Ghost Two"))
-				.add(new Components.GeometryComp().file("ghost_red.g3dj"))
-				.add(new Components.PositionComp().position(new Vector3(5, 0, 5)))
-				.add(new Components.AnimationComp().animations(
-                                new Array<ObjectMap<String, Object>>() {
-                                    {
-                                        add(new ObjectMap<String, Object>() {
-                                            {
-                                                put("id", "float");
-                                                put("offset", 0);
-                                                put("duration", -1);
-                                                put("loopcount", -1);
-                                                put("speed", 1.5);
-                                                put("listener", null);
-                                            }
-                                        });
-                                    }
-                                })
+				.add(new IDComponent().id("red_ghost"))
+				.add(new NameComponent().name("Red Ghost Two"))
+				.add(new GeometryComponent().file("ghost_red.g3dj"))
+				.add(new PositionComponent().position(new Vector3(5, 0, 5)))
+				.add(new AnimationComponent().animations(
+                    new Array<ObjectMap<String, Object>>() {
+                        {
+                            add(new ObjectMap<String, Object>() {
+                                {
+                                    put("id", "float");
+                                    put("offset", 0);
+                                    put("duration", -1);
+                                    put("loopcount", -1);
+                                    put("speed", 1.5);
+                                    put("listener", null);
+                                }
+                            });
+                        }
+                    })
                 ));
 			// ghost 3
 			add(new Entity()
-				.add(new Components.IDComp().id("red_ghost"))
-				.add(new Components.NameComp().name("Red Ghost Three"))
-				.add(new Components.GeometryComp().file("ghost_red.g3dj"))
-				.add(new Components.PositionComp().position(new Vector3(5, 0, 5)))
-				.add(new Components.AnimationComp().animations(
-                                new Array<ObjectMap<String, Object>>() {
-                                    {
-                                        add(new ObjectMap<String, Object>() {
-                                            {
-                                                put("id", "float");
-                                                put("offset", 0);
-                                                put("duration", -1);
-                                                put("loopcount", -1);
-                                                put("speed", 0.5);
-                                                put("listener", null);
-                                            }
-                                        });
-                                    }
-                                })
+				.add(new IDComponent().id("red_ghost"))
+				.add(new NameComponent().name("Red Ghost Three"))
+				.add(new GeometryComponent().file("ghost_red.g3dj"))
+				.add(new PositionComponent().position(new Vector3(5, 0, 5)))
+				.add(new AnimationComponent().animations(
+                    new Array<ObjectMap<String, Object>>() {
+                        {
+                            add(new ObjectMap<String, Object>() {
+                                {
+                                    put("id", "float");
+                                    put("offset", 0);
+                                    put("duration", -1);
+                                    put("loopcount", -1);
+                                    put("speed", 0.5);
+                                    put("listener", null);
+                                }
+                            });
+                        }
+                    })
                 ));
+        }
+    };
+    public Array<Entity> lights = new Array<Entity>() {
+        {
 			// lights 1
 			add(new Entity()
-                .add(new Components.IDComp().id("light"))
-                .add(new Components.NameComp().name("Light One"))
-                .add(new Components.PositionComp().position(new Vector3(0, 5, 0)))
-                .add(new Components.ColorComp().color(new Color(1f, 1f, 1f, 1f)))
-                .add(new Components.IntensityComp().intensity(10))
-                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
-                .add(new Components.Lighting())
-                .add(new Components.Shadowing())
+                .add(new IDComponent().id("light"))
+                .add(new NameComponent().name("Light One"))
+                .add(new PositionComponent().position(new Vector3(0, 5, 0)))
+                .add(new ColorComponent().color(new Color(1f, 1f, 1f, 1f)))
+                .add(new IntensityComponent().intensity(10))
+                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+                .add(new LightingComponent())
+                .add(new ShadowCastingComponent())
 			);
 			// lights 2
 			add(new Entity()
-                .add(new Components.IDComp().id("light"))
-                .add(new Components.NameComp().name("Light two"))
-                .add(new Components.PositionComp().position(new Vector3()))
-                .add(new Components.ColorComp().color(new Color(0.3f, 0.3f, 1f, 1f)))
-                .add(new Components.IntensityComp().intensity(10))
-                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
+                .add(new IDComponent().id("light"))
+                .add(new NameComponent().name("Light two"))
+                .add(new PositionComponent().position(new Vector3()))
+                .add(new ColorComponent().color(new Color(0.3f, 0.3f, 1f, 1f)))
+                .add(new IntensityComponent().intensity(10))
+                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
 			);
 			// lights 3
 			add(new Entity()
-                .add(new Components.IDComp().id("light"))
-                .add(new Components.NameComp().name("Light three"))
-                .add(new Components.PositionComp().position(new Vector3(6, 5, 5)))
-                .add(new Components.ColorComp().color(new Color(1f, 0.3f, 0.3f, 1f)))
-                .add(new Components.IntensityComp().intensity(10))
-                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
+                .add(new IDComponent().id("light"))
+                .add(new NameComponent().name("Light three"))
+                .add(new PositionComponent().position(new Vector3(6, 5, 5)))
+                .add(new ColorComponent().color(new Color(1f, 0.3f, 0.3f, 1f)))
+                .add(new IntensityComponent().intensity(10))
+                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
 			);
 			// lights 4
 			add(new Entity()
-                .add(new Components.IDComp().id("light"))
-                .add(new Components.NameComp().name("Light four"))
-                .add(new Components.PositionComp().position(new Vector3(4, 5, 4)))
-                .add(new Components.ColorComp().color(new Color(1f, 0f, 0f, 1f)))
-                .add(new Components.IntensityComp().intensity(10))
-                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
+                .add(new IDComponent().id("light"))
+                .add(new NameComponent().name("Light four"))
+                .add(new PositionComponent().position(new Vector3(4, 5, 4)))
+                .add(new ColorComponent().color(new Color(1f, 0f, 0f, 1f)))
+                .add(new IntensityComponent().intensity(10))
+                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
 			);
 			// lights 5
 			add(new Entity()
-                .add(new Components.IDComp().id("light"))
-                .add(new Components.NameComp().name("Light five"))
-                .add(new Components.PositionComp().position(new Vector3(6, 20, 6)))
-                .add(new Components.ColorComp().color(new Color(1f, 1f, 1f, 1f)))
-                .add(new Components.IntensityComp().intensity(10))
-                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
+                .add(new IDComponent().id("light"))
+                .add(new NameComponent().name("Light five"))
+                .add(new PositionComponent().position(new Vector3(6, 20, 6)))
+                .add(new ColorComponent().color(new Color(1f, 1f, 1f, 1f)))
+                .add(new IntensityComponent().intensity(10))
+                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
 			);
 		}
 	};

@@ -1,17 +1,28 @@
 package com.hh.ghoststory.screen.core;
 
+import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.components.GeometryComponent;
+import com.hh.ghoststory.components.Mappers;
+import com.hh.ghoststory.components.PositionComponent;
+import com.hh.ghoststory.components.SceneComponent;
 import com.hh.ghoststory.scene.Lighting;
+import com.hh.ghoststory.scene.lights.core.ShadowCaster;
 import com.hh.ghoststory.screen.input.PlayDetector;
 
 /**
@@ -22,12 +33,16 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	protected OrthographicCamera orthographic;
 	protected Camera active;
 	protected AssetManager assetManager = new AssetManager();
-	public Array<ModelInstance> instances = new Array<ModelInstance>();
+//	public Array<ModelInstance> instances = new Array<ModelInstance>();
     protected boolean loading;
 	public Environment environment = new Lighting();
 
 	public enum CameraTypes { P, O }
 
+    public Entity scene;
+    public Array<ModelInstance> instances = new Array<ModelInstance>();
+    public ImmutableArray<Entity> blinstances;
+    public ImmutableArray<ShadowCaster> lights;
 
 	public PlayDetector playDetector;
 
@@ -39,8 +54,17 @@ public abstract class DualCameraScreen extends AbstractScreen {
 		super(game);
 		activateCamera(defaultPerspective());
 		setInput();
+        init();
 	}
 
+    protected void init() {
+        scene = game.engine.getEntitiesFor(Family.all(SceneComponent.class).get()).get(0);
+        blinstances = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class).get());
+
+        assetManager.load("models/" + Mappers.geometry.get(scene).file, Model.class);
+        for (Entity instance : blinstances)
+            assetManager.load("models/" + Mappers.geometry.get(instance).file, Model.class);
+    }
 	/**
 	 * A way for input handlers to access the active camera until camera controlling functions moved here. If they are.
 	 * @return

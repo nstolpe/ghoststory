@@ -1,17 +1,26 @@
 package com.hh.ghoststory;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.hh.ghoststory.lib.utility.Config;
 import com.hh.ghoststory.screen.CreateScreen;
 import com.hh.ghoststory.screen.GameScreen;
 import com.hh.ghoststory.screen.MainScreen;
 import com.hh.ghoststory.screen.PlayScreen;
 
 public class GhostStory extends Game {
+    public Config config;
+    public Engine engine = new Engine();
+
 	@Override
 	public void create() {
+        // some config ill be pulled in to this constructor.
+        config = new Config();
+        config.populateEntities(engine);
+
 		FileHandle file = Gdx.files.local(".ghost_story/character.json");
 //		file.file().getParentFile().mkdirs();
 //		file.writeString("{}", false);

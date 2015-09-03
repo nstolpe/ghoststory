@@ -31,7 +31,7 @@ public class InputHandler {
 	}
 	/*
 	 * Returns the InputAdapter for this screen. Only handles scroll now.
-	 * Too tightly tied to the GameScreen right now. Lighting updates should happen first though,
+	 * Too tightly tied to the GameScreen right now. LightingComponent updates should happen first though,
 	 * since this is working right now.
 	 */
 	private InputAdapter getDefaultInputAdapter() {
