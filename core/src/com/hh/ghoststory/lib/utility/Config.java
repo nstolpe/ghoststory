@@ -52,6 +52,7 @@ public class Config {
             .add(new NameComponent().name("Development Scene"))
             .add(new PositionComponent().position(new Vector3(0, 0, 0)))
             .add(new GeometryComponent().file("scene.g3dj"))
+		    .add(new InstanceComponent())
             .add(new RenderComponent())
             .add(new AmbientComponent().colorAttribute(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f)));
 	// fake values that should have been pulled in through config
@@ -65,6 +66,7 @@ public class Config {
                     .add(new IDComponent().id("red_ghost"))
                     .add(new NameComponent().name("Red Ghost One"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
+                    .add(new InstanceComponent())
                     .add(new PositionComponent().position(new Vector3(5, 0, 5)))
                     .add(new AnimationComponent().animations(
                                     new Array<ObjectMap<String, Object>>() {
@@ -89,7 +91,8 @@ public class Config {
                     .add(new IDComponent().id("red_ghost"))
                     .add(new NameComponent().name("Red Ghost Two"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
-                    .add(new PositionComponent().position(new Vector3(5, 0, 5)))
+                    .add(new InstanceComponent())
+                    .add(new PositionComponent().position(new Vector3(0, 0, 0)))
                     .add(new AnimationComponent().animations(
                                     new Array<ObjectMap<String, Object>>() {
                                         {
@@ -113,7 +116,8 @@ public class Config {
                     .add(new IDComponent().id("red_ghost"))
                     .add(new NameComponent().name("Red Ghost Three"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
-                    .add(new PositionComponent().position(new Vector3(5, 0, 5)))
+                    .add(new InstanceComponent())
+                    .add(new PositionComponent().position(new Vector3(10, 0, 6)))
                     .add(new AnimationComponent().animations(
                                     new Array<ObjectMap<String, Object>>() {
                                         {

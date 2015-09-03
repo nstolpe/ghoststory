@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.render.shaders.SceneShader;
 import com.hh.ghoststory.render.shaders.SceneShaderProvider;
@@ -42,19 +44,19 @@ public class ShadowRenderer implements Telegraph {
 		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider(screen.shadowCasters));
 	}
 
-    public void render(Camera camera) {
+    public void render(Camera camera, Array<ModelInstance> instances) {
         Gdx.gl.glClearColor(screen.clearRed, screen.clearGreen, screen.clearBlue, screen.clearAlpha);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 	    renderDepth();
-	    renderShadows(camera);
-	    renderScene(camera);
+	    renderShadows(camera, instances);
+	    renderScene(camera, instances);
     }
 	public void renderDepth() {
 		for (int i = 0; i < screen.shadowCasters.size; i++)
 			screen.shadowCasters.get(i).render(screen.instances);
 	}
-	public void renderShadows(Camera camera) {
+	public void renderShadows(Camera camera, Array<ModelInstance> instances) {
 		frameBufferShadows.begin();
 
 		Gdx.gl.glClearColor(0.4f, 0.4f, 0.4f, 0.4f);
@@ -67,7 +69,7 @@ public class ShadowRenderer implements Telegraph {
 		frameBufferShadows.end();
 	}
 
-	public void renderScene(Camera camera) {
+	public void renderScene(Camera camera, Array<ModelInstance> instances) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 

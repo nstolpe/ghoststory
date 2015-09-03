@@ -38,7 +38,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 
     public Entity scene;
     public Array<ModelInstance> instances = new Array<ModelInstance>();
-    public ImmutableArray<Entity> foobar;
+    public ImmutableArray<Entity> actors;
     public ImmutableArray<ShadowCaster> lights;
 
 	public PlayDetector playDetector;
@@ -56,10 +56,11 @@ public abstract class DualCameraScreen extends AbstractScreen {
 
     protected void init() {
         scene = game.engine.getEntitiesFor(Family.all(SceneComponent.class).get()).get(0);
-        foobar = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class).get());
+	    assetManager.load("models/" + Mappers.geometry.get(scene).file, Model.class);
 
-        assetManager.load("models/" + Mappers.geometry.get(scene).file, Model.class);
-        for (Entity instance : foobar)
+	    actors = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class).get());
+
+        for (Entity instance : actors)
             assetManager.load("models/" + Mappers.geometry.get(instance).file, Model.class);
     }
 	/**
