@@ -70,7 +70,7 @@ public class Components {
 		}
 	}
 
-	public static class AnimationComp extends Component{
+	public static class AnimationComp extends Component {
 		public ObjectMap<String, ObjectMap<String, Object>> animations;
 		public AnimationController controller;
 		public AnimationComp animations(Array<ObjectMap<String, Object>> animations) {
@@ -82,4 +82,18 @@ public class Components {
 			controller = new AnimationController(instance);
 		}
 	}
+
+    public static class LightTypeComp extends Component {
+        public static int DIRECTIONAL = 0;
+        public static int SPOT = 1;
+        public static int POINT = 2;
+        public int type;
+        public LightTypeComp type(int type) {
+            this.type = type;
+            return this;
+        }
+    }
+
+    public static class Lighting extends Component {}
+    public static class Shadowing extends Component {}
 }

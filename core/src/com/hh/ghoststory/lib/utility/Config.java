@@ -88,7 +88,7 @@ public class Config {
                                         });
                                     }
                                 })
-				));
+                ));
 			// ghost 3
 			add(new Entity()
 				.add(new Components.IDComp().id("red_ghost"))
@@ -110,7 +110,7 @@ public class Config {
                                         });
                                     }
                                 })
-				));
+                ));
 			// lights 1
 			add(new Entity()
                 .add(new Components.IDComp().id("light"))
@@ -118,6 +118,9 @@ public class Config {
                 .add(new Components.PositionComp().position(new Vector3(0, 5, 0)))
                 .add(new Components.ColorComp().color(new Color(1f, 1f, 1f, 1f)))
                 .add(new Components.IntensityComp().intensity(10))
+                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
+                .add(new Components.Lighting())
+                .add(new Components.Shadowing())
 			);
 			// lights 2
 			add(new Entity()
@@ -126,6 +129,7 @@ public class Config {
                 .add(new Components.PositionComp().position(new Vector3()))
                 .add(new Components.ColorComp().color(new Color(0.3f, 0.3f, 1f, 1f)))
                 .add(new Components.IntensityComp().intensity(10))
+                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
 			);
 			// lights 3
 			add(new Entity()
@@ -134,6 +138,7 @@ public class Config {
                 .add(new Components.PositionComp().position(new Vector3(6, 5, 5)))
                 .add(new Components.ColorComp().color(new Color(1f, 0.3f, 0.3f, 1f)))
                 .add(new Components.IntensityComp().intensity(10))
+                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
 			);
 			// lights 4
 			add(new Entity()
@@ -142,6 +147,7 @@ public class Config {
                 .add(new Components.PositionComp().position(new Vector3(4, 5, 4)))
                 .add(new Components.ColorComp().color(new Color(1f, 0f, 0f, 1f)))
                 .add(new Components.IntensityComp().intensity(10))
+                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
 			);
 			// lights 5
 			add(new Entity()
@@ -150,6 +156,7 @@ public class Config {
                 .add(new Components.PositionComp().position(new Vector3(6, 20, 6)))
                 .add(new Components.ColorComp().color(new Color(1f, 1f, 1f, 1f)))
                 .add(new Components.IntensityComp().intensity(10))
+                .add(new Components.LightTypeComp().type(Components.LightTypeComp.POINT))
 			);
 		}
 	};
