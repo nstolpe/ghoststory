@@ -25,6 +25,7 @@ public class GhostStory extends Game {
 //		file.file().getParentFile().mkdirs();
 //		file.writeString("{}", false);
 //		setScreen(getMainScreen());
+//		setScreen(getCreateScreen());
 //		setScreen(getGameScreen());
 		setScreen(getPlayScreen());
 	}

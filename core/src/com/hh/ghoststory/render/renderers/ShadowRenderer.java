@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.render.shaders.SceneShader;
 import com.hh.ghoststory.render.shaders.SceneShaderProvider;
@@ -82,11 +83,11 @@ public class ShadowRenderer implements Telegraph, Disposable {
 		modelBatch.begin(camera);
 		modelBatch.render(instances, environment);
 		modelBatch.end();
+//		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "scene");
 	}
 
     public void initShadowBuffer() {
 	    if (frameBufferShadows != null) frameBufferShadows.dispose();
-	    System.out.println("init the buffer");
         frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
 

@@ -88,7 +88,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 	public void render() {
 //		modelBatch.begin(screen.getActiveCamera());
 //		for (ModelInstance model : modelInstances)
-////			modelBatch.render(model, environment);
+////			modelBatch.render(model, lighting);
 //			modelBatch.render(model);
 //		modelBatch.end();
 		for (final Light light : screen.lights) {
@@ -147,6 +147,6 @@ public class ModelBatchRenderer extends AbstractRenderer {
 	}
 
 	public void setUpLights(ArrayList<Light> lights) {
-//		environment.add(lights);
+//		lighting.add(lights);
 	}
 }

@@ -8,7 +8,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
@@ -17,9 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.components.*;
 import com.hh.ghoststory.scene.Lighting;
-import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
-import com.hh.ghoststory.scene.lights.core.ShadowCaster;
 import com.hh.ghoststory.screen.input.PlayDetector;
 
 /**
@@ -31,7 +28,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	protected Camera active;
 	protected AssetManager assetManager = new AssetManager();
     protected boolean loading = true;
-	public Lighting environment = new Lighting();
+	public Lighting lighting = new Lighting();
 
 	public enum CameraTypes { P, O }
 
@@ -56,7 +53,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
     protected void init() {
         scene = game.engine.getEntitiesFor(Family.all(SceneComponent.class).get()).get(0);
 	    if (Mappers.ambient.has(scene))
-		    environment.set(Mappers.ambient.get(scene).colorAttribute);
+		    lighting.set(Mappers.ambient.get(scene).colorAttribute);
 
 	    assetManager.load("models/" + Mappers.geometry.get(scene).file, Model.class);
 
@@ -68,7 +65,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
         lights = game.engine.getEntitiesFor(Family.all(LightTypeComponent.class, PositionComponent.class).get());
         for (Entity light : lights) {
 	        PointCaster caster = new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity);
-            environment.add(caster);
+            lighting.add(caster);
 	        shadowCasters.add(caster);
         }
     }

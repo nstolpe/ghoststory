@@ -15,11 +15,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.components.*;
-import com.hh.ghoststory.lib.utility.Config;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
-import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
-import javafx.scene.effect.Shadow;
 
 /**
  * Created by nils on 7/14/15.
@@ -39,7 +36,7 @@ public class PlayScreen extends DualCameraScreen {
 
 		// Config is for temporary data/assets/whatever. Only used for testing
 		// this setup, move stuff to more permanent locations once it's all working.
-//		Config.setLights(environment);
+//		Config.setLights(lighting);
 //		shadowCasters.addAll(Config.pointShadowCasters);
 
 		loading = true;
@@ -88,7 +85,7 @@ public class PlayScreen extends DualCameraScreen {
 		active.update();
 		playDetector.update();
 
-		renderer.render(active, instances, shadowCasters, environment);
+		renderer.render(active, instances, shadowCasters, lighting);
 	}
 
 	/**
@@ -138,6 +135,7 @@ public class PlayScreen extends DualCameraScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
+		renderer.initShadowBuffer();
 	}
 //	@Override
 //	public void setInput() {
