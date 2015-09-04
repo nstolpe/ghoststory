@@ -17,7 +17,9 @@ import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.components.*;
 import com.hh.ghoststory.lib.utility.Config;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
+import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.screen.core.DualCameraScreen;
+import javafx.scene.effect.Shadow;
 
 /**
  * Created by nils on 7/14/15.
@@ -85,7 +87,8 @@ public class PlayScreen extends DualCameraScreen {
 
 		active.update();
 		playDetector.update();
-		renderer.render(active, instances);
+
+		renderer.render(active, instances, shadowCasters, environment);
 	}
 
 	/**

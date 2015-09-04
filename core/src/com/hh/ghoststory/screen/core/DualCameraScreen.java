@@ -31,7 +31,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	protected Camera active;
 	protected AssetManager assetManager = new AssetManager();
     protected boolean loading = true;
-	public Environment environment = new Lighting();
+	public Lighting environment = new Lighting();
 
 	public enum CameraTypes { P, O }
 
@@ -64,8 +64,9 @@ public abstract class DualCameraScreen extends AbstractScreen {
 
         lights = game.engine.getEntitiesFor(Family.all(LightTypeComponent.class, PositionComponent.class).get());
         for (Entity light : lights) {
-            environment.add(new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity));
-//	        shadowCasters.add();?
+	        PointCaster caster = new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity);
+            environment.add(caster);
+	        shadowCasters.add(caster);
         }
     }
 	/**
