@@ -18,7 +18,7 @@ import com.hh.ghoststory.lib.utility.ShaderUtil;
  * extend baselight, then implement specific point/directional behavior again in PointShadowCaster, etc
  * replace lighting with this, and allow shadows and lights to be turned on and off.
  *
- * public abstract class Light extends BaseLight {...add camera and universal stuff here...}
+ * public abstract class PointCaster extends BaseLight {...add camera and universal stuff here...}
  */
 public abstract class ShadowCaster {
 	public PerspectiveCamera camera = new PerspectiveCamera();
