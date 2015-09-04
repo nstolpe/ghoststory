@@ -55,6 +55,9 @@ public abstract class DualCameraScreen extends AbstractScreen {
 
     protected void init() {
         scene = game.engine.getEntitiesFor(Family.all(SceneComponent.class).get()).get(0);
+	    if (Mappers.ambient.has(scene))
+		    environment.set(Mappers.ambient.get(scene).colorAttribute);
+
 	    assetManager.load("models/" + Mappers.geometry.get(scene).file, Model.class);
 
 	    actors = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class).get());
