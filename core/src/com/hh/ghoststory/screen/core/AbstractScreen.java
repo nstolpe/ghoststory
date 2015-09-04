@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.scene.lights.PointShadowCaster;
+import com.hh.ghoststory.scene.lights.core.Caster;
 
 /**
  * The base class for all game screens.
@@ -25,7 +26,7 @@ public abstract class AbstractScreen implements Screen {
 	public float clearBlue = 0f;
 	public float clearGreen = 0f;
 	public float clearAlpha = 1f;
-	public Array<PointShadowCaster> shadowCasters = new Array<PointShadowCaster>();
+	public Array<Caster> shadowCasters = new Array<Caster>();
 	public MessageDispatcher messageDispatcher = new MessageDispatcher();
 
 	protected BitmapFont font = new BitmapFont(

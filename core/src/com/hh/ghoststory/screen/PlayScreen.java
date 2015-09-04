@@ -37,7 +37,7 @@ public class PlayScreen extends DualCameraScreen {
 
 		// Config is for temporary data/assets/whatever. Only used for testing
 		// this setup, move stuff to more permanent locations once it's all working.
-		Config.setLights(environment);
+//		Config.setLights(environment);
 		shadowCasters.addAll(Config.pointShadowCasters);
 
 		loading = true;

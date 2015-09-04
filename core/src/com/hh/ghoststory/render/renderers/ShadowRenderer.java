@@ -63,7 +63,7 @@ public class ShadowRenderer implements Telegraph {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		modelBatchShadows.begin(camera);
-		modelBatchShadows.render(screen.instances);
+		modelBatchShadows.render(instances);
 		modelBatchShadows.end();
 //		ScreenshotFactory.saveScreenshot(frameBufferShadows.getWidth(), frameBufferShadows.getHeight(), "shadows");
 		frameBufferShadows.end();
@@ -76,7 +76,7 @@ public class ShadowRenderer implements Telegraph {
 		frameBufferShadows.getColorBufferTexture().bind(SceneShader.textureNum);
 
 		modelBatch.begin(camera);
-		modelBatch.render(screen.instances, screen.environment);
+		modelBatch.render(instances, screen.environment);
 		modelBatch.end();
 	}
 

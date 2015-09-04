@@ -148,7 +148,6 @@ public class Config {
                 .add(new ColorComponent().color(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent().intensity(10))
                 .add(new LightTypeComponent().type(LightTypeComponent.POINT))
-                .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
 			);
 			// lights 2
@@ -169,24 +168,24 @@ public class Config {
                 .add(new IntensityComponent().intensity(10))
                 .add(new LightTypeComponent().type(LightTypeComponent.POINT))
 			);
-			// lights 4
-			add(new Entity()
-                .add(new IDComponent().id("light"))
-                .add(new NameComponent().name("Light four"))
-                .add(new PositionComponent().position(new Vector3(4, 5, 4)))
-                .add(new ColorComponent().color(new Color(1f, 0f, 0f, 1f)))
-                .add(new IntensityComponent().intensity(10))
-                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
-			);
-			// lights 5
-			add(new Entity()
-                .add(new IDComponent().id("light"))
-                .add(new NameComponent().name("Light five"))
-                .add(new PositionComponent().position(new Vector3(6, 20, 6)))
-                .add(new ColorComponent().color(new Color(1f, 1f, 1f, 1f)))
-                .add(new IntensityComponent().intensity(10))
-                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
-			);
+//			// lights 4
+//			add(new Entity()
+//                .add(new IDComponent().id("light"))
+//                .add(new NameComponent().name("Light four"))
+//                .add(new PositionComponent().position(new Vector3(4, 5, 4)))
+//                .add(new ColorComponent().color(new Color(1f, 0f, 0f, 1f)))
+//                .add(new IntensityComponent().intensity(10))
+//                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+//			);
+//			// lights 5
+//			add(new Entity()
+//                .add(new IDComponent().id("light"))
+//                .add(new NameComponent().name("Light five"))
+//                .add(new PositionComponent().position(new Vector3(6, 20, 6)))
+//                .add(new ColorComponent().color(new Color(1f, 1f, 1f, 1f)))
+//                .add(new IntensityComponent().intensity(10))
+//                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+//			);
 		}
 	};
 

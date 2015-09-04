@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.scene.lights.PointShadowCaster;
+import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.scene.lights.core.ShadowCaster;
 
 /**
@@ -23,10 +24,10 @@ import com.hh.ghoststory.scene.lights.core.ShadowCaster;
  * Needs access to `screen` so it's here. Should be moved somewhere else.
  */
 public class ShadowMapShader extends BaseShader {
-	private final Array<PointShadowCaster> shadowCasters;
+	private final Array<Caster> shadowCasters;
 	public Renderable renderable;
 
-	public ShadowMapShader(final Renderable renderable, Array<PointShadowCaster> shadowCasters) {
+	public ShadowMapShader(final Renderable renderable, Array<Caster> shadowCasters) {
 		this.renderable = renderable;
 		program = new ShaderProgram(
 			Gdx.files.internal("shaders/shadow.vertex.glsl"),
@@ -81,7 +82,7 @@ public class ShadowMapShader extends BaseShader {
 	@Override
 	public void render(final Renderable renderable, final Attributes combinedAttributes) {
 		boolean firstCall = true;
-		for (final ShadowCaster shadowCaster : shadowCasters) {
+		for (final Caster shadowCaster : shadowCasters) {
 			shadowCaster.applyToShader(program);
 			if (firstCall) {
 				// Classic depth test

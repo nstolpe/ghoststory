@@ -1,10 +1,7 @@
 package com.hh.ghoststory.scene.lights.core;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Cubemap;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.Renderable;
@@ -27,8 +24,8 @@ public class PointCaster extends PointLight implements Disposable, Caster {
 	public FrameBufferCubemap frameBuffer;
 	public Cubemap depthMap;
 	public ShaderProgram shaderProgram = new ShaderProgram(
-			Gdx.files.internal("depth.vertex.glsl"),
-			Gdx.files.internal("depth.fragment.glsl")
+			Gdx.files.internal("shaders/depth.vertex.glsl"),
+			Gdx.files.internal("shaders/depth.fragment.glsl")
 	);
 	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {
 		@Override
@@ -42,6 +39,16 @@ public class PointCaster extends PointLight implements Disposable, Caster {
 		initFrameBuffer();
 	}
 
+    public PointCaster(Color color, Vector3 position, float intensity) {
+        this();
+        set(color, position, intensity);
+    }
+
+    protected void setCameraPosition(Vector3 position) {
+        camera.position.set(position);
+        // is update needed here? probably
+        camera.update();
+    }
 	/**
 	 * implements overrides
 	 */
@@ -114,10 +121,45 @@ public class PointCaster extends PointLight implements Disposable, Caster {
 
 	@Override
 	public PointCaster setPosition(Vector3 position) {
-		super.setPosition(position);
-		camera.position.set(position);
-		// is update needed here? probably
-		camera.update();
+        super.setPosition(position);
+		setCameraPosition(position);
 		return this;
 	}
+
+    @Override
+    public PointLight set (final PointLight copyFrom) {
+        return set(copyFrom.color, copyFrom.position, copyFrom.intensity);
+    }
+
+    @Override
+    public PointLight set (final Color color, final Vector3 position, final float intensity) {
+        super.set(color,position, intensity);
+        setCameraPosition(position);
+        return this;
+    }
+
+    @Override
+    public PointLight set (final float r, final float g, final float b, final Vector3 position, final float intensity) {
+        return set(new Color(r,g,b, 1f), position, intensity);
+    }
+
+    @Override
+    public PointLight set (final Color color, final float x, final float y, final float z, final float intensity) {
+        return set(color, new Vector3(x, y, z), intensity);
+    }
+
+    @Override
+    public PointLight set (final float r, final float g, final float b, final float x, final float y, final float z, final float intensity) {
+        return set(new Color(r,g,b, 1f), new Vector3(x, y, z), intensity);
+    }
+
+    @Override
+    public boolean equals (Object obj) {
+        return (obj instanceof PointLight) ? equals((PointLight)obj) : false;
+    }
+
+    @Override
+    public boolean equals (PointLight other) {
+        return (other != null && (other == this || (color.equals(other.color) && position.equals(other.position) && intensity == other.intensity)));
+    }
 }
