@@ -128,8 +128,9 @@ public class PlayScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	    // gl stuff happens in renderer, move this there probably.
+//        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         instances.clear();
 
         // asset loading has just finished, loading hasn't been updated

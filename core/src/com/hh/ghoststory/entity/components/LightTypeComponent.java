@@ -11,6 +11,11 @@ public class LightTypeComponent implements Component {
     public static int POINT = 2;
     public int type;
 
+    public LightTypeComponent() {}
+
+    public LightTypeComponent(int type) {
+        this.type = type;
+    }
     public LightTypeComponent type(int type) {
         this.type = type;
         return this;

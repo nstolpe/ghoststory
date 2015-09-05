@@ -29,8 +29,8 @@ public class Config {
     // should come from read-in config
     public Entity scene = new Entity()
             .add(new SceneComponent())
-            .add(new IDComponent().id("scene"))
-            .add(new NameComponent().name("Development Scene"))
+            .add(new IDComponent("scene"))
+            .add(new NameComponent("Development Scene"))
             .add(new PositionComponent(new Vector3(0, 0, 0)))
             .add(new GeometryComponent().file("scene.g3dj"))
 		    .add(new InstanceComponent())
@@ -44,14 +44,14 @@ public class Config {
 		{
             // player character
             add(new Entity()
-                .add(new IDComponent().id("player_character"))
-                .add(new NameComponent().name("Mr Player"))
-                .add(new NameComponent().name("Mr Player"))
+                .add(new IDComponent("player_character"))
+                .add(new NameComponent("Mr Player"))
+                .add(new NameComponent("Mr Player"))
                 .add(new GeometryComponent().file("ghost_orange.g3dj"))
                 .add(new InstanceComponent())
                 .add(new PositionComponent(new Vector3(-5, 0, -5)))
                 .add(new RotationComponent(new Quaternion()))
-                .add(new AnimationComponent().animations(
+                .add(new AnimationComponent(
                                 new Array<ObjectMap<String, Object>>() {
                                     {
                                         add(new ObjectMap<String, Object>() {
@@ -72,13 +72,13 @@ public class Config {
             );
 			// ghost 1
 			add(new Entity()
-                    .add(new IDComponent().id("red_ghost"))
-                    .add(new NameComponent().name("Red Ghost One"))
+                    .add(new IDComponent("red_ghost"))
+                    .add(new NameComponent("Red Ghost One"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(5, 0, 5)))
                     .add(new RotationComponent(new Quaternion()))
-                    .add(new AnimationComponent().animations(
+                    .add(new AnimationComponent(
 				                    new Array<ObjectMap<String, Object>>() {
 					                    {
 						                    add(new ObjectMap<String, Object>() {
@@ -99,13 +99,13 @@ public class Config {
             );
 			// ghost 2
 			add(new Entity()
-                    .add(new IDComponent().id("red_ghost"))
-                    .add(new NameComponent().name("Red Ghost Two"))
+                    .add(new IDComponent("red_ghost"))
+                    .add(new NameComponent("Red Ghost Two"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(0, 0, 0)))
                     .add(new RotationComponent(new Quaternion()))
-                    .add(new AnimationComponent().animations(
+                    .add(new AnimationComponent(
 				                    new Array<ObjectMap<String, Object>>() {
 					                    {
 						                    add(new ObjectMap<String, Object>() {
@@ -126,13 +126,13 @@ public class Config {
             );
 			// ghost 3
 			add(new Entity()
-                    .add(new IDComponent().id("red_ghost"))
-                    .add(new NameComponent().name("Red Ghost Three"))
+                    .add(new IDComponent("red_ghost"))
+                    .add(new NameComponent("Red Ghost Three"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(10, 0, 6)))
                     .add(new RotationComponent(new Quaternion()))
-                    .add(new AnimationComponent().animations(
+                    .add(new AnimationComponent(
 				                    new Array<ObjectMap<String, Object>>() {
 					                    {
 						                    add(new ObjectMap<String, Object>() {
@@ -157,54 +157,54 @@ public class Config {
         {
 			// lights 1
 			add(new Entity()
-                .add(new IDComponent().id("light"))
-                .add(new NameComponent().name("Light One"))
-                .add(new PositionComponent().position(new Vector3(0, 5, 0)))
-                .add(new ColorComponent().color(new Color(1f, 1f, 1f, 1f)))
-                .add(new IntensityComponent().intensity(10))
-                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+                .add(new IDComponent("light"))
+                .add(new NameComponent("Light One"))
+                .add(new PositionComponent(new Vector3(0, 5, 0)))
+                .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
+                .add(new IntensityComponent(10))
+                .add(new LightTypeComponent(LightTypeComponent.POINT))
                 .add(new ShadowCastingComponent())
 			);
 			// lights 2
 			add(new Entity()
-                .add(new IDComponent().id("light"))
-                .add(new NameComponent().name("Light two"))
-                .add(new PositionComponent().position(new Vector3(14, 6, 6)))
-                .add(new ColorComponent().color(new Color(0.3f, 0.3f, 1f, 1f)))
-                .add(new IntensityComponent().intensity(10))
-                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+                .add(new IDComponent("light"))
+                .add(new NameComponent("Light two"))
+                .add(new PositionComponent(new Vector3(14, 6, 6)))
+                .add(new ColorComponent(new Color(0.3f, 0.3f, 1f, 1f)))
+                .add(new IntensityComponent(10))
+                .add(new LightTypeComponent(LightTypeComponent.POINT))
                 .add(new ShadowCastingComponent())
 			);
 			// lights 3
 			add(new Entity()
-                .add(new IDComponent().id("light"))
-                .add(new NameComponent().name("Light three"))
-                .add(new PositionComponent().position(new Vector3(6, 5, 5)))
-                .add(new ColorComponent().color(new Color(1f, 0.3f, 0.3f, 1f)))
-                .add(new IntensityComponent().intensity(10))
-                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+                .add(new IDComponent("light"))
+                .add(new NameComponent("Light three"))
+                .add(new PositionComponent(new Vector3(6, 5, 5)))
+                .add(new ColorComponent(new Color(1f, 0.3f, 0.3f, 1f)))
+                .add(new IntensityComponent(10))
+                .add(new LightTypeComponent(LightTypeComponent.POINT))
                 .add(new ShadowCastingComponent())
 			);
-//			// lights 4
-//			add(new Entity()
-//                .add(new IDComponent().id("light"))
-//                .add(new NameComponent().name("Light four"))
-//                .add(new PositionComponent().position(new Vector3(4, 5, 4)))
-//                .add(new ColorComponent().color(new Color(1f, 0f, 0f, 1f)))
-//                .add(new IntensityComponent().intensity(10))
-//                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
-//                .add(new ShadowCastingComponent())
-//			);
-//			// lights 5
-//			add(new Entity()
-//                .add(new IDComponent().id("light"))
-//                .add(new NameComponent().name("Light five"))
-//                .add(new PositionComponent().position(new Vector3(6, 20, 6)))
-//                .add(new ColorComponent().color(new Color(1f, 1f, 1f, 1f)))
-//                .add(new IntensityComponent().intensity(10))
-//                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
-//                .add(new ShadowCastingComponent())
-//			);
+			// lights 4
+			add(new Entity()
+                .add(new IDComponent("light"))
+                .add(new NameComponent("Light four"))
+                .add(new PositionComponent(new Vector3(4, 5, 4)))
+                .add(new ColorComponent(new Color(1f, 0f, 0f, 1f)))
+                .add(new IntensityComponent(10))
+                .add(new LightTypeComponent(LightTypeComponent.POINT))
+                .add(new ShadowCastingComponent())
+			);
+			// lights 5
+			add(new Entity()
+                .add(new IDComponent("light"))
+                .add(new NameComponent("Light five"))
+                .add(new PositionComponent(new Vector3(6, 20, 6)))
+                .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
+                .add(new IntensityComponent(10))
+                .add(new LightTypeComponent(LightTypeComponent.POINT))
+                .add(new ShadowCastingComponent())
+			);
 		}
 	};
 }

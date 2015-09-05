@@ -8,6 +8,12 @@ import com.badlogic.ashley.core.Component;
 public class IntensityComponent implements Component {
     public float intensity;
 
+    public IntensityComponent() {}
+
+    public IntensityComponent(float intensity) {
+        this.intensity = intensity;
+    }
+
     public IntensityComponent intensity(float intensity) {
         this.intensity = intensity;
         return this;

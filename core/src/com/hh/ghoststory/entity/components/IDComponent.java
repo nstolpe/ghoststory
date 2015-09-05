@@ -8,6 +8,12 @@ import com.badlogic.ashley.core.Component;
 public class IDComponent implements Component {
     public String id;
 
+    public IDComponent() {}
+
+    public IDComponent(String id) {
+        this.id = id;
+    }
+
     public IDComponent id(String id) {
         this.id = id;
         return this;

@@ -51,7 +51,10 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	}
 
     public void render(Camera camera, Array<ModelInstance> instances, Array<Caster> shadowCasters, Lighting environment) {
-        Gdx.gl.glClearColor(screen.clearRed, screen.clearGreen, screen.clearBlue, screen.clearAlpha);
+	    // @TODO next two from Screen. Maybe pass in or set width for the Renderer, as well as clear colors?
+	    // Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+	    Gdx.gl.glClearColor(screen.clearRed, screen.clearGreen, screen.clearBlue, screen.clearAlpha);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 	    renderDepth(shadowCasters, instances);

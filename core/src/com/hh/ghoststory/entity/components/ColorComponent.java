@@ -9,6 +9,12 @@ import com.badlogic.gdx.graphics.Color;
 public class ColorComponent implements Component {
     public Color color;
 
+    public ColorComponent() {}
+
+    public ColorComponent(Color color) {
+        this.color = color;
+    }
+
     public ColorComponent color(Color color) {
         this.color = color;
         return this;

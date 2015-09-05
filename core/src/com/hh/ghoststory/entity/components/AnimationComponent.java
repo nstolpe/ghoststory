@@ -13,7 +13,14 @@ public class AnimationComponent implements Component {
     public ObjectMap<String, ObjectMap<String, Object>> animations = new ObjectMap();
     public AnimationController controller;
 
-    public AnimationComponent animations(Array<ObjectMap<String, Object>> animations) {
+    public AnimationComponent() {}
+
+	public AnimationComponent(Array<ObjectMap<String, Object>> animations) {
+        for (ObjectMap<String, Object> animation : animations)
+            this.animations.put((String) animation.get("id"), animation);
+    }
+
+	public AnimationComponent animations(Array<ObjectMap<String, Object>> animations) {
         for (ObjectMap<String, Object> animation : animations)
             this.animations.put((String) animation.get("id"), animation);
         return this;
