@@ -1,7 +1,6 @@
 package com.hh.ghoststory.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
@@ -32,7 +31,6 @@ import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.scene.actors.PlayerCharacter;
 import com.hh.ghoststory.scene.gamemodels.core.GameModel;
 import com.hh.ghoststory.scene.gamemodels.Character;
-import com.hh.ghoststory.screen.core.AbstractScreen;
 
 import java.util.HashMap;
 import java.util.Map;

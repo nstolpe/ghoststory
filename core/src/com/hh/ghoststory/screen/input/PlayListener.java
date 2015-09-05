@@ -14,19 +14,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
-import com.hh.ghoststory.screen.core.DualCameraScreen;
+import com.hh.ghoststory.screen.PlayScreen;
 
 /**
  * Created by nils on 8/29/15.
  */
 public class PlayListener extends GestureDetector.GestureAdapter {
-	private final DualCameraScreen screen;
+	private final PlayScreen screen;
 	public PlayDetector controller;
 	private float previousZoom;
 	private Material cachedMat;
 	private ModelInstance activeInstance;
 
-	public PlayListener(DualCameraScreen screen) {
+	public PlayListener(PlayScreen screen) {
 		this.screen = screen;
 	}
 

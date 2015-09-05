@@ -1,4 +1,4 @@
-package com.hh.ghoststory.screen.core;
+package com.hh.ghoststory.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,9 +22,9 @@ public abstract class AbstractScreen implements Screen {
 	protected final GhostStory game;
 	protected float screenWidth;
 	protected float screenHeight;
-	public float clearRed = 0f;
-	public float clearBlue = 0f;
-	public float clearGreen = 0f;
+	public float clearRed = 1f;
+	public float clearBlue = 1f;
+	public float clearGreen = 1f;
 	public float clearAlpha = 1f;
     protected boolean loading;
 	public Array<Caster> shadowCasters = new Array<Caster>();
@@ -50,6 +50,11 @@ public abstract class AbstractScreen implements Screen {
 	public void resize(int width, int height) {
 	}
 
+    /**
+     * This might not be doing anything necessary. Commentintgthe gl calls doesn't
+     * change anything on render for PlayScreen at least. Might not be needed in descendant either.
+     * @param delta
+     */
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(this.clearRed, this.clearGreen, this.clearBlue, this.clearAlpha);

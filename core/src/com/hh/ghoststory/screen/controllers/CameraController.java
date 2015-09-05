@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.collision.Ray;
-import com.hh.ghoststory.screen.core.AbstractScreen;
+import com.hh.ghoststory.screen.AbstractScreen;
 
 /**
  * Created by nils on 8/27/15.

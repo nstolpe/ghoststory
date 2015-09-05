@@ -21,10 +21,10 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.hh.ghoststory.screen.core.DualCameraScreen;
+import com.hh.ghoststory.screen.PlayScreen;
 
 public class PlayDetector extends GestureDetector {
-	private DualCameraScreen screen;
+	private PlayScreen screen;
 	/** The button for rotating the screen.active(). */
 	public int rotateButton = Input.Buttons.RIGHT;
 	/** The angle to rotate when moved the full width or height of the screen. */
@@ -77,14 +77,14 @@ public class PlayDetector extends GestureDetector {
 	private final Vector3 tmpV2 = new Vector3();
 	protected final PlayListener gestureListener;
 
-	public PlayDetector(final PlayListener GestureListener, DualCameraScreen screen) {
+	public PlayDetector(final PlayListener GestureListener, PlayScreen screen) {
 		super(GestureListener);
 		this.gestureListener = GestureListener;
 		this.gestureListener.controller = this;
 		this.screen = screen;
 	}
 
-	public PlayDetector(DualCameraScreen screen) {
+	public PlayDetector(PlayScreen screen) {
 		this(new PlayListener(screen), screen);
 	}
 

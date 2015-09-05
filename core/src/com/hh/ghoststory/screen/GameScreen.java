@@ -4,7 +4,6 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenAccessor;
 import aurelienribon.tweenengine.TweenEquations;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -23,7 +22,6 @@ import com.hh.ghoststory.render.renderers.ModelBatchRenderer;
 import com.hh.ghoststory.lib.tween.accessors.ColorAccessor;
 import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
-import com.hh.ghoststory.screen.core.AbstractScreen;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -19,23 +19,23 @@ import com.hh.ghoststory.render.shaders.SceneShaderProvider;
 import com.hh.ghoststory.render.shaders.ShadowMapShaderProvider;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.Caster;
-import com.hh.ghoststory.screen.core.DualCameraScreen;
+import com.hh.ghoststory.screen.PlayScreen;
 
 /**
  * Created by nils on 7/23/15.
  */
 public class ShadowRenderer implements Telegraph, Disposable {
-    public DualCameraScreen screen;
+    public PlayScreen screen;
 	public FrameBuffer frameBufferShadows;
 	public ModelBatch modelBatch;
 	public ModelBatch modelBatchShadows;
 	private MessageDispatcher messageDispatcher;
 
-    public ShadowRenderer(DualCameraScreen screen) {
+    public ShadowRenderer(PlayScreen screen) {
 	    this(screen, screen.messageDispatcher);
     }
 
-    public ShadowRenderer(DualCameraScreen screen, MessageDispatcher messageDispatcher) {
+    public ShadowRenderer(PlayScreen screen, MessageDispatcher messageDispatcher) {
         this.screen = screen;
 	    this.messageDispatcher = messageDispatcher;
 	    init();
