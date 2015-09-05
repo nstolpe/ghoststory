@@ -10,7 +10,7 @@ public class MessageTypes {
 	public static class Screen {
 		// ShadowRenderer
 		public final static int INIT_SHADOW_BUFFER    = 0;
-		// CameraController
+		// CameraController. Was removed. Its stuff went to PlayScreen.
 		public final static int REQUEST_ACTIVE_CAMERA = 1;
 		public final static int SEND_ACTIVE_CAMERA    = 2;
 		public final static int GET_CAMERA_POSITION   = 3;

@@ -11,16 +11,14 @@ import com.badlogic.gdx.graphics.glutils.FrameBufferCubemap;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.hh.ghoststory.DepthMapShader;
 
 /**
  * Created by nils on 9/3/15.
  */
-public class PointCaster extends PointLight implements Disposable, Caster {
+public class PointCaster extends PointLight implements Caster {
 	public PerspectiveCamera camera = new PerspectiveCamera();
-	public int depthmapsize = 1024;
-	public boolean casting = true;
+	public int depthMapSize = 1024;
 	public FrameBufferCubemap frameBuffer;
 	public Cubemap depthMap;
 	public ShaderProgram shaderProgram = new ShaderProgram(
@@ -50,13 +48,13 @@ public class PointCaster extends PointLight implements Disposable, Caster {
         camera.update();
     }
 	/**
-	 * implements overrides
+	 * @TODO near and far should be settable. Maybe use intensity
 	 */
 	@Override
 	public void initCamera() {
 		camera.fieldOfView = 90f;
-		camera.viewportWidth = depthmapsize;
-		camera.viewportHeight = depthmapsize;
+		camera.viewportWidth = depthMapSize;
+		camera.viewportHeight = depthMapSize;
 		camera.near = 1f;
 		camera.far = 30;
 		camera.position.set(position);
@@ -75,7 +73,7 @@ public class PointCaster extends PointLight implements Disposable, Caster {
 
 	@Override
 	public void initFrameBuffer() {
-		frameBuffer = new FrameBufferCubemap(Pixmap.Format.RGBA8888, depthmapsize, depthmapsize, true);
+		frameBuffer = new FrameBufferCubemap(Pixmap.Format.RGBA8888, depthMapSize, depthMapSize, true);
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public abstract class AbstractScreen implements Screen {
 	public float clearGreen = 1f;
 	public float clearAlpha = 1f;
     protected boolean loading;
-	public Array<Caster> shadowCasters = new Array<Caster>();
+	public Array<Caster> casters = new Array<Caster>();
 	public MessageDispatcher messageDispatcher = new MessageDispatcher();
 
 	protected BitmapFont font = new BitmapFont(
@@ -75,6 +75,8 @@ public abstract class AbstractScreen implements Screen {
 
 	@Override
 	public void dispose() {
+        for (Caster caster : casters)
+            caster.dispose();
 	}
 
 	protected void setClear(float red, float green, float blue, float alpha) {
@@ -86,11 +88,13 @@ public abstract class AbstractScreen implements Screen {
 
     protected void doneLoading() {
         loading = false;
-    };
+    }
 
     /*
      * Class to create buttons on the main screen. A factory may be better, or use libGDX skin. Or move
      * to own class.
+     *
+     * Used in create and main. Move this somewhere else.
      */
 	public class MainScreenButton {
 		NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);

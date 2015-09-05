@@ -80,7 +80,7 @@ public class Timelines {
 
 	/**
 	 * Returns a timeline with one rotate Tween and one translate Tween. It will cause
-	 * its target to face a point and move towards it. Meant to be used on actors, which
+	 * its target to face a point and move towards it. Meant to be used on mobs, which
 	 * will have a position Quaternion and a rotation Vector3. They haven't been built yet.
 	 * Use to move an actor that will first turn to face a target location, then move
 	 * towards it.

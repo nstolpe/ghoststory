@@ -14,7 +14,7 @@ public class Lighting extends Environment {
 	public Array<ShadowCaster> shadowCasters = new Array<ShadowCaster>();
 
 	/*
-     * Adds a ShadowCaster to shadowCasters. See note above it's declaration.
+     * Adds a ShadowCaster to casters. See note above it's declaration.
      */
 	public Environment add (ShadowCaster shadowCaster) {
 		if (shadowCaster instanceof PointShadowCaster) {
@@ -26,7 +26,7 @@ public class Lighting extends Environment {
 	}
 
 	/*
-     * Removes a ShadowCaster from shadowCasters. See note above it's declaration.
+     * Removes a ShadowCaster from casters. See note above it's declaration.
      */
 	public Environment remove(ShadowCaster shadowCaster) {
 		shadowCasters.removeValue(shadowCaster, true);

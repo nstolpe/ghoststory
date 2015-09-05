@@ -5,10 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
@@ -35,14 +32,18 @@ public class PlayScreen extends AbstractScreen {
     protected AssetManager assetManager = new AssetManager();
     public Lighting lighting = new Lighting();
 
+
     public enum CameraTypes { P, O }
 
-    public Entity scene;
     public Array<ModelInstance> instances = new Array<ModelInstance>();
-    public ImmutableArray<Entity> actors;
+
+    public Entity scene;
+    public Entity pc;
+    public ImmutableArray<Entity> mobs;
     public ImmutableArray<Entity> lights;
 
     public PlayDetector playDetector;
+    private FPSLogger logger = new FPSLogger();
 
     /**
      * Creates the Screen with a default camera.
@@ -57,23 +58,37 @@ public class PlayScreen extends AbstractScreen {
     }
 
     protected void init() {
+        // get the scene. just model right now.
         scene = game.engine.getEntitiesFor(Family.all(SceneComponent.class).get()).get(0);
+        // add ambient if it's there.
         if (Mappers.ambient.has(scene))
             lighting.set(Mappers.ambient.get(scene).colorAttribute);
 
         assetManager.load("models/" + Mappers.geometry.get(scene).file, Model.class);
+        // done scene.
 
-        actors = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class).get());
+        // pc
+        pc = game.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
+        assetManager.load("models/" + Mappers.geometry.get(pc).file, Model.class);
+        assetManager.load("models/ghost_texture_blue.png", Texture.class);
+        // end pc
 
-        for (Entity instance : actors)
-            assetManager.load("models/" + Mappers.geometry.get(instance).file, Model.class);
+        // mobs
+        mobs = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class, MobComponent.class).get());
 
+        for (Entity mob : mobs)
+            assetManager.load("models/" + Mappers.geometry.get(mob).file, Model.class);
+        // end mobs
+
+        //lights
         lights = game.engine.getEntitiesFor(Family.all(LightTypeComponent.class, PositionComponent.class).get());
         for (Entity light : lights) {
             PointCaster caster = new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity);
             lighting.add(caster);
-            shadowCasters.add(caster);
+            if (Mappers.shadowCasting.has(light))
+                casters.add(caster);
         }
+        // end lights
     }
     /**
      * A way for input handlers to access the active camera until camera controlling functions moved here. If they are.
@@ -111,9 +126,11 @@ public class PlayScreen extends AbstractScreen {
 
         renderer.initShadowBuffer();
     }
+
     @Override
     public void render(float delta) {
         super.render(delta);
+        logger.log();
         instances.clear();
 
         // asset loading has just finished, loading hasn't been updated
@@ -148,11 +165,11 @@ public class PlayScreen extends AbstractScreen {
         active.update();
         playDetector.update();
 
-        renderer.render(active, instances, shadowCasters, lighting);
+        renderer.render(active, instances, casters, lighting);
     }
 
     /**
-     * Called when the asset manager has finished updating. Make models here.
+     * Called when the asset manager has finished updating. Associate models with game entities and start animations..
      * @TODO Add more stuff that needs to happen after loading.
      */
     @Override
@@ -165,15 +182,15 @@ public class PlayScreen extends AbstractScreen {
             ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(renderable).file, Model.class));
             Mappers.instance.get(renderable).instance(instance);
 
-            // if the renderable Entity has an animation, set that up.
+            // if the renderable Entity has a default/standing animation, set that up.
             // @TODO refactor normal/default animation selection. Check if a normal should even be played.
             if (Mappers.animation.has(renderable)) {
                 AnimationComponent animation = Mappers.animation.get(renderable);
                 animation.init(instance);
-                // the normal/default/rest animation should be defined on the entity somewhere.
+                // the normal/default/rest animation should be defined on the entity somewhere, not just default to "normal".
                 ObjectMap<String, Object> normal = animation.animations.get("normal");
-                // this casting sucks.
-                animation.controller.setAnimation((String) normal.get("id"), (Float) normal.get("offset"), (Float) normal.get("duration"), (Integer) normal.get("loopcount"), (Float)normal.get("speed"), (AnimationController.AnimationListener)normal.get("listneer"));
+                // this casting sucks. JSON import might be good to use, should fix that.
+                animation.controller.setAnimation((String) normal.get("id"), (Float) normal.get("offset"), (Float) normal.get("duration"), (Integer) normal.get("loopcount"), (Float)normal.get("speed"), (AnimationController.AnimationListener)normal.get("listener"));
             }
         }
     }
@@ -297,6 +314,7 @@ public class PlayScreen extends AbstractScreen {
      * and ortho. Also keep ortho zoom, but make it smoother.
      *
      * Generic function to accept zooms. Passes it to specific handler.
+     * Not being used now. Is this needed? Route all input events to here?
      * @param zoom
      */
     public void zoom(double zoom) {
@@ -427,4 +445,11 @@ public class PlayScreen extends AbstractScreen {
 //		return perspectiveCamera;
 //	}
     /** End Camera Section */
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        assetManager.dispose();
+        renderer.dispose();
+    }
 }

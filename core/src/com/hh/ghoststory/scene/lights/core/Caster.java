@@ -12,4 +12,5 @@ public interface Caster {
 	public void applyToShader(final ShaderProgram shaderProgram);
 	public void initFrameBuffer();
 	public void render(Array<ModelInstance> instances);
+    public void dispose();
 }

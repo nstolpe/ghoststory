@@ -16,6 +16,8 @@ public class Mappers {
     public static final ComponentMapper<LightingComponent> lighting = ComponentMapper.getFor(LightingComponent.class);
     public static final ComponentMapper<LightTypeComponent> lightType = ComponentMapper.getFor(LightTypeComponent.class);
     public static final ComponentMapper<NameComponent> name = ComponentMapper.getFor(NameComponent.class);
+    public static final ComponentMapper<MobComponent> mob = ComponentMapper.getFor(MobComponent.class);
+    public static final ComponentMapper<PlayerComponent> player = ComponentMapper.getFor(PlayerComponent.class);
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
     public static final ComponentMapper<ShadowCastingComponent> shadowCasting = ComponentMapper.getFor(ShadowCastingComponent.class);
 }

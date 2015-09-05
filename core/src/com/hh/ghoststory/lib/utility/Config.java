@@ -41,6 +41,33 @@ public class Config {
 	// behaviors can be added too, but pc behavior doesn't need to be here (aside from spawn point).
 	public Array<Entity> actors = new Array<Entity>() {
 		{
+            // player character
+            add(new Entity()
+                .add(new IDComponent().id("player_character"))
+                .add(new NameComponent().name("Mr Player"))
+                .add(new NameComponent().name("Mr Player"))
+                .add(new GeometryComponent().file("ghost_orange.g3dj"))
+                .add(new InstanceComponent())
+                .add(new PositionComponent().position(new Vector3(-5, 0, -5)))
+                .add(new AnimationComponent().animations(
+                    new Array<ObjectMap<String, Object>>() {
+                        {
+                            add(new ObjectMap<String, Object>() {
+                                {
+                                    put("id", "normal");
+                                    put("offset", 0.0f);
+                                    put("duration", -1.0f);
+                                    put("loopcount", -1);
+                                    put("speed", 1.0f);
+                                    put("listener", null);
+                                }
+                            });
+                        }
+                    })
+                )
+                .add(new RenderComponent())
+                .add(new PlayerComponent())
+            );
 			// ghost 1
 			add(new Entity()
                     .add(new IDComponent().id("red_ghost"))
@@ -65,6 +92,7 @@ public class Config {
                                     })
                     )
                     .add(new RenderComponent())
+                    .add(new MobComponent())
             );
 			// ghost 2
 			add(new Entity()
@@ -90,6 +118,7 @@ public class Config {
                                     })
                     )
                     .add(new RenderComponent())
+                    .add(new MobComponent())
             );
 			// ghost 3
 			add(new Entity()
@@ -115,6 +144,7 @@ public class Config {
                                     })
                     )
                     .add(new RenderComponent())
+                    .add(new MobComponent())
             );
         }
     };
@@ -138,6 +168,7 @@ public class Config {
                 .add(new ColorComponent().color(new Color(0.3f, 0.3f, 1f, 1f)))
                 .add(new IntensityComponent().intensity(10))
                 .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+                .add(new ShadowCastingComponent())
 			);
 			// lights 3
 			add(new Entity()
