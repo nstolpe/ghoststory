@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.hh.ghoststory.components.*;
+import com.hh.ghoststory.entity.components.*;
 
 /**
  * Created by nils on 7/15/15.
@@ -30,7 +30,7 @@ public class Config {
             .add(new SceneComponent())
             .add(new IDComponent().id("scene"))
             .add(new NameComponent().name("Development Scene"))
-            .add(new PositionComponent().position(new Vector3(0, 0, 0)))
+            .add(new PositionComponent(new Vector3(0, 0, 0)))
             .add(new GeometryComponent().file("scene.g3dj"))
 		    .add(new InstanceComponent())
             .add(new RenderComponent())
@@ -48,22 +48,23 @@ public class Config {
                 .add(new NameComponent().name("Mr Player"))
                 .add(new GeometryComponent().file("ghost_orange.g3dj"))
                 .add(new InstanceComponent())
-                .add(new PositionComponent().position(new Vector3(-5, 0, -5)))
+                .add(new PositionComponent(new Vector3(-5, 0, -5)))
+                .add(new RotationComponent(new Vector3(0, 0, 0)))
                 .add(new AnimationComponent().animations(
-                    new Array<ObjectMap<String, Object>>() {
-                        {
-                            add(new ObjectMap<String, Object>() {
-                                {
-                                    put("id", "normal");
-                                    put("offset", 0.0f);
-                                    put("duration", -1.0f);
-                                    put("loopcount", -1);
-                                    put("speed", 1.0f);
-                                    put("listener", null);
-                                }
-                            });
-                        }
-                    })
+                                new Array<ObjectMap<String, Object>>() {
+                                    {
+                                        add(new ObjectMap<String, Object>() {
+                                            {
+                                                put("id", "normal");
+                                                put("offset", 0.0f);
+                                                put("duration", -1.0f);
+                                                put("loopcount", -1);
+                                                put("speed", 1.0f);
+                                                put("listener", null);
+                                            }
+                                        });
+                                    }
+                                })
                 )
                 .add(new RenderComponent())
                 .add(new PlayerComponent())
@@ -74,7 +75,8 @@ public class Config {
                     .add(new NameComponent().name("Red Ghost One"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
-                    .add(new PositionComponent().position(new Vector3(5, 0, 5)))
+                    .add(new PositionComponent(new Vector3(5, 0, 5)))
+                    .add(new RotationComponent(new Vector3(0, 0, 0)))
                     .add(new AnimationComponent().animations(
                                     new Array<ObjectMap<String, Object>>() {
                                         {
@@ -100,7 +102,8 @@ public class Config {
                     .add(new NameComponent().name("Red Ghost Two"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
-                    .add(new PositionComponent().position(new Vector3(0, 0, 0)))
+                    .add(new PositionComponent(new Vector3(0, 0, 0)))
+                    .add(new RotationComponent(new Vector3(0, 0, 0)))
                     .add(new AnimationComponent().animations(
                                     new Array<ObjectMap<String, Object>>() {
                                         {
@@ -126,7 +129,8 @@ public class Config {
                     .add(new NameComponent().name("Red Ghost Three"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
-                    .add(new PositionComponent().position(new Vector3(10, 0, 6)))
+                    .add(new PositionComponent(new Vector3(10, 0, 6)))
+                    .add(new RotationComponent(new Vector3(0, 0, 0)))
                     .add(new AnimationComponent().animations(
                                     new Array<ObjectMap<String, Object>>() {
                                         {
@@ -178,6 +182,7 @@ public class Config {
                 .add(new ColorComponent().color(new Color(1f, 0.3f, 0.3f, 1f)))
                 .add(new IntensityComponent().intensity(10))
                 .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+//                .add(new ShadowCastingComponent())
 			);
 //			// lights 4
 //			add(new Entity()
@@ -187,6 +192,7 @@ public class Config {
 //                .add(new ColorComponent().color(new Color(1f, 0f, 0f, 1f)))
 //                .add(new IntensityComponent().intensity(10))
 //                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+//                .add(new ShadowCastingComponent())
 //			);
 //			// lights 5
 //			add(new Entity()
@@ -196,6 +202,7 @@ public class Config {
 //                .add(new ColorComponent().color(new Color(1f, 1f, 1f, 1f)))
 //                .add(new IntensityComponent().intensity(10))
 //                .add(new LightTypeComponent().type(LightTypeComponent.POINT))
+//                .add(new ShadowCastingComponent())
 //			);
 		}
 	};

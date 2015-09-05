@@ -14,7 +14,9 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.components.*;
+import com.hh.ghoststory.entity.EntityTypes;
+import com.hh.ghoststory.entity.Mappers;
+import com.hh.ghoststory.entity.components.*;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
@@ -29,20 +31,16 @@ public class PlayScreen extends AbstractScreen {
     protected PerspectiveCamera perspective;
     protected OrthographicCamera orthographic;
     protected Camera active;
-    protected AssetManager assetManager = new AssetManager();
+    public AssetManager assetManager = new AssetManager();
     public Lighting lighting = new Lighting();
-
-
     public enum CameraTypes { P, O }
-
     public Array<ModelInstance> instances = new Array<ModelInstance>();
-
+    public PlayDetector playDetector;
     public Entity scene;
     public Entity pc;
     public ImmutableArray<Entity> mobs;
     public ImmutableArray<Entity> lights;
 
-    public PlayDetector playDetector;
     private FPSLogger logger = new FPSLogger();
 
     /**
@@ -59,7 +57,7 @@ public class PlayScreen extends AbstractScreen {
 
     protected void init() {
         // get the scene. just model right now.
-        scene = game.engine.getEntitiesFor(Family.all(SceneComponent.class).get()).get(0);
+        scene = game.engine.getEntitiesFor(EntityTypes.SCENE).get(0);
         // add ambient if it's there.
         if (Mappers.ambient.has(scene))
             lighting.set(Mappers.ambient.get(scene).colorAttribute);
@@ -70,18 +68,18 @@ public class PlayScreen extends AbstractScreen {
         // pc
         pc = game.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
         assetManager.load("models/" + Mappers.geometry.get(pc).file, Model.class);
-        assetManager.load("models/ghost_texture_blue.png", Texture.class);
+        assetManager.load("models/ghost_texture_blue.png", Pixmap.class);
         // end pc
 
         // mobs
-        mobs = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, PositionComponent.class, MobComponent.class).get());
+        mobs = game.engine.getEntitiesFor(EntityTypes.MOB);
 
         for (Entity mob : mobs)
             assetManager.load("models/" + Mappers.geometry.get(mob).file, Model.class);
         // end mobs
 
         //lights
-        lights = game.engine.getEntitiesFor(Family.all(LightTypeComponent.class, PositionComponent.class).get());
+        lights = game.engine.getEntitiesFor(EntityTypes.LIGHT);
         for (Entity light : lights) {
             PointCaster caster = new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity);
             lighting.add(caster);
@@ -130,7 +128,8 @@ public class PlayScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        logger.log();
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         instances.clear();
 
         // asset loading has just finished, loading hasn't been updated
@@ -139,7 +138,7 @@ public class PlayScreen extends AbstractScreen {
             // asset loading is finished and post load hooks have completed
             // maybe move to an update function
         } else if (!loading){
-            ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, RenderComponent.class, PositionComponent.class, InstanceComponent.class).get());
+            ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(EntityTypes.RENDERABLE_INSTANCE);
             // This could go in an entity system.
             for (Entity renderable : renderables) {
                 // something should have stopped earlier if instance wasn't set on the component.
@@ -159,13 +158,11 @@ public class PlayScreen extends AbstractScreen {
             messageDispatcher.update(delta);
         }
 
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
         active.update();
         playDetector.update();
 
         renderer.render(active, instances, casters, lighting);
+        logger.log();
     }
 
     /**
@@ -175,7 +172,7 @@ public class PlayScreen extends AbstractScreen {
     @Override
     protected void doneLoading() {
         super.doneLoading();
-        ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, RenderComponent.class, PositionComponent.class).get());
+        ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(EntityTypes.RENDERABLE);
 
         // retrieve ModelInstances from the assetManager and assign them to the renderable Entity.
         for (Entity renderable : renderables) {

@@ -1,4 +1,4 @@
-package com.hh.ghoststory.components;
+package com.hh.ghoststory.entity.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;

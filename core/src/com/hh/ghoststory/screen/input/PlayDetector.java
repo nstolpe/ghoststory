@@ -18,9 +18,18 @@ package com.hh.ghoststory.screen.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.math.collision.Ray;
 import com.hh.ghoststory.screen.PlayScreen;
 
 public class PlayDetector extends GestureDetector {
@@ -77,7 +86,10 @@ public class PlayDetector extends GestureDetector {
 	private final Vector3 tmpV2 = new Vector3();
 	protected final PlayListener gestureListener;
 
-	public PlayDetector(final PlayListener GestureListener, PlayScreen screen) {
+    private Material cachedMat;
+    private ModelInstance activeInstance;
+
+    public PlayDetector(final PlayListener GestureListener, PlayScreen screen) {
 		super(GestureListener);
 		this.gestureListener = GestureListener;
 		this.gestureListener.controller = this;
@@ -283,6 +295,43 @@ public class PlayDetector extends GestureDetector {
 	 */
 	@Override
 	public boolean mouseMoved (int screenX, int screenY) {
+//            Ray ray = screen.active().getPickRay(screenX, screenY);
+//            Vector3 position = new Vector3();
+//            Vector3 center = new Vector3();
+//            Vector3 dimensions = new Vector3();
+//            float radius;
+//            float distance = -1;
+//
+//            if (activeInstance != null && cachedMat != null) {
+//                activeInstance.materials.get(0).set(cachedMat);
+//                activeInstance = null;
+//            }
+//
+//            for (int i = 0; i < screen.instances.size; ++i) {
+//                final ModelInstance instance = screen.instances.get(i);
+//                instance.transform.getTranslation(position);
+//                BoundingBox box = instance.calculateBoundingBox(new BoundingBox());
+//                position.add(box.getCenter(new Vector3()));
+//                box.getCenter(center);
+//                box.getDimensions(dimensions);
+//                radius = dimensions.len() / 2f;
+//                Texture tex = new Texture(Gdx.files.internal("models/ghost_texture_blue.png"), true);
+////                Pixmap pm = screen.assetManager.get("models/ghost_texture_blue.png", Pixmap.class);
+////				Texture tex = new Texture(pm, true);
+//                tex.setFilter(Texture.TextureFilter.MipMapLinearLinear, Texture.TextureFilter.Nearest);
+//                float dist2 = ray.origin.dst2(position);
+//
+//                if (distance >= 0f && dist2 > distance) continue;
+//
+//                if (Intersector.intersectRaySphere(ray, position, radius, null)) {
+//                    cachedMat = instance.materials.get(0).copy();
+//                    activeInstance = instance;
+////				instance.materials.get(0).set(ColorAttribute.createDiffuse(Color.LIGHT_GRAY), ColorAttribute.createAmbient(Color.LIGHT_GRAY));
+//                    instance.materials.get(0).set(new TextureAttribute(TextureAttribute.Diffuse, tex), new ColorAttribute(ColorAttribute.Specular, Color.GOLD));
+//
+//                    distance = dist2;
+//                }
+//            }
 		return false;
 	}
 }

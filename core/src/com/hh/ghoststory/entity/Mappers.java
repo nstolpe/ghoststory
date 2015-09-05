@@ -1,6 +1,7 @@
-package com.hh.ghoststory.components;
+package com.hh.ghoststory.entity;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.hh.ghoststory.entity.components.*;
 
 /**
  * Created by nils on 9/3/15.
@@ -19,5 +20,6 @@ public class Mappers {
     public static final ComponentMapper<MobComponent> mob = ComponentMapper.getFor(MobComponent.class);
     public static final ComponentMapper<PlayerComponent> player = ComponentMapper.getFor(PlayerComponent.class);
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
+    public static final ComponentMapper<RotationComponent> rotation = ComponentMapper.getFor(RotationComponent.class);
     public static final ComponentMapper<ShadowCastingComponent> shadowCasting = ComponentMapper.getFor(ShadowCastingComponent.class);
 }

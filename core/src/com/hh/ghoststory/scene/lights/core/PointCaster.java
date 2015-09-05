@@ -18,7 +18,8 @@ import com.hh.ghoststory.DepthMapShader;
  */
 public class PointCaster extends PointLight implements Caster {
 	public PerspectiveCamera camera = new PerspectiveCamera();
-	public int depthMapSize = 1024;
+	// depthMapSize should be configurable, has a big influence on FPS
+    public int depthMapSize = 1024;
 	public FrameBufferCubemap frameBuffer;
 	public Cubemap depthMap;
 	public ShaderProgram shaderProgram = new ShaderProgram(
