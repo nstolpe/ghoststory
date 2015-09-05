@@ -89,12 +89,12 @@ public class GameScreen extends AbstractScreen {
 		cameraHandler.getActiveCamera().update();
 
 		for (final Light light : lights) light.needsUpdate= true;
-		if (doneLoading()) {
-			this.updateModels();
-			this.renderer.setRenderables(collectModelInstances());
-			this.animationController.update(Gdx.graphics.getDeltaTime());
-			this.renderer.render();
-		}
+//		if (doneLoading()) {
+//			this.updateModels();
+//			this.renderer.setRenderables(collectModelInstances());
+//			this.animationController.update(Gdx.graphics.getDeltaTime());
+//			this.renderer.render();
+//		}
 		this.logger.log();
 
 	}
@@ -190,9 +190,9 @@ public class GameScreen extends AbstractScreen {
 	/*
 	 * Check if assets have all been loaded. Run in a loop.
 	 */
-	private boolean doneLoading() {
+	protected void doneLoading() {
 		if (this.loading && !renderer.assetManager.update()) {
-			return false;
+//			return false;
 		} else if (this.loading && renderer.assetManager.update()) {
 			for (GameModel gameModel : this.gameModels) {
 				setModelResource(gameModel);
@@ -204,9 +204,9 @@ public class GameScreen extends AbstractScreen {
 			this.animationController = new AnimationController(character.model);
 			this.animationController.setAnimation("float", -1);
 			this.loading = false;
-			return false;
+//			return false;
 		}
-		return true;
+//		return true;
 	}
 
 	/*

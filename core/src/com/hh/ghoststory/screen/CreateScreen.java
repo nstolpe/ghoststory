@@ -184,12 +184,12 @@ public class CreateScreen extends AbstractScreen {
 //			Table.drawDebug(stage);
 		}
 		Gdx.gl.glViewport(Gdx.graphics.getWidth() / 4, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-		if (doneLoading()) {
-			modelBatch.begin(mcamera);
-			character.update();
-			modelBatch.render(character.model, environment);
-			modelBatch.end();
-		}
+//		if (doneLoading()) {
+//			modelBatch.begin(mcamera);
+//			character.update();
+//			modelBatch.render(character.model, environment);
+//			modelBatch.end();
+//		}
 	}
 
 	@Override
@@ -266,9 +266,9 @@ public class CreateScreen extends AbstractScreen {
 	/*
 	 * Check if assets have all been loaded. Run in a loop.
 	 */
-	private boolean doneLoading() {
+	protected void doneLoading() {
 		if (loading && assets.update() != true) {
-			return false;
+//			return false;
 		} else if (loading && assets.update()) {
 
 			character.setTexture("models/ghost_texture_green.png");
@@ -277,9 +277,9 @@ public class CreateScreen extends AbstractScreen {
 			}
 			character.model.userData = "ghost_texture_green.png";
 			loading = false;
-			return false;
+//			return false;
 		}
-		return true;
+//		return true;
 	}
 
 	private void setAttributes(LabelStyle labelStyle, TextFieldStyle textStyle) {

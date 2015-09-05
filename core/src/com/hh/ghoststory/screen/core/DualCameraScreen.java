@@ -10,11 +10,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.components.*;
+import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
 import com.hh.ghoststory.screen.input.PlayDetector;
@@ -23,11 +26,11 @@ import com.hh.ghoststory.screen.input.PlayDetector;
  * Created by nils on 7/17/15.
  */
 public abstract class DualCameraScreen extends AbstractScreen {
+    protected ShadowRenderer renderer = new ShadowRenderer(this);
 	protected PerspectiveCamera perspective;
 	protected OrthographicCamera orthographic;
 	protected Camera active;
 	protected AssetManager assetManager = new AssetManager();
-    protected boolean loading = true;
 	public Lighting lighting = new Lighting();
 
 	public enum CameraTypes { P, O }
@@ -48,6 +51,7 @@ public abstract class DualCameraScreen extends AbstractScreen {
 		activateCamera(defaultPerspective());
 		setInput();
         init();
+        loading = true;
 	}
 
     protected void init() {
@@ -108,8 +112,27 @@ public abstract class DualCameraScreen extends AbstractScreen {
 	 * Called when the asset manager has finished updating. Make models here.
 	 * @TODO Add more stuff that needs to happen after loading.
 	 */
-	public void doneLoading() {
-		loading = false;
+    @Override
+	protected void doneLoading() {
+        super.doneLoading();
+        ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(Family.all(GeometryComponent.class, RenderComponent.class, PositionComponent.class).get());
+
+        // retrieve ModelInstances from the assetManager and assign them to the renderable Entity.
+        for (Entity renderable : renderables) {
+            ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(renderable).file, Model.class));
+            Mappers.instance.get(renderable).instance(instance);
+
+            // if the renderable Entity has an animation, set that up.
+            // @TODO refactor normal/default animation selection. Check if a normal should even be played.
+            if (Mappers.animation.has(renderable)) {
+                AnimationComponent animation = Mappers.animation.get(renderable);
+                animation.init(instance);
+                // the normal/default/rest animation should be defined on the entity somewhere.
+                ObjectMap<String, Object> normal = animation.animations.get("normal");
+                // this casting sucks.
+                animation.controller.setAnimation((String) normal.get("id"), (Float) normal.get("offset"), (Float) normal.get("duration"), (Integer) normal.get("loopcount"), (Float)normal.get("speed"), (AnimationController.AnimationListener)normal.get("listneer"));
+            }
+        }
 	}
 
 	/** Camera Section */

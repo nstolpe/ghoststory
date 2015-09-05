@@ -26,6 +26,7 @@ public abstract class AbstractScreen implements Screen {
 	public float clearBlue = 0f;
 	public float clearGreen = 0f;
 	public float clearAlpha = 1f;
+    protected boolean loading;
 	public Array<Caster> shadowCasters = new Array<Caster>();
 	public MessageDispatcher messageDispatcher = new MessageDispatcher();
 
@@ -78,10 +79,14 @@ public abstract class AbstractScreen implements Screen {
 		this.clearAlpha = alpha;
 	}
 
-	/*
-	 * Class to create buttons on the main screen. A factory may be better, or use libGDX skin. Or move
-	 * to own class.
-	 */
+    protected void doneLoading() {
+        loading = false;
+    };
+
+    /*
+     * Class to create buttons on the main screen. A factory may be better, or use libGDX skin. Or move
+     * to own class.
+     */
 	public class MainScreenButton {
 		NinePatch up = new NinePatch(new Texture("images/up.9.png"), 18, 38, 38, 38);
 		NinePatch down = new NinePatch(new Texture("images/down.9.png"), 38, 38, 38, 38);
