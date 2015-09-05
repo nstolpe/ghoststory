@@ -25,6 +25,7 @@ public class PlayListener extends GestureDetector.GestureAdapter {
 	private final PlayScreen screen;
 	public PlayDetector controller;
 	private float previousZoom;
+	// @TODO move cachedMat and activeDistance to the Screen.
 	private Material cachedMat;
 	private ModelInstance activeInstance;
 
@@ -36,6 +37,7 @@ public class PlayListener extends GestureDetector.GestureAdapter {
 	 * This needs some thought. A lot can happen on touchdown, depending on the target. Seems
 	 * to be only getting the left click.
 	 * Right now, it changes the color of the ghost it hits. It might also be better on touchUp
+	 * @TODO make this only process the input. Then send the relevant data off as a message.
 	 * @param x
 	 * @param y
 	 * @param pointer
@@ -88,6 +90,14 @@ public class PlayListener extends GestureDetector.GestureAdapter {
 		return false;
 	}
 
+	/**
+	 * @TODO make this only process the input. Then send the relevant data off as a message.
+	 * @param x
+	 * @param y
+	 * @param count
+	 * @param button
+	 * @return
+	 */
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
         Ray pickRay = screen.getPickRay(x, y);
@@ -123,10 +133,10 @@ public class PlayListener extends GestureDetector.GestureAdapter {
         float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
 //				float rotationDuration = Math.abs(rotation.dot(newRotation));
 
-        screen.killTween(screen.character.position, Vector3Accessor.POSITION_XYZ);
-        screen.killTween(screen.character.rotation, QuaternionAccessor.ROTATION);
-
-        screen.tweenFaceAndMoveTo(screen.character.rotation, newRotation, screen.character.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
+//        screen.killTween(screen.character.position, Vector3Accessor.POSITION_XYZ);
+//        screen.killTween(screen.character.rotation, QuaternionAccessor.ROTATION);
+//
+//        screen.tweenFaceAndMoveTo(screen.character.rotation, newRotation, screen.character.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
 
 		return false;
 	}

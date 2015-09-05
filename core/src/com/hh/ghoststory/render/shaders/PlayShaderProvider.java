@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 /**
  * Created by nils on 8/28/15.
  */
-public class SceneShaderProvider extends DefaultShaderProvider {
+public class PlayShaderProvider extends DefaultShaderProvider {
 	@Override
 	protected Shader createShader(final Renderable renderable) {
-		return new SceneShader(renderable);
+		return new PlayShader(renderable);
 	}
 }

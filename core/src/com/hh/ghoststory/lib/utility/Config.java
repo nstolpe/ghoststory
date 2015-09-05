@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -49,7 +50,7 @@ public class Config {
                 .add(new GeometryComponent().file("ghost_orange.g3dj"))
                 .add(new InstanceComponent())
                 .add(new PositionComponent(new Vector3(-5, 0, -5)))
-                .add(new RotationComponent(new Vector3(0, 0, 0)))
+                .add(new RotationComponent(new Quaternion()))
                 .add(new AnimationComponent().animations(
                                 new Array<ObjectMap<String, Object>>() {
                                     {
@@ -76,22 +77,22 @@ public class Config {
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(5, 0, 5)))
-                    .add(new RotationComponent(new Vector3(0, 0, 0)))
+                    .add(new RotationComponent(new Quaternion()))
                     .add(new AnimationComponent().animations(
-                                    new Array<ObjectMap<String, Object>>() {
-                                        {
-                                            add(new ObjectMap<String, Object>() {
-                                                {
-                                                    put("id", "normal");
-                                                    put("offset", 0.0f);
-                                                    put("duration", -1.0f);
-                                                    put("loopcount", -1);
-                                                    put("speed", 1.0f);
-                                                    put("listener", null);
-                                                }
-                                            });
-                                        }
-                                    })
+				                    new Array<ObjectMap<String, Object>>() {
+					                    {
+						                    add(new ObjectMap<String, Object>() {
+							                    {
+								                    put("id", "normal");
+								                    put("offset", 0.0f);
+								                    put("duration", -1.0f);
+								                    put("loopcount", -1);
+								                    put("speed", 1.0f);
+								                    put("listener", null);
+							                    }
+						                    });
+					                    }
+				                    })
                     )
                     .add(new RenderComponent())
                     .add(new MobComponent())
@@ -103,22 +104,22 @@ public class Config {
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(0, 0, 0)))
-                    .add(new RotationComponent(new Vector3(0, 0, 0)))
+                    .add(new RotationComponent(new Quaternion()))
                     .add(new AnimationComponent().animations(
-                                    new Array<ObjectMap<String, Object>>() {
-                                        {
-                                            add(new ObjectMap<String, Object>() {
-                                                {
-                                                    put("id", "normal");
-                                                    put("offset", 0.0f);
-                                                    put("duration", -1.0f);
-                                                    put("loopcount", -1);
-                                                    put("speed", 1.5f);
-                                                    put("listener", null);
-                                                }
-                                            });
-                                        }
-                                    })
+				                    new Array<ObjectMap<String, Object>>() {
+					                    {
+						                    add(new ObjectMap<String, Object>() {
+							                    {
+								                    put("id", "normal");
+								                    put("offset", 0.0f);
+								                    put("duration", -1.0f);
+								                    put("loopcount", -1);
+								                    put("speed", 1.5f);
+								                    put("listener", null);
+							                    }
+						                    });
+					                    }
+				                    })
                     )
                     .add(new RenderComponent())
                     .add(new MobComponent())
@@ -130,22 +131,22 @@ public class Config {
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
                     .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(10, 0, 6)))
-                    .add(new RotationComponent(new Vector3(0, 0, 0)))
+                    .add(new RotationComponent(new Quaternion()))
                     .add(new AnimationComponent().animations(
-                                    new Array<ObjectMap<String, Object>>() {
-                                        {
-                                            add(new ObjectMap<String, Object>() {
-                                                {
-                                                    put("id", "normal");
-                                                    put("offset", 0.0f);
-                                                    put("duration", -1.0f);
-                                                    put("loopcount", -1);
-                                                    put("speed", 0.5f);
-                                                    put("listener", null);
-                                                }
-                                            });
-                                        }
-                                    })
+				                    new Array<ObjectMap<String, Object>>() {
+					                    {
+						                    add(new ObjectMap<String, Object>() {
+							                    {
+								                    put("id", "normal");
+								                    put("offset", 0.0f);
+								                    put("duration", -1.0f);
+								                    put("loopcount", -1);
+								                    put("speed", 0.5f);
+								                    put("listener", null);
+							                    }
+						                    });
+					                    }
+				                    })
                     )
                     .add(new RenderComponent())
                     .add(new MobComponent())
@@ -182,7 +183,7 @@ public class Config {
                 .add(new ColorComponent().color(new Color(1f, 0.3f, 0.3f, 1f)))
                 .add(new IntensityComponent().intensity(10))
                 .add(new LightTypeComponent().type(LightTypeComponent.POINT))
-//                .add(new ShadowCastingComponent())
+                .add(new ShadowCastingComponent())
 			);
 //			// lights 4
 //			add(new Entity()

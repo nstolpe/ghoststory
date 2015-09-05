@@ -13,8 +13,8 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.hh.ghoststory.lib.MessageTypes;
-import com.hh.ghoststory.render.shaders.SceneShader;
-import com.hh.ghoststory.render.shaders.SceneShaderProvider;
+import com.hh.ghoststory.render.shaders.PlayShader;
+import com.hh.ghoststory.render.shaders.PlayShaderProvider;
 import com.hh.ghoststory.render.shaders.ShadowMapShaderProvider;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.Caster;
@@ -40,10 +40,13 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	    init();
     }
 
+	/**
+	 * Initializes the renderer. Subscribes to the screen's messageidspatcher
+	 */
 	private void init() {
 		screen.messageDispatcher.addListener(this, MessageTypes.Screen.INIT_SHADOW_BUFFER);
 		initShadowBuffer();
-		modelBatch = new ModelBatch(new SceneShaderProvider());
+		modelBatch = new ModelBatch(new PlayShaderProvider());
 		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider(screen.casters));
 	}
 
@@ -77,7 +80,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
-		frameBufferShadows.getColorBufferTexture().bind(SceneShader.textureNum);
+		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
 
 		modelBatch.begin(camera);
 		modelBatch.render(instances, environment);
