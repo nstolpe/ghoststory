@@ -6,7 +6,6 @@ import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -18,8 +17,6 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.hh.ghoststory.entity.Mappers;
 import com.hh.ghoststory.lib.MessageTypes;
-import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
-import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 import com.hh.ghoststory.screen.PlayScreen;
 
 /**
@@ -125,6 +122,7 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
         if (button == Input.Buttons.LEFT) {
             frameworkDispatcher.dispatchMessage(this, MessageTypes.Framework.TAP, screenToWorld(x, y));
         }
+
         Vector3 intersection = screenToWorld(x, y);
         // this should move out.
         Vector3 position = Mappers.position.get(screen.pc).position;
@@ -151,6 +149,7 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
             newRotation.z = -newRotation.z;
             newRotation.w = -newRotation.w;
         }
+
 
         // Figure this out w/ quats, if possible.
         float rotationDuration = Math.abs(currentAngle - newAngle) / 200;

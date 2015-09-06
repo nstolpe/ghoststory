@@ -1,5 +1,7 @@
 package com.hh.ghoststory.screen;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -11,9 +13,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Plane;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
@@ -21,9 +21,14 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.entity.EntityTypes;
 import com.hh.ghoststory.entity.Mappers;
-import com.hh.ghoststory.entity.components.*;
+import com.hh.ghoststory.entity.components.AnimationComponent;
+import com.hh.ghoststory.entity.components.InstanceComponent;
+import com.hh.ghoststory.entity.components.PlayerComponent;
 import com.hh.ghoststory.entity.systems.BoundingBoxSystem;
 import com.hh.ghoststory.lib.MessageTypes;
+import com.hh.ghoststory.lib.tween.Timelines;
+import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
+import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
@@ -40,7 +45,9 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     protected Camera active;
     public AssetManager assetManager = new AssetManager();
     public Lighting lighting = new Lighting();
-	public enum CameraTypes { P, O }
+    private TweenManager tweenManager = new TweenManager();
+
+    public enum CameraTypes { P, O }
     public Array<ModelInstance> instances = new Array<ModelInstance>();
     public PlayDetector playDetector;
     public Entity scene;
@@ -63,6 +70,9 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TAP);
         loading = true;
 	    game.engine.addSystem(new BoundingBoxSystem());
+        Tween.setCombinedAttributesLimit(4);
+        Tween.registerAccessor(Vector3.class, new Vector3Accessor());
+        Tween.registerAccessor(Quaternion.class, new QuaternionAccessor());
     }
 
     protected void setEntities() {
@@ -154,8 +164,12 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
             for (Entity renderable : renderables) {
                 // something should have stopped earlier if instance wasn't set on the component.
                 if (Mappers.instance.get(renderable).instance != null) {
-                    Vector3 position = Mappers.position.get(renderable).position;
                     ModelInstance instance = Mappers.instance.get(renderable).instance;
+                    if (Mappers.rotation.has(renderable)) {
+                        instance.transform.rotate(Mappers.rotation.get(renderable).rotation);
+                    }
+
+                    Vector3 position = Mappers.position.get(renderable).position;
                     instance.transform.setTranslation(position);
 
                     // update entities with animation components. Maybe a 2nd loop instead of the check?
@@ -169,6 +183,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
             frameworkDispatcher.update(delta);
         }
 
+        tweenManager.update(delta);
         active.update();
         playDetector.update();
 
@@ -467,15 +482,13 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 
 				break;
 			case MessageTypes.Framework.TAP:
-                processTap((Vector3) msg.extraInfo);
+                System.out.println("tween");
+                // @TODO change that 3 to a character Entity Component value.
+                Timelines.faceAndGo(Mappers.rotation.get(pc).rotation, Mappers.position.get(pc).position, (Vector3) msg.extraInfo, 3).start(tweenManager);
 				break;
 			default:
 				break;
 		}
 		return false;
 	}
-
-    public void processTap(Vector3 xy) {
-
-    }
 }

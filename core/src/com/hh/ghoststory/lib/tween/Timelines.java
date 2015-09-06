@@ -95,20 +95,20 @@ public class Timelines {
 	 */
 	public static Timeline faceAndGo(Quaternion rotation, Vector3 translation, Vector3 translationTarget, final float rate) {
 		float angle = rotation.getYaw();
-//		float angle = rotation.getAxisAngle(new Vector3(0, 1, 0));
+		// float angle = rotation.getAxisAngle(new Vector3(0, 1, 0));
 		float angleTarget = MathUtils.atan2(translationTarget.x - translation.x, translationTarget.z - translation.z);
 		final float translationDuration = translationTarget.dst(translation) / rate;
 		final Quaternion rotationTarget = new Quaternion(new Vector3(0,1,0), angleTarget).nor();
 
-//		keep the angle between -180 and 180. Why doesn't the quat rotation take care of this?
+		// keep the angle between -180 and 180. Why doesn't the quat rotation take care of this?
 		if (Math.abs(angleTarget - angle) >  180) angleTarget += angleTarget < angle ? 360 : -360;
 
-//		invert he rotationTarget if the dot product between it and rotation is < 0
+		// invert he rotationTarget if the dot product between it and rotation is < 0
 		if (rotation.dot(rotationTarget) < 0) rotationTarget.mul(-1);
 
-//		Figure this out w/ quats, if possible.
+		// Figure this out w/ quats, if possible.
 		float rotationDuration = Math.abs(angle - angleTarget) / 200;
-//		float rotationDuration = Math.abs(rotation.dot(rotationTarget));
+		// float rotationDuration = Math.abs(rotation.dot(rotationTarget));
 
 		Tween rotate = Tweens.rotate(rotationDuration, TweenEquations.easeNone, rotation, rotationTarget);
 		Tween translate = Tweens.translate(translationDuration, TweenEquations.easeNone, translation, translationTarget);
