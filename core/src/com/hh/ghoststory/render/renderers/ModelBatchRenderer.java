@@ -67,7 +67,7 @@ public class ModelBatchRenderer extends AbstractRenderer {
 			System.err.println("Error with shader " + type + ": " + shaderProgram.getLog());
 			System.exit(1);
 		} else {
-			Gdx.app.log("init", "Shader " + type + " compiled " + shaderProgram.getLog());
+			Gdx.app.log("setEntities", "Shader " + type + " compiled " + shaderProgram.getLog());
 		}
 
 		return shaderProgram;

@@ -59,6 +59,7 @@ public class GhostStory extends Game {
 	@Override
 	public void render() {
 		super.render();
+		engine.update(Gdx.graphics.getDeltaTime());
 	}
 
 	@Override

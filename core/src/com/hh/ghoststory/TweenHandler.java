@@ -130,6 +130,10 @@ public class TweenHandler {
 				.ease(easing);
 	}
 
+	/**
+	 * Takes an array of sequential Tweens and pushes them onto a timeline, then starts the timeline.
+	 * @param tweens
+	 */
 	public void runSequence(Tween[] tweens) {
 		Timeline timeline = Timeline.createSequence();
 

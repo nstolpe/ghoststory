@@ -18,6 +18,7 @@ package com.hh.ghoststory.screen.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -84,20 +85,14 @@ public class PlayDetector extends GestureDetector {
 	private float startX, startY;
 	private final Vector3 tmpV1 = new Vector3();
 	private final Vector3 tmpV2 = new Vector3();
-	protected final PlayListener gestureListener;
 
-    private Material cachedMat;
-    private ModelInstance activeInstance;
-
-    public PlayDetector(final PlayListener GestureListener, PlayScreen screen) {
-		super(GestureListener);
-		this.gestureListener = GestureListener;
-		this.gestureListener.controller = this;
+    public PlayDetector(final PlayListener gestureListener, PlayScreen screen) {
+		super(gestureListener);
 		this.screen = screen;
 	}
 
-	public PlayDetector(PlayScreen screen) {
-		this(new PlayListener(screen), screen);
+	public PlayDetector(PlayScreen screen, MessageDispatcher frameworkDispatcher) {
+		this(new PlayListener(screen, frameworkDispatcher), screen);
 	}
 
 	public void update (){

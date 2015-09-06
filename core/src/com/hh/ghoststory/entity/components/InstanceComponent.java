@@ -8,6 +8,13 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
  */
 public class InstanceComponent implements Component {
     public ModelInstance instance;
+
+    public InstanceComponent() {}
+
+    public InstanceComponent(ModelInstance instance) {
+        instance(instance);
+    }
+
     public InstanceComponent instance(ModelInstance instance) {
         this.instance = instance;
         return this;

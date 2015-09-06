@@ -2,6 +2,9 @@ package com.hh.ghoststory.screen.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +17,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.hh.ghoststory.entity.Mappers;
+import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 import com.hh.ghoststory.screen.PlayScreen;
@@ -21,16 +25,18 @@ import com.hh.ghoststory.screen.PlayScreen;
 /**
  * Created by nils on 8/29/15.
  */
-public class PlayListener extends GestureDetector.GestureAdapter {
+public class PlayListener extends GestureDetector.GestureAdapter implements Telegraph {
 	private final PlayScreen screen;
-	public PlayDetector controller;
+	private final MessageDispatcher frameworkDispatcher;
+	public PlayDetector detector;
 	private float previousZoom;
 	// @TODO move cachedMat and activeDistance to the Screen.
 	private Material cachedMat;
 	private ModelInstance activeInstance;
 
-	public PlayListener(PlayScreen screen) {
+	public PlayListener(PlayScreen screen, MessageDispatcher frameworkDispatcher) {
 		this.screen = screen;
+		this.frameworkDispatcher = frameworkDispatcher;
 	}
 
 	/**
@@ -62,11 +68,17 @@ public class PlayListener extends GestureDetector.GestureAdapter {
 			for (int i = 0; i < screen.instances.size; ++i) {
 				final ModelInstance instance = screen.instances.get(i);
 				instance.transform.getTranslation(position);
+				/**
+				 * Bounding box should be stored on Entity
+				 */
 				BoundingBox box = instance.calculateBoundingBox(new BoundingBox());
 				position.add(box.getCenter(new Vector3()));
 				box.getCenter(center);
 				box.getDimensions(dimensions);
 				radius = dimensions.len() / 2f;
+				/**
+				 * not recalculated every touch.
+				 */
 				Texture tex = new Texture(Gdx.files.internal("models/ghost_texture_blue.png"), true);
 //                Pixmap pm = screen.assetManager.get("models/ghost_texture_blue.png", Pixmap.class);
 //				Texture tex = new Texture(pm, true);
@@ -78,20 +90,23 @@ public class PlayListener extends GestureDetector.GestureAdapter {
 				if (Intersector.intersectRaySphere(ray, position, radius, null)) {
 					cachedMat = instance.materials.get(0).copy();
 					activeInstance = instance;
-	//				instance.materials.get(0).set(ColorAttribute.createDiffuse(Color.LIGHT_GRAY), ColorAttribute.createAmbient(Color.LIGHT_GRAY));
 					instance.materials.get(0).set(new TextureAttribute(TextureAttribute.Diffuse, tex), new ColorAttribute(ColorAttribute.Specular, Color.GOLD));
 
 					distance = dist2;
 				}
 			}
 		}
-
+		// @TODO something for touch would also be nice.
+		if (button == Input.Buttons.LEFT) {
+			frameworkDispatcher.dispatchMessage(this, MessageTypes.Framework.TOUCH_DOWN, new Vector2(x, y));
+		}
 		previousZoom = 0;
 		return false;
 	}
 
 	/**
 	 * @TODO make this only process the input. Then send the relevant data off as a message.
+	 *       Code for running the tweens is in GameScreen and TweenHandler.
 	 * @param x
 	 * @param y
 	 * @param count
@@ -158,7 +173,7 @@ public class PlayListener extends GestureDetector.GestureAdapter {
 
 	/**
 	 * Eventually passes zoom to the PlayDetector.zoom function.
-	 * @TODO Evaluate. This hasn't triggered due to no touch. Eventually uses the controller, so final can go to screen.
+	 * @TODO Evaluate. This hasn't triggered due to no touch. Eventually uses the detector, so final can go to screen.
 	 * @param initialDistance
 	 * @param distance
 	 * @return
@@ -169,11 +184,16 @@ public class PlayListener extends GestureDetector.GestureAdapter {
 		float amount = newZoom - previousZoom;
 		previousZoom = newZoom;
 		float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
-		return controller.pinchZoom(amount / ((w > h) ? h : w));
+		return detector.pinchZoom(amount / ((w > h) ? h : w));
 	}
 
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+		return false;
+	}
+
+	@Override
+	public boolean handleMessage(Telegram msg) {
 		return false;
 	}
 };

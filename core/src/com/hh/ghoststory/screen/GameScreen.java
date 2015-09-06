@@ -298,7 +298,7 @@ public class GameScreen extends AbstractScreen {
 	// 1 use in InputHandler
 	public void tweenFaceAndMoveTo(Quaternion currentRotation, Quaternion targetRotation, Vector3 currentPosition, Vector3 targetPosition, float rd, float td) {
 		tweenHandler.runSequence(new Tween[] {
-				tweenHandler.buildTween(currentRotation, new float[]{targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w }, QuaternionAccessor.ROTATION, rd, TweenEquations.easeNone),
+				tweenHandler.buildTween(currentRotation, new float[] {targetRotation.x, targetRotation.y, targetRotation.z, targetRotation.w }, QuaternionAccessor.ROTATION, rd, TweenEquations.easeNone),
 				tweenHandler.buildTween(currentPosition, new float[] { targetPosition.x, targetPosition.y, targetPosition.z }, Vector3Accessor.POSITION_XYZ, td, TweenEquations.easeNone)
 		});
 	}

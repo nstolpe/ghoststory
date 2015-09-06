@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -17,6 +19,8 @@ import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.entity.EntityTypes;
 import com.hh.ghoststory.entity.Mappers;
 import com.hh.ghoststory.entity.components.*;
+import com.hh.ghoststory.entity.systems.BoundingBoxSystem;
+import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
@@ -26,14 +30,14 @@ import com.hh.ghoststory.screen.input.PlayDetector;
  * Created by nils on 7/14/15.
  * Screen for interaction with the game world. Not inventory, not save menus, not stats, just the gameworld.
  */
-public class PlayScreen extends AbstractScreen {
+public class PlayScreen extends AbstractScreen implements Telegraph {
     protected ShadowRenderer renderer = new ShadowRenderer(this);
     protected PerspectiveCamera perspective;
     protected OrthographicCamera orthographic;
     protected Camera active;
     public AssetManager assetManager = new AssetManager();
     public Lighting lighting = new Lighting();
-    public enum CameraTypes { P, O }
+	public enum CameraTypes { P, O }
     public Array<ModelInstance> instances = new Array<ModelInstance>();
     public PlayDetector playDetector;
     public Entity scene;
@@ -47,15 +51,17 @@ public class PlayScreen extends AbstractScreen {
      * Creates the Screen with a default camera.
      * @param game
      */
-    public PlayScreen(GhostStory game) {
+    public PlayScreen(final GhostStory game) {
         super(game);
         activateCamera(defaultPerspective());
         setInput();
-        init();
+        setEntities();
+	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TOUCH_DOWN);
         loading = true;
+	    game.engine.addSystem(new BoundingBoxSystem());
     }
 
-    protected void init() {
+    protected void setEntities() {
         // get the scene. just model right now.
         scene = game.engine.getEntitiesFor(EntityTypes.SCENE).get(0);
         // add ambient if it's there.
@@ -99,7 +105,7 @@ public class PlayScreen extends AbstractScreen {
      * Override this in derived classes, unless you want only mouse camera control.
      */
     public void setInput() {
-        playDetector = new PlayDetector(this);
+        playDetector = new PlayDetector(this, frameworkDispatcher);
         Gdx.input.setInputProcessor(playDetector);
     }
 
@@ -156,7 +162,7 @@ public class PlayScreen extends AbstractScreen {
                 }
             }
 
-            messageDispatcher.update(delta);
+            frameworkDispatcher.update(delta);
         }
 
         active.update();
@@ -178,8 +184,8 @@ public class PlayScreen extends AbstractScreen {
         // retrieve ModelInstances from the assetManager and assign them to the renderable Entity.
         for (Entity renderable : renderables) {
             ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(renderable).file, Model.class));
-            Mappers.instance.get(renderable).instance(instance);
-
+//            Mappers.instance.get(renderable).instance(instance);
+			game.engine.getEntity(renderable.getId()).add(new InstanceComponent(instance));
             // if the renderable Entity has a default/standing animation, set that up.
             // @TODO refactor normal/default animation selection. Check if a normal should even be played.
             if (Mappers.animation.has(renderable)) {
@@ -450,4 +456,14 @@ public class PlayScreen extends AbstractScreen {
         assetManager.dispose();
         renderer.dispose();
     }
+	@Override
+	public boolean handleMessage(Telegram msg) {
+		switch (msg.message) {
+			case MessageTypes.Framework.TOUCH_DOWN:
+				break;
+			default:
+				break;
+		}
+		return false;
+	}
 }

@@ -22,4 +22,5 @@ public class Mappers {
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
     public static final ComponentMapper<RotationComponent> rotation = ComponentMapper.getFor(RotationComponent.class);
     public static final ComponentMapper<ShadowCastingComponent> shadowCasting = ComponentMapper.getFor(ShadowCastingComponent.class);
+    public static final ComponentMapper<BoundingBoxComponent> boundingBox = ComponentMapper.getFor(BoundingBoxComponent.class);
 }

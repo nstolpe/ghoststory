@@ -28,15 +28,15 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	public FrameBuffer frameBufferShadows;
 	public ModelBatch modelBatch;
 	public ModelBatch modelBatchShadows;
-	private MessageDispatcher messageDispatcher;
+	private MessageDispatcher frameworkDispatcher;
 
     public ShadowRenderer(PlayScreen screen) {
-	    this(screen, screen.messageDispatcher);
+	    this(screen, screen.frameworkDispatcher);
     }
 
-    public ShadowRenderer(PlayScreen screen, MessageDispatcher messageDispatcher) {
+    public ShadowRenderer(PlayScreen screen, MessageDispatcher frameworkDispatcher) {
         this.screen = screen;
-	    this.messageDispatcher = messageDispatcher;
+	    this.frameworkDispatcher = frameworkDispatcher;
 	    init();
     }
 
@@ -44,10 +44,10 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	 * Initializes the renderer. Subscribes to the screen's messageidspatcher
 	 */
 	private void init() {
-		screen.messageDispatcher.addListener(this, MessageTypes.Screen.INIT_SHADOW_BUFFER);
-		initShadowBuffer();
+		frameworkDispatcher.addListener(this, MessageTypes.Framework.INIT_SHADOW_BUFFER);
 		modelBatch = new ModelBatch(new PlayShaderProvider());
 		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider(screen.casters));
+		initShadowBuffer();
 	}
 
     public void render(Camera camera, Array<ModelInstance> instances, Array<Caster> shadowCasters, Lighting environment) {
@@ -61,9 +61,9 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	    renderShadows(camera, instances);
 	    renderScene(camera, instances, environment);
     }
-	public void renderDepth(Array<Caster> shadowCasters, Array<ModelInstance> instances) {
-		for (int i = 0; i < shadowCasters.size; i++)
-			shadowCasters.get(i).render(instances);
+	public void renderDepth(Array<Caster> caster, Array<ModelInstance> instances) {
+		for (int i = 0; i < caster.size; i++)
+			caster.get(i).render(instances);
 	}
 
 	public void renderShadows(Camera camera, Array<ModelInstance> instances) {
@@ -97,9 +97,16 @@ public class ShadowRenderer implements Telegraph, Disposable {
     }
 
 	@Override
+	public void dispose() {
+		modelBatch.dispose();
+		modelBatchShadows.dispose();
+		frameBufferShadows.dispose();
+	}
+
+	@Override
 	public boolean handleMessage(Telegram msg) {
 		switch (msg.message) {
-			case MessageTypes.Screen.INIT_SHADOW_BUFFER:
+			case MessageTypes.Framework.INIT_SHADOW_BUFFER:
 				initShadowBuffer();
 				break;
 			default:
@@ -109,10 +116,4 @@ public class ShadowRenderer implements Telegraph, Disposable {
 		return true;
 	}
 
-	@Override
-	public void dispose() {
-		modelBatch.dispose();
-		modelBatchShadows.dispose();
-		frameBufferShadows.dispose();
-	}
 }

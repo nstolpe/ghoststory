@@ -28,7 +28,7 @@ public abstract class AbstractScreen implements Screen {
 	public float clearAlpha = 1f;
     protected boolean loading;
 	public Array<Caster> casters = new Array<Caster>();
-	public MessageDispatcher messageDispatcher = new MessageDispatcher();
+	public MessageDispatcher frameworkDispatcher = new MessageDispatcher();
 
 	protected BitmapFont font = new BitmapFont(
 			Gdx.files.internal("fonts/crimson.fnt"),
