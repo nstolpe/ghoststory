@@ -96,7 +96,7 @@ public class Timelines {
 	public static Timeline faceAndGo(Quaternion rotation, Vector3 translation, Vector3 translationTarget, final float rate) {
 		float angle = rotation.getYaw();
 		// float angle = rotation.getAxisAngle(new Vector3(0, 1, 0));
-		float angleTarget = MathUtils.atan2(translationTarget.x - translation.x, translationTarget.z - translation.z);
+		float angleTarget = MathUtils.atan2(translationTarget.x - translation.x, translationTarget.z - translation.z) * 180 / MathUtils.PI;
 		final float translationDuration = translationTarget.dst(translation) / rate;
 		final Quaternion rotationTarget = new Quaternion(new Vector3(0,1,0), angleTarget).nor();
 
@@ -113,6 +113,6 @@ public class Timelines {
 		Tween rotate = Tweens.rotate(rotationDuration, TweenEquations.easeNone, rotation, rotationTarget);
 		Tween translate = Tweens.translate(translationDuration, TweenEquations.easeNone, translation, translationTarget);
 
-		return Timeline.createSequence().push(rotate);//.push(translate);
+		return Timeline.createSequence().push(rotate).push(translate);
 	}
 }

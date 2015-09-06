@@ -474,8 +474,9 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 			case MessageTypes.Framework.TAP:
                 Quaternion rotation = Mappers.rotation.get(pc).rotation;
                 Vector3 position = Mappers.position.get(pc).position;
-                tweenManager.killTarget(rotation, QuaternionAccessor.ROTATION);
                 tweenManager.killTarget(position, Vector3Accessor.POSITION_XYZ);
+                tweenManager.killTarget(rotation, QuaternionAccessor.ROTATION);
+
                 // @TODO change that 3 to a character Entity Component value.
                 Timelines.faceAndGo(rotation, position, (Vector3) msg.extraInfo, 3).start(tweenManager);
 				break;

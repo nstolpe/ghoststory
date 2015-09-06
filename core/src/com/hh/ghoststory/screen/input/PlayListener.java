@@ -101,9 +101,9 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 			}
 		}
 		// @TODO something for touch would also be nice.
-		if (button == Input.Buttons.LEFT) {
-			frameworkDispatcher.dispatchMessage(this, MessageTypes.Framework.TOUCH_DOWN, new Vector2(x, y));
-		}
+//		if (button == Input.Buttons.LEFT) {
+//			frameworkDispatcher.dispatchMessage(this, MessageTypes.Framework.TOUCH_DOWN, new Vector2(x, y));
+//		}
 		previousZoom = 0;
 		return false;
 	}
@@ -126,7 +126,8 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 	}
 
     /**
-     * Gets 3d world coordinates from 2d screen inputs.
+     * Gets 3d world coordinates from 2d screen inputs. Uses tmp1Vec3 to store the
+     * intersection.
      * @param x
      * @param y
      * @return

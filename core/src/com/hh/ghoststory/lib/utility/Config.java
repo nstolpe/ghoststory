@@ -33,7 +33,6 @@ public class Config {
             .add(new NameComponent("Development Scene"))
             .add(new PositionComponent(new Vector3(0, 0, 0)))
             .add(new GeometryComponent().file("scene.g3dj"))
-//		    .add(new InstanceComponent())
             .add(new RenderComponent())
             .add(new AmbientComponent().colorAttribute(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f)));
 	// fake values that should have been pulled in through config
@@ -48,7 +47,6 @@ public class Config {
                 .add(new NameComponent("Mr Player"))
                 .add(new NameComponent("Mr Player"))
                 .add(new GeometryComponent().file("ghost_orange.g3dj"))
-//                .add(new InstanceComponent())
                 .add(new PositionComponent(new Vector3(-5, 0, -5)))
                 .add(new RotationComponent(new Quaternion()))
                 .add(new AnimationComponent(
@@ -75,7 +73,6 @@ public class Config {
                     .add(new IDComponent("red_ghost"))
                     .add(new NameComponent("Red Ghost One"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
-//                    .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(5, 0, 5)))
                     .add(new RotationComponent(new Quaternion()))
                     .add(new AnimationComponent(
@@ -102,7 +99,6 @@ public class Config {
                     .add(new IDComponent("red_ghost"))
                     .add(new NameComponent("Red Ghost Two"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
-//                    .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(0, 0, 0)))
                     .add(new RotationComponent(new Quaternion()))
                     .add(new AnimationComponent(
@@ -129,7 +125,6 @@ public class Config {
                     .add(new IDComponent("red_ghost"))
                     .add(new NameComponent("Red Ghost Three"))
                     .add(new GeometryComponent().file("ghost_red.g3dj"))
-//                    .add(new InstanceComponent())
                     .add(new PositionComponent(new Vector3(10, 0, 6)))
                     .add(new RotationComponent(new Quaternion()))
                     .add(new AnimationComponent(
