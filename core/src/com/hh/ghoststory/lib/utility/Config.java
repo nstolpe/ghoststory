@@ -183,7 +183,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 0.3f, 0.3f, 1f)))
                 .add(new IntensityComponent(10))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
-                .add(new ShadowCastingComponent())
+//                .add(new ShadowCastingComponent())
 			);
 			// lights 4
 			add(new Entity()
@@ -193,7 +193,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 0f, 0f, 1f)))
                 .add(new IntensityComponent(10))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
-                .add(new ShadowCastingComponent())
+//                .add(new ShadowCastingComponent())
 			);
 			// lights 5
 			add(new Entity()
@@ -203,7 +203,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(10))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
-                .add(new ShadowCastingComponent())
+//                .add(new ShadowCastingComponent())
 			);
 		}
 	};

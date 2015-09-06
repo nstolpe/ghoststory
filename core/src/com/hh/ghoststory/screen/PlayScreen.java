@@ -11,6 +11,9 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Plane;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
@@ -57,6 +60,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         setInput();
         setEntities();
 	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TOUCH_DOWN);
+	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TAP);
         loading = true;
 	    game.engine.addSystem(new BoundingBoxSystem());
     }
@@ -460,10 +464,18 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 	public boolean handleMessage(Telegram msg) {
 		switch (msg.message) {
 			case MessageTypes.Framework.TOUCH_DOWN:
+
+				break;
+			case MessageTypes.Framework.TAP:
+                processTap((Vector3) msg.extraInfo);
 				break;
 			default:
 				break;
 		}
 		return false;
 	}
+
+    public void processTap(Vector3 xy) {
+
+    }
 }

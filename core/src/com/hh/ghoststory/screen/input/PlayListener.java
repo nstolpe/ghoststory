@@ -30,11 +30,18 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 	private final MessageDispatcher frameworkDispatcher;
 	public PlayDetector detector;
 	private float previousZoom;
+
 	// @TODO move cachedMat and activeDistance to the Screen.
 	private Material cachedMat;
 	private ModelInstance activeInstance;
 
-	public PlayListener(PlayScreen screen, MessageDispatcher frameworkDispatcher) {
+    // for use in methods instead of creating new ones all the time.
+    private Ray ray;
+    private Vector3 tmp1Vec3 = new Vector3();
+    private Vector3 tmp2Vec3 = new Vector3();
+    private Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
+
+    public PlayListener(PlayScreen screen, MessageDispatcher frameworkDispatcher) {
 		this.screen = screen;
 		this.frameworkDispatcher = frameworkDispatcher;
 	}
@@ -115,10 +122,11 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 	 */
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
-        Ray pickRay = screen.getPickRay(x, y);
-        Vector3 intersection = new Vector3();
-        Plane xzPlane = new Plane(new Vector3(0, 1, 0), 0);
-        Intersector.intersectRayPlane(pickRay, xzPlane, intersection);
+        if (button == Input.Buttons.LEFT) {
+            frameworkDispatcher.dispatchMessage(this, MessageTypes.Framework.TAP, screenToWorld(x, y));
+        }
+        Vector3 intersection = screenToWorld(x, y);
+        // this should move out.
         Vector3 position = Mappers.position.get(screen.pc).position;
         Quaternion rotation = Mappers.rotation.get(screen.pc).rotation;
 
@@ -155,6 +163,18 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 
 		return false;
 	}
+
+    /**
+     * Gets 3d world coordinates from 2d screen inputs.
+     * @param x
+     * @param y
+     * @return
+     */
+    private Vector3 screenToWorld(float x, float y) {
+        ray = screen.active().getPickRay(x, y);
+        Intersector.intersectRayPlane(ray, xzPlane, tmp1Vec3);
+        return tmp1Vec3;
+    }
 
 	@Override
 	public boolean longPress(float x, float y) {

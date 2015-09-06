@@ -15,6 +15,7 @@ public class MessageTypes {
 		// ShadowRenderer
 		public final static int INIT_SHADOW_BUFFER    = 0;
 		public final static int TOUCH_DOWN = 1;
+		public final static int TAP = 2;
 		// CameraController. Was removed. Its stuff went to PlayScreen.
 		public final static int REQUEST_ACTIVE_CAMERA = 1;
 		public final static int SEND_ACTIVE_CAMERA    = 2;
