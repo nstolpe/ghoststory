@@ -153,36 +153,26 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 //        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         instances.clear();
 
-        // asset loading has just finished, loading hasn't been updated
         if (loading && assetManager.update()) {
             doneLoading();
-            // asset loading is finished and post load hooks have completed
-            // maybe move to an update function
         } else if (!loading){
             ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(EntityTypes.RENDERABLE_INSTANCE);
-            // This could go in an entity system.
             for (Entity renderable : renderables) {
-                // something should have stopped earlier if instance wasn't set on the component.
-                if (Mappers.instance.get(renderable).instance != null) {
-                    ModelInstance instance = Mappers.instance.get(renderable).instance;
-                    if (Mappers.rotation.has(renderable)) {
-                        instance.transform.rotate(Mappers.rotation.get(renderable).rotation);
-                    }
+                ModelInstance instance = Mappers.instance.get(renderable).instance;
 
-                    Vector3 position = Mappers.position.get(renderable).position;
-                    instance.transform.setTranslation(position);
+                if (Mappers.rotation.has(renderable))
+                    instance.transform.set(Mappers.rotation.get(renderable).rotation);
 
-                    // update entities with animation components. Maybe a 2nd loop instead of the check?
-                    if (Mappers.animation.has(renderable))
-                        Mappers.animation.get(renderable).controller.update(delta);
+                instance.transform.setTranslation(Mappers.position.get(renderable).position);
 
-                    instances.add(instance);
-                }
+                if (Mappers.animation.has(renderable))
+                    Mappers.animation.get(renderable).controller.update(delta);
+
+                instances.add(instance);
             }
-
-            frameworkDispatcher.update(delta);
         }
 
+        frameworkDispatcher.update(delta);
         tweenManager.update(delta);
         active.update();
         playDetector.update();
@@ -482,9 +472,12 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 
 				break;
 			case MessageTypes.Framework.TAP:
-                System.out.println("tween");
+                Quaternion rotation = Mappers.rotation.get(pc).rotation;
+                Vector3 position = Mappers.position.get(pc).position;
+                tweenManager.killTarget(rotation, QuaternionAccessor.ROTATION);
+                tweenManager.killTarget(position, Vector3Accessor.POSITION_XYZ);
                 // @TODO change that 3 to a character Entity Component value.
-                Timelines.faceAndGo(Mappers.rotation.get(pc).rotation, Mappers.position.get(pc).position, (Vector3) msg.extraInfo, 3).start(tweenManager);
+                Timelines.faceAndGo(rotation, position, (Vector3) msg.extraInfo, 3).start(tweenManager);
 				break;
 			default:
 				break;

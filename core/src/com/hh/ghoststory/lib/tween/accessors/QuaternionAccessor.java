@@ -25,6 +25,7 @@ public class QuaternionAccessor implements TweenAccessor<Quaternion> {
 
 	@Override
 	public void setValues(Quaternion quat, int tweenType, float[] newValues) {
+        System.out.println(newValues[0] + " " + newValues[1] + " " + newValues[2] + " " + newValues[3]);
 		switch (tweenType) {
 			case ROTATION:
 				quat.set(newValues[0], newValues[1], newValues[2], newValues[3]).nor();

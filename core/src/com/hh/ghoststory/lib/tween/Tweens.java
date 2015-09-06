@@ -14,7 +14,7 @@ public class Tweens {
 	/**
 	 * Rotates a Quaternion.
 	 * @param duration  Duration Tween should last.
-	 * @param easing    Easting equation for the Tween.
+	 * @param easing    Easing equation for the Tween.
 	 * @param current   Quaternion holding rotation at start of Tween.
 	 * @param target    Quaternion holding rotation at end of Tween.
 	 * @return
@@ -33,7 +33,7 @@ public class Tweens {
 	/**
 	 * Translates a Vector3
 	 * @param duration  Duration Tween should last.
-	 * @param easing    Easting equation for the Tween.
+	 * @param easing    Easing equation for the Tween.
 	 * @param current   Vector3 holding rotation at start of Tween.
 	 * @param target    Vector3 holding rotation at end of Tween.
 	 * @return

@@ -122,44 +122,6 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
         if (button == Input.Buttons.LEFT) {
             frameworkDispatcher.dispatchMessage(this, MessageTypes.Framework.TAP, screenToWorld(x, y));
         }
-
-        Vector3 intersection = screenToWorld(x, y);
-        // this should move out.
-        Vector3 position = Mappers.position.get(screen.pc).position;
-        Quaternion rotation = Mappers.rotation.get(screen.pc).rotation;
-
-        float translationDuration = intersection.dst(position) / 3;
-//        float translationDuration = intersection.dst(position) / screen.character.speed;
-
-        float newAngle = MathUtils.atan2(intersection.x - position.x, intersection.z - position.z) * 180 / MathUtils.PI;
-
-        float currentAngle = rotation.getYaw();
-//				float currentAngle = rotation.getAxisAngle(new Vector3(0,1,0));
-
-        // keep the angle between -180 and 180. Why doesn't the quat rotation take care of this?
-        if (Math.abs(newAngle - currentAngle) >  180)
-            newAngle += newAngle < currentAngle ? 360 : -360;
-
-        Quaternion newRotation = new Quaternion(new Vector3(0,1,0), newAngle).nor();
-
-        // invert he newRotation if the dot product between it and rotation is < 0
-        if (rotation.dot(newRotation) < 0) {
-            newRotation.x = -newRotation.x;
-            newRotation.y = -newRotation.y;
-            newRotation.z = -newRotation.z;
-            newRotation.w = -newRotation.w;
-        }
-
-
-        // Figure this out w/ quats, if possible.
-        float rotationDuration = Math.abs(currentAngle - newAngle) / 200;
-//				float rotationDuration = Math.abs(rotation.dot(newRotation));
-
-//        screen.killTween(screen.character.position, Vector3Accessor.POSITION_XYZ);
-//        screen.killTween(screen.character.rotation, QuaternionAccessor.ROTATION);
-//
-//        screen.tweenFaceAndMoveTo(screen.character.rotation, newRotation, screen.character.position, new Vector3(intersection.x, intersection.y, intersection.z), rotationDuration, translationDuration);
-
 		return false;
 	}
 

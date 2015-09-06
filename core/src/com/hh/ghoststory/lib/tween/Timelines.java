@@ -113,9 +113,6 @@ public class Timelines {
 		Tween rotate = Tweens.rotate(rotationDuration, TweenEquations.easeNone, rotation, rotationTarget);
 		Tween translate = Tweens.translate(translationDuration, TweenEquations.easeNone, translation, translationTarget);
 
-//		These can't be here anymore and should be moved to whatever is requesting the Timeline.
-//		screen.killTween(screen.character.position, Vector3Accessor.POSITION_XYZ);
-//		screen.killTween(screen.character.rotation, QuaternionAccessor.ROTATION);
-		return Timeline.createSequence().push(rotate).push(translate);
+		return Timeline.createSequence().push(rotate);//.push(translate);
 	}
 }
