@@ -17,7 +17,7 @@ public class Vector3Accessor implements TweenAccessor<Vector3> {
 
 	@Override
 	public int getValues(Vector3 vec, int tweenType, float[] returnValues) {
-		System.out.println("GET: " + returnValues[0] + " " + returnValues[1] + " " + returnValues[2]);
+//		System.out.println("GET: " + returnValues[0] + " " + returnValues[1] + " " + returnValues[2]);
 		switch (tweenType) {
 			case POSITION_X:
 				returnValues[0] = vec.x;
@@ -53,7 +53,7 @@ public class Vector3Accessor implements TweenAccessor<Vector3> {
 
 	@Override
 	public void setValues(Vector3 vec, int tweenType, float[] newValues) {
-		System.out.println("SET: " + newValues[0] + " " + newValues[1] + " " + newValues[2]);
+//		System.out.println("SET: " + newValues[0] + " " + newValues[1] + " " + newValues[2]);
 		switch (tweenType) {
 			case POSITION_X:
 				vec.x = newValues[0];

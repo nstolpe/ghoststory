@@ -88,6 +88,7 @@ public class PlayDetector extends GestureDetector {
 
     public PlayDetector(final PlayListener gestureListener, PlayScreen screen) {
 		super(gestureListener);
+        gestureListener.detector = this;
 		this.screen = screen;
 	}
 

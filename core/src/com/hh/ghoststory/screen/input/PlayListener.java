@@ -56,6 +56,12 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 	 */
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
+		// @TODO Make this much, much better. Made mobile die w/
+        // Long monitor contention event
+        // Also was causing the weird stutter when
+        // clicking/touching to move the pc
+        // when it was already moving.
+//        if (button == 43) {
 		if (button == Input.Buttons.LEFT) {
 			Ray ray = screen.active().getPickRay(x, y);
 			Vector3 position = new Vector3();

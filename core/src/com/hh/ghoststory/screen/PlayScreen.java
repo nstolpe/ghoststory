@@ -179,7 +179,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         playDetector.update();
 
         renderer.render(active, instances, casters, lighting);
-//        logger.log();
+        logger.log();
     }
 
     /**
