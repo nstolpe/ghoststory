@@ -119,9 +119,9 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 	 */
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
-        if (button == Input.Buttons.LEFT) {
+        if (button == Input.Buttons.LEFT)
+	        System.out.println("TOUChed by something");
             frameworkDispatcher.dispatchMessage(this, MessageTypes.Framework.TAP, screenToWorld(x, y));
-        }
 		return false;
 	}
 

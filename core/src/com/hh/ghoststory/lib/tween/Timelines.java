@@ -86,18 +86,18 @@ public class Timelines {
 	 * towards it.
 	 *
 	 * @param rotation        Current rotation of the Actor being tweened.
-	 * @param translation      Current translation of the Actor being tweened.
-	 * @param translationTarget  Target translation of the Actor being tweened.
-	 * @param rate  The rate that controls the duration of the Tween.
+	 * @param position        Current translation of the Actor being tweened.
+	 * @param positionTarget  Target translation of the Actor being tweened.
+	 * @param rate            The rate that controls the duration of the Tween.
 	 *
 	 * @return A configured Timeline.
 	 * @TODO test some of the options and then clean up the comments.
 	 */
-	public static Timeline faceAndGo(Quaternion rotation, Vector3 translation, Vector3 translationTarget, final float rate) {
+	public static Timeline faceAndGo(Quaternion rotation, Vector3 position, Vector3 positionTarget, final float rate) {
 		float angle = rotation.getYaw();
 		// float angle = rotation.getAxisAngle(new Vector3(0, 1, 0));
-		float angleTarget = MathUtils.atan2(translationTarget.x - translation.x, translationTarget.z - translation.z) * 180 / MathUtils.PI;
-		final float translationDuration = translationTarget.dst(translation) / rate;
+		float angleTarget = MathUtils.atan2(positionTarget.x - position.x, positionTarget.z - position.z) * 180 / MathUtils.PI;
+		final float translationDuration = positionTarget.dst(position) / rate;
 		final Quaternion rotationTarget = new Quaternion(new Vector3(0,1,0), angleTarget).nor();
 
 		// keep the angle between -180 and 180. Why doesn't the quat rotation take care of this?
@@ -111,7 +111,7 @@ public class Timelines {
 		// float rotationDuration = Math.abs(rotation.dot(rotationTarget));
 
 		Tween rotate = Tweens.rotate(rotationDuration, TweenEquations.easeNone, rotation, rotationTarget);
-		Tween translate = Tweens.translate(translationDuration, TweenEquations.easeNone, translation, translationTarget);
+		Tween translate = Tweens.translate(translationDuration, TweenEquations.easeNone, position, positionTarget);
 
 		return Timeline.createSequence().push(rotate).push(translate);
 	}

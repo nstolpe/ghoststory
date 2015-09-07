@@ -1,5 +1,6 @@
 package com.hh.ghoststory.screen;
 
+import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
@@ -178,7 +179,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         playDetector.update();
 
         renderer.render(active, instances, casters, lighting);
-        logger.log();
+//        logger.log();
     }
 
     /**
@@ -474,6 +475,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 			case MessageTypes.Framework.TAP:
                 Quaternion rotation = Mappers.rotation.get(pc).rotation;
                 Vector3 position = Mappers.position.get(pc).position;
+
                 tweenManager.killTarget(position, Vector3Accessor.POSITION_XYZ);
                 tweenManager.killTarget(rotation, QuaternionAccessor.ROTATION);
 
