@@ -372,9 +372,9 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
      */
     private PerspectiveCamera defaultPerspective() {
         PerspectiveCamera camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(10, 10, 10);
+        camera.position.set(0, 40, 0);
 //		camera.direction.set(-1, -1, -1);
-        camera.lookAt(10,0,10);
+        camera.lookAt(0, 0, 0);
         camera.near = 1;
         return camera;
     }
