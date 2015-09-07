@@ -18,18 +18,13 @@ import com.hh.ghoststory.entity.components.InstanceComponent;
  * Controlled by the asset/doneloading chain.
  */
 public class BoundingBoxSystem extends EntitySystem {
-	private Engine engine;
-	@Override
-	public void addedToEngine(Engine engine) {
-		this.engine = engine;
-	}
 	@Override
 	public void update(float deltaTime) {
-		ImmutableArray<Entity> entities = engine.getEntitiesFor(Family.all(InstanceComponent.class).exclude(BoundingBoxComponent.class).get());
+		ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(InstanceComponent.class).exclude(BoundingBoxComponent.class).get());
 		for (Entity entity : entities) {
 			ModelInstance instance = Mappers.instance.get(entity).instance;
 			BoundingBox box = instance.calculateBoundingBox(new BoundingBox());
-			engine.getEntity(entity.getId()).add(new BoundingBoxComponent(box));
+			getEngine().getEntity(entity.getId()).add(new BoundingBoxComponent(box));
 		}
 	}
 }

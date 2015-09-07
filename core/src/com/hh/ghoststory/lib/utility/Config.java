@@ -154,11 +154,13 @@ public class Config {
 			add(new Entity()
                 .add(new IDComponent("light"))
                 .add(new NameComponent("Light One"))
-                .add(new PositionComponent(new Vector3(0, 5, 0)))
+                .add(new PositionComponent(new Vector3(0, 5, -20)))
                 .add(new ColorComponent(new Color(1f, 0f, 0f, 1f)))
                 .add(new IntensityComponent(20))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
+                .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
+                .add(new BehaviorComponent())
 			);
 			// lights 2
 			add(new Entity()
@@ -168,6 +170,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(10))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
+                .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
 			);
 			// lights 3
@@ -178,6 +181,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(10))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
+                .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
 			);
 			// lights 4
@@ -188,6 +192,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(10))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
+                .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
 			);
 			// lights 5
@@ -198,6 +203,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(10))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
+                .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
 			);
 		}

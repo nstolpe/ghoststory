@@ -11,5 +11,5 @@ public class EntityTypes {
     public static final Family RENDERABLE = Family.all(GeometryComponent.class, RenderComponent.class, PositionComponent.class).get();
     public static final Family SCENE = Family.all(SceneComponent.class).get();
     public static final Family MOB = Family.all(GeometryComponent.class, PositionComponent.class, MobComponent.class).get();
-    public static final Family LIGHT = Family.all(LightTypeComponent.class, PositionComponent.class).get();
+    public static final Family LIGHT = Family.all(LightingComponent.class, PositionComponent.class).get();
 }

@@ -26,6 +26,8 @@ import java.util.Random;
  *     }
  * };
  *
+ * Tween.call(lightCallback).start(tweenManager);
+ *
  * TweenCallback callback = new TweenCallback() {
  *     @Override
  *     public void onEvent(int type, BaseTween<?> source) {

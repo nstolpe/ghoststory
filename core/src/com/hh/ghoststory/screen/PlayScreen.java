@@ -12,6 +12,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -23,7 +24,9 @@ import com.hh.ghoststory.entity.EntityTypes;
 import com.hh.ghoststory.entity.Mappers;
 import com.hh.ghoststory.entity.components.AnimationComponent;
 import com.hh.ghoststory.entity.components.InstanceComponent;
+import com.hh.ghoststory.entity.components.LightingComponent;
 import com.hh.ghoststory.entity.components.PlayerComponent;
+import com.hh.ghoststory.entity.systems.BehaviorSystem;
 import com.hh.ghoststory.entity.systems.BoundingBoxSystem;
 import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.lib.tween.Timelines;
@@ -31,6 +34,7 @@ import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.scene.Lighting;
+import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
 import com.hh.ghoststory.screen.input.PlayDetector;
 
@@ -69,10 +73,13 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TOUCH_DOWN);
 	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TAP);
         loading = true;
-	    game.engine.addSystem(new BoundingBoxSystem());
+
         Tween.setCombinedAttributesLimit(4);
         Tween.registerAccessor(Vector3.class, new Vector3Accessor());
         Tween.registerAccessor(Quaternion.class, new QuaternionAccessor());
+
+        game.engine.addSystem(new BoundingBoxSystem());
+        game.engine.addSystem(new BehaviorSystem(tweenManager));
     }
 
     protected void setEntities() {
@@ -99,9 +106,11 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         // end mobs
 
         //lights
+        // this is ugly now and needs to be better.
         lights = game.engine.getEntitiesFor(EntityTypes.LIGHT);
         for (Entity light : lights) {
-            PointCaster caster = new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity);
+            PointCaster caster = Mappers.lighting.get(light).caster(new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity)).caster;
+
             lighting.add(caster);
             if (Mappers.shadowCasting.has(light))
                 casters.add(caster);
@@ -169,6 +178,10 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
                     Mappers.animation.get(renderable).controller.update(delta);
 
                 instances.add(instance);
+            }
+
+            for (Entity light : lights) {
+                Mappers.lighting.get(light).caster.setPosition(Mappers.position.get(light).position);
             }
         }
 

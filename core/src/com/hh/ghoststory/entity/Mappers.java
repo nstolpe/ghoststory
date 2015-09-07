@@ -9,6 +9,7 @@ import com.hh.ghoststory.entity.components.*;
 public class Mappers {
     public static final ComponentMapper<AmbientComponent> ambient = ComponentMapper.getFor(AmbientComponent.class);
     public static final ComponentMapper<AnimationComponent> animation = ComponentMapper.getFor(AnimationComponent.class);
+    public static final ComponentMapper<BehaviorComponent> behavior = ComponentMapper.getFor(BehaviorComponent.class);
     public static final ComponentMapper<ColorComponent> color = ComponentMapper.getFor(ColorComponent.class);
     public static final ComponentMapper<GeometryComponent> geometry = ComponentMapper.getFor(GeometryComponent.class);
     public static final ComponentMapper<IDComponent> id = ComponentMapper.getFor(IDComponent.class);
