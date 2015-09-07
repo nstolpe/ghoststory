@@ -15,7 +15,6 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
-import com.hh.ghoststory.entity.Mappers;
 import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.screen.PlayScreen;
 
@@ -61,6 +60,7 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
         // Also was causing the weird stutter when
         // clicking/touching to move the pc
         // when it was already moving.
+        // Also, this might be better in longtouch, but shorten longtouch/s length
         if (button == 43) {
 //		if (button == Input.Buttons.LEFT) {
 			Ray ray = screen.active().getPickRay(x, y);
@@ -128,7 +128,6 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 	@Override
 	public boolean tap(float x, float y, int count, int button) {
         if (button == Input.Buttons.LEFT)
-	        System.out.println("TOUChed by something");
             frameworkDispatcher.dispatchMessage(this, MessageTypes.Framework.TAP, screenToWorld(x, y));
 		return false;
 	}

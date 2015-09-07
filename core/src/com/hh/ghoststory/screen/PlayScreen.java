@@ -1,6 +1,5 @@
 package com.hh.ghoststory.screen;
 
-import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.ashley.core.Entity;
