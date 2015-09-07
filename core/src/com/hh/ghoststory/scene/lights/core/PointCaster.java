@@ -18,7 +18,7 @@ import com.hh.ghoststory.DepthMapShader;
  */
 public class PointCaster extends PointLight implements Caster {
 	public PerspectiveCamera camera = new PerspectiveCamera();
-	// depthMapSize should be configurable, has a big influence on FPS
+	// @TODO depthMapSize should be configurable, has a big influence on FPS
     public int depthMapSize = 1024;
 	public FrameBufferCubemap frameBuffer;
 	public Cubemap depthMap;
@@ -94,14 +94,15 @@ public class PointCaster extends PointLight implements Caster {
 			modelBatch.begin(camera);
 			modelBatch.render(instances);
 			modelBatch.end();
-//			Debugging. Remove when everything works.
-//		    ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
 		}
 		frameBuffer.end();
 
 		depthMap = frameBuffer.getColorBufferTexture();
 	}
 
+    /**
+     * @TODO called in AbstractScreen now. Maybe Lights should handle it?
+     */
 	@Override
 	public void dispose() {
 		frameBuffer.dispose();

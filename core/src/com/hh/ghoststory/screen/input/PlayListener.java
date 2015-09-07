@@ -61,8 +61,8 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
         // Also was causing the weird stutter when
         // clicking/touching to move the pc
         // when it was already moving.
-//        if (button == 43) {
-		if (button == Input.Buttons.LEFT) {
+        if (button == 43) {
+//		if (button == Input.Buttons.LEFT) {
 			Ray ray = screen.active().getPickRay(x, y);
 			Vector3 position = new Vector3();
 			Vector3 center = new Vector3();
@@ -79,7 +79,9 @@ public class PlayListener extends GestureDetector.GestureAdapter implements Tele
 				final ModelInstance instance = screen.instances.get(i);
 				instance.transform.getTranslation(position);
 				/**
-				 * Bounding box should be stored on Entity
+				 * Bounding is stored on Entity, this can be used now, and caching
+                 * should help.
+                 *
 				 */
 				BoundingBox box = instance.calculateBoundingBox(new BoundingBox());
 				position.add(box.getCenter(new Vector3()));
