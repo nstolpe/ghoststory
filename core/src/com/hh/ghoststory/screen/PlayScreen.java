@@ -22,10 +22,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.entity.EntityTypes;
 import com.hh.ghoststory.entity.Mappers;
-import com.hh.ghoststory.entity.components.AnimationComponent;
-import com.hh.ghoststory.entity.components.InstanceComponent;
-import com.hh.ghoststory.entity.components.LightingComponent;
-import com.hh.ghoststory.entity.components.PlayerComponent;
+import com.hh.ghoststory.entity.components.*;
 import com.hh.ghoststory.entity.systems.BehaviorSystem;
 import com.hh.ghoststory.entity.systems.BoundingBoxSystem;
 import com.hh.ghoststory.lib.MessageTypes;
@@ -85,19 +82,22 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     }
 
     protected void setEntities() {
+		// this should be somewhere else
+		// assetManager.load("models/ghost_texture_blue.png", Pixmap.class);
+		// load all geometry
+		ImmutableArray<Entity> geometry = game.engine.getEntitiesFor(Family.all(GeometryComponent.class).get());
+		for (Entity geo : geometry)
+			assetManager.load("models/" + Mappers.geometry.get(geo).file, Model.class);
+
         // get the scene. just model right now.
         scene = game.engine.getEntitiesFor(EntityTypes.SCENE).get(0);
         // add ambient if it's there.
         if (Mappers.ambient.has(scene))
             lighting.set(Mappers.ambient.get(scene).colorAttribute);
-
-        assetManager.load("models/" + Mappers.geometry.get(scene).file, Model.class);
         // done scene.
 
         // pc
         pc = game.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
-        assetManager.load("models/" + Mappers.geometry.get(pc).file, Model.class);
-        assetManager.load("models/ghost_texture_blue.png", Pixmap.class);
         // end pc
 
         // mobs
@@ -108,11 +108,11 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         // end mobs
 
         //lights
-        // this is ugly now and needs to be better.
+        // this is ugly now and needs to be better. Entity system.
         lights = game.engine.getEntitiesFor(EntityTypes.LIGHT);
         for (Entity light : lights) {
             PointCaster caster = Mappers.lighting.get(light).caster(new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity)).caster;
-
+			assetManager.load("models/" + Mappers.geometry.get(light).file, Model.class);
             lighting.add(caster);
             if (Mappers.shadowCasting.has(light))
                 casters.add(caster);
@@ -167,14 +167,17 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         if (loading && assetManager.update()) {
             doneLoading();
         } else if (!loading){
-            ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(EntityTypes.RENDERABLE_INSTANCE);
+			// use family here to gather all entities as one (light, model, both, etc). Then
+			// check in ifs Mappers.animation.has(entity) to set
+            ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(Family.all(InstanceComponent.class).get());
             for (Entity renderable : renderables) {
                 ModelInstance instance = Mappers.instance.get(renderable).instance;
 
                 if (Mappers.rotation.has(renderable))
                     instance.transform.set(Mappers.rotation.get(renderable).rotation);
 
-                instance.transform.setTranslation(Mappers.position.get(renderable).position);
+				if (Mappers.position.has(renderable))
+                	instance.transform.setTranslation(Mappers.position.get(renderable).position);
 
                 if (Mappers.animation.has(renderable))
                     Mappers.animation.get(renderable).controller.update(delta);
@@ -204,12 +207,12 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     @Override
     protected void doneLoading() {
         super.doneLoading();
-        ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(EntityTypes.RENDERABLE);
+        ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(Family.all(GeometryComponent.class).get());
 
         // retrieve ModelInstances from the assetManager and assign them to the renderable Entity.
         for (Entity renderable : renderables) {
             ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(renderable).file, Model.class));
-//            Mappers.instance.get(renderable).instance(instance);
+			// need to get an editable version of the entity since we add a component.
 			game.engine.getEntity(renderable.getId()).add(new InstanceComponent(instance));
             // if the renderable Entity has a default/standing animation, set that up.
             // @TODO refactor normal/default animation selection. Check if a normal should even be played.

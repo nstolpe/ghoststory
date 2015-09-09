@@ -8,6 +8,11 @@ import com.badlogic.ashley.core.Component;
 public class GeometryComponent implements Component {
     public String file;
 
+	public GeometryComponent() {}
+
+	public GeometryComponent(String file) {
+		this.file = file;
+	}
     public GeometryComponent file(String file) {
         this.file = file;
         return this;

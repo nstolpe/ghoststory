@@ -161,6 +161,7 @@ public class Config {
                 .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
                 .add(new BehaviorComponent())
+				.add(new GeometryComponent().file("cube.g3dj"))
 			);
 			// lights 2
 			add(new Entity()
@@ -172,6 +173,8 @@ public class Config {
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
                 .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
+				.add(new BehaviorComponent())
+				.add(new GeometryComponent().file("cube.g3dj"))
 			);
 			// lights 3
 			add(new Entity()
@@ -183,6 +186,8 @@ public class Config {
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
                 .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
+				.add(new BehaviorComponent())
+				.add(new GeometryComponent().file("cube.g3dj"))
 			);
 			// lights 4
 			add(new Entity()
@@ -194,6 +199,8 @@ public class Config {
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
                 .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
+				.add(new BehaviorComponent())
+				.add(new GeometryComponent().file("cube.g3dj"))
 			);
 			// lights 5
 			add(new Entity()
@@ -205,6 +212,8 @@ public class Config {
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
                 .add(new LightingComponent())
                 .add(new ShadowCastingComponent())
+				.add(new BehaviorComponent())
+				.add(new GeometryComponent().file("cube.g3dj"))
 			);
 		}
 	};

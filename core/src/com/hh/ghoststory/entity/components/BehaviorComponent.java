@@ -13,6 +13,7 @@ public class BehaviorComponent implements Component {
     public ObjectMap<String, ObjectMap<String, Object>> behaviors = new ObjectMap();
 
     public static int BOUNCE = 0;
+    public static int COLOR_CYCLE= 0;
 
     public BehaviorComponent() {}
 
