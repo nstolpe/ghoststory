@@ -30,6 +30,7 @@ import com.hh.ghoststory.entity.systems.BehaviorSystem;
 import com.hh.ghoststory.entity.systems.BoundingBoxSystem;
 import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.lib.tween.Timelines;
+import com.hh.ghoststory.lib.tween.accessors.ColorAccessor;
 import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
@@ -77,6 +78,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         Tween.setCombinedAttributesLimit(4);
         Tween.registerAccessor(Vector3.class, new Vector3Accessor());
         Tween.registerAccessor(Quaternion.class, new QuaternionAccessor());
+        Tween.registerAccessor(Color.class, new ColorAccessor());
 
         game.engine.addSystem(new BoundingBoxSystem());
         game.engine.addSystem(new BehaviorSystem(tweenManager));
@@ -182,6 +184,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 
             for (Entity light : lights) {
                 Mappers.lighting.get(light).caster.setPosition(Mappers.position.get(light).position);
+                Mappers.lighting.get(light).caster.setColor(Mappers.color.get(light).color);
             }
         }
 

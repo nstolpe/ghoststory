@@ -11,7 +11,11 @@ import com.hh.ghoststory.entity.Mappers;
 import com.hh.ghoststory.entity.components.BehaviorComponent;
 import com.hh.ghoststory.entity.components.PlayerComponent;
 import com.hh.ghoststory.lib.tween.Timelines;
+import com.hh.ghoststory.lib.tween.accessors.ColorAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
+import com.hh.ghoststory.lib.utility.Util;
+
+import java.util.Random;
 
 /**
  * Created by nils on 9/7/15.
@@ -19,7 +23,12 @@ import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 public class BehaviorSystem extends EntitySystem {
     // this is wack for now. maybe the tweenManger can be in the
     // entity system. it will be interacting with them
-    // more than anything else.
+    // more than anything else. It needs to be accessible w/in the callback.
+    // or maybe od something w/ lambdas http://stackoverflow.com/questions/4480334/how-to-call-a-method-stored-in-a-hashmap-java
+    // Entity tweenManager = new Entity().add(new TweenManagerComponent);
+    // TweenManagerComponent implements Component {
+    //     public TweenManager tweenManager = new TweenManager();
+    // }
     private final TweenManager tweenManager;
     public BehaviorSystem(TweenManager tweenManager) {
         this.tweenManager = tweenManager;
@@ -30,14 +39,52 @@ public class BehaviorSystem extends EntitySystem {
         ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(BehaviorComponent.class).get());
 
         for (final Entity entity: entities) {
-            final Timeline bounce = Timelines.bounce(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 5, TweenEquations.easeInSine, new float[]{0f, 5f, -20f}, new float[]{0f, 5f, 20f});
+			// Don't need bounce. Or probably any of the callback style. OR maybe this is bounce?
+			// tween engine is still here thought.
+            Timeline.createSequence()
+				.push(
+					Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 5)
+						.ease(TweenEquations.easeInOutCirc)
+						.target(new float[]{0f, 5f, 20f})
+				)
+				.push(
+					Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 5)
+						.ease(TweenEquations.easeInOutCirc)
+						.target(new float[]{0f, 5f, -20f})
+				)
+				.repeat(Tween.INFINITY, 0)
+				.start(tweenManager);
 
-            Tween.call(new TweenCallback() {
-                @Override
-                public void onEvent(int type, BaseTween<?> source) {
-                    Timelines.bounce(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 5, TweenEquations.easeInSine, new float[]{0f, 5f, -20f}, new float[]{0f, 5f, 20f}).setCallback(this).start(tweenManager);
-                }
-            }).start(tweenManager);
+			Timeline.createSequence()
+				.push(
+					Tween.to(Mappers.color.get(entity).color, ColorAccessor.COLORS, 1)
+						.target(Util.randomGenerator.nextFloat(),Util.randomGenerator.nextFloat(),Util.randomGenerator.nextFloat())
+						.ease(TweenEquations.easeNone))
+				.repeat(Tween.INFINITY, 0)
+				.start(tweenManager);
         }
+//		Random generator = new Random();
+//		float red = generator.nextFloat();
+//		float green = generator.nextFloat();
+//		float blue = generator.nextFloat();
+//			Timeline.createSequence()
+//					.push(Tween.to(Mappers.color.get(entity).color, ColorAccessor.COLORS, 1)
+//							.target(red,green,blue)
+//							.ease(TweenEquations.easeNone))
+//					.setCallback(new TweenCallback() {
+//						@Override
+//						public void onEvent(int type, BaseTween<?> source) {
+//
+//						}
+//					})
+//					.start(tweenManager);
     }
+
+	public void random() {
+		Random generator = new Random();
+		float red = generator.nextFloat();
+		float green = generator.nextFloat();
+		float blue = generator.nextFloat();
+
+	}
 }
