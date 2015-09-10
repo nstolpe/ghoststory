@@ -52,8 +52,6 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     public enum CameraTypes { P, O }
     public Array<ModelInstance> instances = new Array<ModelInstance>();
     public PlayDetector playDetector;
-    public Entity scene;
-    public ImmutableArray<Entity> mobs;
     public ImmutableArray<Entity> lights;
 
     private FPSLogger logger = new FPSLogger();
@@ -85,36 +83,32 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     protected void setEntities() {
 		// this should be somewhere else
 		// assetManager.load("models/ghost_texture_blue.png", Pixmap.class);
+		ImmutableArray<Entity> entities = game.engine.getEntities();
 
-		// load all geometry
-		ImmutableArray<Entity> geometry = game.engine.getEntitiesFor(Family.all(GeometryComponent.class).get());
-		for (Entity geo : geometry)
-			assetManager.load("models/" + Mappers.geometry.get(geo).file, Model.class);
-
-        // get the scene. just model right now.
-        scene = game.engine.getEntitiesFor(EntityTypes.SCENE).get(0);
-        // add ambient if it's there.
-        if (Mappers.ambient.has(scene))
-            lighting.set(Mappers.ambient.get(scene).colorAttribute);
-        // done scene.
-
-        // mobs
-        mobs = game.engine.getEntitiesFor(EntityTypes.MOB);
-
-        for (Entity mob : mobs)
-            assetManager.load("models/" + Mappers.geometry.get(mob).file, Model.class);
-        // end mobs
+		for (Entity entity : entities) {
+			if (Mappers.geometry.has(entity))
+				assetManager.load("models/" + Mappers.geometry.get(entity).file, Model.class);
+			if (Mappers.ambient.has(game.engine.getEntitiesFor(EntityTypes.SCENE).get(0)))
+				lighting.set(Mappers.ambient.get(game.engine.getEntitiesFor(EntityTypes.SCENE).get(0)).colorAttribute);
+			//lights
+			// this is ugly now and needs to be better. Entity system.
+			if (Mappers.lighting.has(entity)) {
+				PointCaster caster = Mappers.lighting.get(entity).caster(new PointCaster(Mappers.color.get(entity).color, Mappers.position.get(entity).position, Mappers.intensity.get(entity).intensity)).caster;
+				lighting.add(caster);
+				if (Mappers.shadowCasting.has(entity))
+					casters.add(caster);
+			}
+		}
 
         //lights
         // this is ugly now and needs to be better. Entity system.
-        lights = game.engine.getEntitiesFor(EntityTypes.LIGHT);
-        for (Entity light : lights) {
-            PointCaster caster = Mappers.lighting.get(light).caster(new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity)).caster;
-			assetManager.load("models/" + Mappers.geometry.get(light).file, Model.class);
-            lighting.add(caster);
-            if (Mappers.shadowCasting.has(light))
-                casters.add(caster);
-        }
+//        lights = game.engine.getEntitiesFor(EntityTypes.LIGHT);
+//        for (Entity light : lights) {
+//            PointCaster caster = Mappers.lighting.get(light).caster(new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity)).caster;
+//            lighting.add(caster);
+//            if (Mappers.shadowCasting.has(light))
+//                casters.add(caster);
+//        }
         // end lights
     }
     /**
@@ -183,10 +177,10 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
                 instances.add(instance);
             }
 
-            for (Entity light : lights) {
-                Mappers.lighting.get(light).caster.setPosition(Mappers.position.get(light).position);
-                Mappers.lighting.get(light).caster.setColor(Mappers.color.get(light).color);
-            }
+			for (Entity light : game.engine.getEntitiesFor(Family.all(LightingComponent.class).get())) {
+				Mappers.lighting.get(light).caster.setPosition(Mappers.position.get(light).position);
+				Mappers.lighting.get(light).caster.setColor(Mappers.color.get(light).color);
+			}
         }
 
         frameworkDispatcher.update(delta);
