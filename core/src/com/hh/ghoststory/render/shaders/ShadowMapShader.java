@@ -22,16 +22,16 @@ import com.hh.ghoststory.scene.lights.core.Caster;
  * Needs access to `screen` so it's here. Should be moved somewhere else.
  */
 public class ShadowMapShader extends BaseShader {
-	private final Array<Caster> shadowCasters;
+	private final Array<Caster> casters;
 	public Renderable renderable;
 
-	public ShadowMapShader(final Renderable renderable, Array<Caster> shadowCasters) {
+	public ShadowMapShader(final Renderable renderable, Array<Caster> casters) {
 		this.renderable = renderable;
 		program = new ShaderProgram(
 			Gdx.files.internal("shaders/shadow.vertex.glsl"),
 			Gdx.files.internal("shaders/shadow.fragment.glsl")
 		);;
-		this.shadowCasters = shadowCasters;
+		this.casters = casters;
 		register(DefaultShader.Inputs.worldTrans, DefaultShader.Setters.worldTrans);
 		register(DefaultShader.Inputs.projViewTrans, DefaultShader.Setters.projViewTrans);
 		register(DefaultShader.Inputs.normalMatrix, DefaultShader.Setters.normalMatrix);
@@ -80,8 +80,8 @@ public class ShadowMapShader extends BaseShader {
 	@Override
 	public void render(final Renderable renderable, final Attributes combinedAttributes) {
 		boolean firstCall = true;
-		for (final Caster shadowCaster : shadowCasters) {
-			shadowCaster.applyToShader(program);
+		for (final Caster caster : casters) {
+			caster.applyToShader(program);
 			if (firstCall) {
 				// Classic depth test
 				context.setDepthTest(GL20.GL_LEQUAL);
