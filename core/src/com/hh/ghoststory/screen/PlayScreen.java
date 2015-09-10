@@ -53,7 +53,6 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     public Array<ModelInstance> instances = new Array<ModelInstance>();
     public PlayDetector playDetector;
     public Entity scene;
-    public Entity pc;
     public ImmutableArray<Entity> mobs;
     public ImmutableArray<Entity> lights;
 
@@ -72,11 +71,13 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TAP);
         loading = true;
 
+		// Tween setup
         Tween.setCombinedAttributesLimit(4);
         Tween.registerAccessor(Vector3.class, new Vector3Accessor());
         Tween.registerAccessor(Quaternion.class, new QuaternionAccessor());
         Tween.registerAccessor(Color.class, new ColorAccessor());
 
+		// entity engine setup
         game.engine.addSystem(new BoundingBoxSystem());
         game.engine.addSystem(new BehaviorSystem(tweenManager));
     }
@@ -84,6 +85,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     protected void setEntities() {
 		// this should be somewhere else
 		// assetManager.load("models/ghost_texture_blue.png", Pixmap.class);
+
 		// load all geometry
 		ImmutableArray<Entity> geometry = game.engine.getEntitiesFor(Family.all(GeometryComponent.class).get());
 		for (Entity geo : geometry)
@@ -95,10 +97,6 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         if (Mappers.ambient.has(scene))
             lighting.set(Mappers.ambient.get(scene).colorAttribute);
         // done scene.
-
-        // pc
-        pc = game.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
-        // end pc
 
         // mobs
         mobs = game.engine.getEntitiesFor(EntityTypes.MOB);
@@ -491,7 +489,8 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 
 				break;
 			case MessageTypes.Framework.TAP:
-                Quaternion rotation = Mappers.rotation.get(pc).rotation;
+				Entity pc = game.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0);
+                Quaternion rotation = Mappers.rotation.get(game.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0)).rotation;
                 Vector3 position = Mappers.position.get(pc).position;
 
                 tweenManager.killTarget(position, Vector3Accessor.POSITION_XYZ);
