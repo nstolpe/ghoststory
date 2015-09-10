@@ -48,13 +48,13 @@ public class BehaviorSystem extends EntitySystem {
 		Timeline.createSequence()
 			.push(
 					Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 5)
-							.ease(TweenEquations.easeInSine)
-							.target(new float[]{0f, 5f, 20f})
+							.ease(TweenEquations.easeInOutCubic)
+							.target(new float[]{0f, 6f, 20f})
 			)
 			.push(
 					Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 5)
-							.ease(TweenEquations.easeInSine)
-							.target(new float[]{0f, 5f, -20f})
+							.ease(TweenEquations.easeInOutCubic)
+							.target(new float[]{0f, 6f, -20f})
 			)
 			.repeat(Tween.INFINITY, 0)
 			.start(tweenManager);

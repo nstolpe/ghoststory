@@ -216,7 +216,7 @@ public class CreateScreen extends AbstractScreen {
 				FileHandle file = Gdx.files.local(".ghost_story/playerCharacter.json");
 				System.out.println(file);
 				file.writeString(json.toJson(playerCharacter), false);
-				game.setScreen(game.getGameScreen());
+				// game.setScreen(game.getPlayScreen()); or something.
 				Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				dispose();
 //    			if (TABLE_DEBUG == true)

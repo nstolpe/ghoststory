@@ -56,8 +56,8 @@ public class PointCaster extends PointLight implements Caster {
 		camera.fieldOfView = 90f;
 		camera.viewportWidth = depthMapSize;
 		camera.viewportHeight = depthMapSize;
-		camera.near = 1f;
-		camera.far = 30;
+		camera.near = 0f;
+		camera.far = 30f;
 		camera.position.set(position);
 		camera.update();
 	}

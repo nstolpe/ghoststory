@@ -100,7 +100,7 @@ public class MainScreen extends AbstractScreen {
 								new Action() {
 									@Override
 									public boolean act(float delta) {
-										game.setScreen(game.getGameScreen());
+										// used to get the GameScreen here.
 										return true;
 									}
 								}

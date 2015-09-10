@@ -7,7 +7,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.hh.ghoststory.lib.utility.Config;
 import com.hh.ghoststory.screen.CreateScreen;
-import com.hh.ghoststory.screen.GameScreen;
 import com.hh.ghoststory.screen.MainScreen;
 import com.hh.ghoststory.screen.PlayScreen;
 
@@ -26,7 +25,6 @@ public class GhostStory extends Game {
 //		file.writeString("{}", false);
 //		setScreen(getMainScreen());
 //		setScreen(getCreateScreen());
-//		setScreen(getGameScreen());
 		setScreen(getPlayScreen());
 	}
 
@@ -37,10 +35,6 @@ public class GhostStory extends Game {
 	 */
 	public MainScreen getMainScreen() {
 		return new MainScreen(this);
-	}
-
-	public GameScreen getGameScreen() {
-		return new GameScreen(this);
 	}
 
 	public PlayScreen getPlayScreen() {
