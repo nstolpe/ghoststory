@@ -140,7 +140,6 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     public void render(float delta) {
         super.render(delta);
         instances.clear();
-
         if (loading && assetManager.update()) {
             doneLoading();
         } else if (!loading){

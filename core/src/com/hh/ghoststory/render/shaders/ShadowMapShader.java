@@ -12,9 +12,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
-import com.hh.ghoststory.scene.lights.PointShadowCaster;
 import com.hh.ghoststory.scene.lights.core.Caster;
-import com.hh.ghoststory.scene.lights.core.ShadowCaster;
 
 /**
  * Created by nils on 8/25/15.
