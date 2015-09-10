@@ -91,8 +91,8 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 			if (Mappers.ambient.has(game.engine.getEntitiesFor(EntityTypes.SCENE).get(0)))
 				lighting.set(Mappers.ambient.get(game.engine.getEntitiesFor(EntityTypes.SCENE).get(0)).colorAttribute);
 			// lights. this is ugly now and needs to be better. Entity system.
-			if (Mappers.lighting.has(entity)) {
-				PointCaster caster = Mappers.lighting.get(entity).caster(new PointCaster(Mappers.color.get(entity).color, Mappers.position.get(entity).position, Mappers.intensity.get(entity).intensity)).caster;
+			if (Mappers.light.has(entity)) {
+				PointCaster caster = Mappers.light.get(entity).caster(new PointCaster(Mappers.color.get(entity).color, Mappers.position.get(entity).position, Mappers.intensity.get(entity).intensity)).caster;
 				lighting.add(caster);
 				if (Mappers.shadowCasting.has(entity))
 					casters.add(caster);
@@ -139,9 +139,6 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     @Override
     public void render(float delta) {
         super.render(delta);
-	    // gl stuff happens in renderer, move this there probably.
-//        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         instances.clear();
 
         if (loading && assetManager.update()) {
@@ -165,9 +162,9 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
                 instances.add(instance);
             }
 
-			for (Entity light : game.engine.getEntitiesFor(Family.all(LightingComponent.class).get())) {
-				Mappers.lighting.get(light).caster.setPosition(Mappers.position.get(light).position);
-				Mappers.lighting.get(light).caster.setColor(Mappers.color.get(light).color);
+			for (Entity light : game.engine.getEntitiesFor(Family.all(LightComponent.class).get())) {
+				Mappers.light.get(light).caster.setPosition(Mappers.position.get(light).position);
+				Mappers.light.get(light).caster.setColor(Mappers.color.get(light).color);
 			}
         }
 
@@ -187,10 +184,8 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
     @Override
     protected void doneLoading() {
         super.doneLoading();
-        ImmutableArray<Entity> renderables = game.engine.getEntitiesFor(Family.all(GeometryComponent.class).get());
-
         // retrieve ModelInstances from the assetManager and assign them to the renderable Entity.
-        for (Entity renderable : renderables) {
+        for (Entity renderable : game.engine.getEntitiesFor(Family.all(GeometryComponent.class).get())) {
             ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(renderable).file, Model.class));
 			// need to get an editable version of the entity since we add a component.
 			game.engine.getEntity(renderable.getId()).add(new InstanceComponent(instance));
@@ -202,7 +197,14 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
                 // the normal/default/rest animation should be defined on the entity somewhere, not just default to "normal".
                 ObjectMap<String, Object> normal = animation.animations.get("normal");
                 // this casting sucks. JSON import might be good to use, should fix that.
-                animation.controller.setAnimation((String) normal.get("id"), (Float) normal.get("offset"), (Float) normal.get("duration"), (Integer) normal.get("loopcount"), (Float)normal.get("speed"), (AnimationController.AnimationListener)normal.get("listener"));
+                animation.controller.setAnimation(
+					(String) normal.get("id"),
+					(Float) normal.get("offset"),
+					(Float) normal.get("duration"),
+					(Integer) normal.get("loopcount"),
+					(Float)normal.get("speed"),
+					(AnimationController.AnimationListener)normal.get("listener")
+				);
             }
         }
     }

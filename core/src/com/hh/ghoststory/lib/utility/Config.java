@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.entity.components.*;
+import com.hh.ghoststory.scene.lights.core.PointCaster;
 
 /**
  * Created by nils on 7/15/15.
@@ -158,7 +159,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 0f, 0f, 1f)))
                 .add(new IntensityComponent(40))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
-                .add(new LightingComponent())
+                .add(new LightComponent(new PointCaster(), true, true))
                 .add(new ShadowCastingComponent())
                 .add(new BehaviorComponent())
 				.add(new GeometryComponent().file("cube.g3dj"))
@@ -171,7 +172,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(20))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
-                .add(new LightingComponent())
+                .add(new LightComponent())
                 .add(new ShadowCastingComponent())
 				.add(new BehaviorComponent())
 				.add(new GeometryComponent().file("cube.g3dj"))
@@ -184,7 +185,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(20))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
-                .add(new LightingComponent())
+                .add(new LightComponent())
                 .add(new ShadowCastingComponent())
 				.add(new BehaviorComponent())
 				.add(new GeometryComponent().file("cube.g3dj"))
@@ -197,7 +198,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(20))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
-                .add(new LightingComponent())
+                .add(new LightComponent())
                 .add(new ShadowCastingComponent())
 				.add(new BehaviorComponent())
 				.add(new GeometryComponent().file("cube.g3dj"))
@@ -210,7 +211,7 @@ public class Config {
                 .add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
                 .add(new IntensityComponent(20))
                 .add(new LightTypeComponent(LightTypeComponent.POINT))
-                .add(new LightingComponent())
+                .add(new LightComponent())
                 .add(new ShadowCastingComponent())
 				.add(new BehaviorComponent())
 				.add(new GeometryComponent().file("cube.g3dj"))
