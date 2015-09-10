@@ -12,13 +12,13 @@ import com.hh.ghoststory.screen.PlayScreen;
 
 public class GhostStory extends Game {
     public Config config;
-    public Engine engine = new Engine();
+//    public Engine engine = new Engine();
 
 	@Override
 	public void create() {
         // some config ill be pulled in to this constructor.
         config = new Config();
-        config.populateEntities(engine);
+        config.populateEntities();
 
 		FileHandle file = Gdx.files.local(".ghost_story/character.json");
 //		file.file().getParentFile().mkdirs();
@@ -53,7 +53,7 @@ public class GhostStory extends Game {
 	@Override
 	public void render() {
 		super.render();
-		engine.update(Gdx.graphics.getDeltaTime());
+		config.engine.update(Gdx.graphics.getDeltaTime());
 	}
 
 	@Override
