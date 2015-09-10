@@ -12,7 +12,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -32,7 +31,6 @@ import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.scene.Lighting;
-import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
 import com.hh.ghoststory.screen.input.PlayDetector;
 
@@ -64,7 +62,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         super(game);
         activateCamera(defaultPerspective());
         setInput();
-        setEntities();
+        setUpEntities();
 	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TOUCH_DOWN);
 	    frameworkDispatcher.addListener(this, MessageTypes.Framework.TAP);
         loading = true;
@@ -80,18 +78,19 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
         game.engine.addSystem(new BehaviorSystem(tweenManager));
     }
 
-    protected void setEntities() {
+    protected void setUpEntities() {
 		// this should be somewhere else
 		// assetManager.load("models/ghost_texture_blue.png", Pixmap.class);
 		ImmutableArray<Entity> entities = game.engine.getEntities();
 
 		for (Entity entity : entities) {
+			// load the Model for each Entity with a GeometryComponent
 			if (Mappers.geometry.has(entity))
 				assetManager.load("models/" + Mappers.geometry.get(entity).file, Model.class);
+			// set ambient if it's there.
 			if (Mappers.ambient.has(game.engine.getEntitiesFor(EntityTypes.SCENE).get(0)))
 				lighting.set(Mappers.ambient.get(game.engine.getEntitiesFor(EntityTypes.SCENE).get(0)).colorAttribute);
-			//lights
-			// this is ugly now and needs to be better. Entity system.
+			// lights. this is ugly now and needs to be better. Entity system.
 			if (Mappers.lighting.has(entity)) {
 				PointCaster caster = Mappers.lighting.get(entity).caster(new PointCaster(Mappers.color.get(entity).color, Mappers.position.get(entity).position, Mappers.intensity.get(entity).intensity)).caster;
 				lighting.add(caster);
@@ -99,17 +98,6 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 					casters.add(caster);
 			}
 		}
-
-        //lights
-        // this is ugly now and needs to be better. Entity system.
-//        lights = game.engine.getEntitiesFor(EntityTypes.LIGHT);
-//        for (Entity light : lights) {
-//            PointCaster caster = Mappers.lighting.get(light).caster(new PointCaster(Mappers.color.get(light).color, Mappers.position.get(light).position, Mappers.intensity.get(light).intensity)).caster;
-//            lighting.add(caster);
-//            if (Mappers.shadowCasting.has(light))
-//                casters.add(caster);
-//        }
-        // end lights
     }
     /**
      * A way for input handlers to access the active camera until camera controlling functions moved here. If they are.
