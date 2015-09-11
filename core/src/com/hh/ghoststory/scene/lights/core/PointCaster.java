@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.DepthMapShader;
+import com.hh.ghoststory.ScreenshotFactory;
 
 /**
  * Created by nils on 9/3/15.
@@ -56,7 +57,7 @@ public class PointCaster extends PointLight implements Caster {
 		camera.fieldOfView = 90f;
 		camera.viewportWidth = depthMapSize;
 		camera.viewportHeight = depthMapSize;
-		camera.near = 0f;
+		camera.near = 0.5f;
 		camera.far = 30f;
 		camera.position.set(position);
 		camera.update();
@@ -94,6 +95,7 @@ public class PointCaster extends PointLight implements Caster {
 			modelBatch.begin(camera);
 			modelBatch.render(instances);
 			modelBatch.end();
+//			ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmapcube");
 		}
 		frameBuffer.end();
 
