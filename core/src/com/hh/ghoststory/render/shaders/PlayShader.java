@@ -11,15 +11,12 @@ import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
  */
 public class PlayShader extends DefaultShader {
 	public static final int textureNum = 4;
+	private static final String vertex = Gdx.files.internal("shaders/default.vertex.glsl").readString();
+	private static final String fragment = Gdx.files.internal("shaders/default.fragment.glsl").readString();
+
 
 	public PlayShader(Renderable renderable) {
-		super(
-			renderable,
-			new Config(
-				Gdx.files.internal("shaders/default.vertex.glsl").readString(),
-				Gdx.files.internal("shaders/default.fragment.glsl").readString()
-			)
-		);
+		super(renderable, new Config(vertex, fragment));
 	}
 
 	@Override
