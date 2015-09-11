@@ -39,13 +39,6 @@
       "shininess": 21,
       "specular": [
          0.000000, 0.000000, 0.000000
-      ],
-      "textures": [
-        {
-          "filename": "bg_repeat.tga",
-          "id": "BG_REPEA.JPG",
-          "type": "DIFFUSE"
-        }
       ]
     },
     {
@@ -62,13 +55,6 @@
       "shininess": 21,
       "specular": [
          0.000000, 0.000000, 0.000000
-      ],
-      "textures": [
-        {
-          "filename": "bg_repeat.tga",
-          "id": "BG_REPEA.JPG",
-          "type": "DIFFUSE"
-        }
       ]
     },
     {
@@ -85,13 +71,6 @@
       "shininess": 21,
       "specular": [
          0.000000, 0.000000, 0.000000
-      ],
-      "textures": [
-        {
-          "filename": "bg_repeat.tga",
-          "id": "BG_REPEA.JPG",
-          "type": "DIFFUSE"
-        }
       ]
     },
     {
@@ -108,13 +87,6 @@
       "shininess": 21,
       "specular": [
          0.000000, 0.000000, 0.000000
-      ],
-      "textures": [
-        {
-          "filename": "bg_repeat.tga",
-          "id": "BG_REPEA.JPG",
-          "type": "DIFFUSE"
-        }
       ]
     },
     {
@@ -131,13 +103,6 @@
       "shininess": 21,
       "specular": [
          0.000000, 0.000000, 0.000000
-      ],
-      "textures": [
-        {
-          "filename": "bg_repeat.tga",
-          "id": "BG_REPEA.JPG",
-          "type": "DIFFUSE"
-        }
       ]
     },
     {
@@ -154,13 +119,6 @@
       "shininess": 21,
       "specular": [
          0.000000, 0.000000, 0.000000
-      ],
-      "textures": [
-        {
-          "filename": "bg_repeat.tga",
-          "id": "BG_REPEA.JPG",
-          "type": "DIFFUSE"
-        }
       ]
     },
     {
@@ -177,13 +135,6 @@
       "shininess": 21,
       "specular": [
          0.000000, 0.000000, 0.000000
-      ],
-      "textures": [
-        {
-          "filename": "bg_repeat.tga",
-          "id": "BG_REPEA.JPG",
-          "type": "DIFFUSE"
-        }
       ]
     },
     {
@@ -200,13 +151,6 @@
       "shininess": 21,
       "specular": [
          0.000000, 0.000000, 0.000000
-      ],
-      "textures": [
-        {
-          "filename": "bg_repeat.tga",
-          "id": "BG_REPEA.JPG",
-          "type": "DIFFUSE"
-        }
       ]
     }
   ],
