@@ -1125,7 +1125,7 @@
 	],
 	"animations": [
 		{
-			"id": "normal",
+			"id": "default",
 				"bones": [
 				{
 					"boneId": "ghost",

@@ -112,9 +112,9 @@ uniform float u_screenHeight;
 float PCF(sampler2D u_shadows, vec2 uv) {
     float result = 0.0;
     float depth = texture2D(u_shadows, uv).a;
-    for (int x = -2; x <= 2; x++) {
-        for (int y = -2; y <= 2; y++) {
-            vec2 off = vec2(x, y) / 1024;
+    for (float x = -2.0; x <= 2.0; x++) {
+        for (float y = -2.0; y <= 2.0; y++) {
+            vec2 off = vec2(x, y) / 1024.0;
             float alpha = texture2D(u_shadows, uv + off).a;
             result += texture2D(u_shadows, uv + off).a;
         }

@@ -30,11 +30,12 @@ public class ShadowMapShader extends BaseShader {
 		program = new ShaderProgram(
 			Gdx.files.internal("shaders/shadow.vertex.glsl"),
 			Gdx.files.internal("shaders/shadow.fragment.glsl")
-		);;
+		);
 		this.casters = casters;
 		register(DefaultShader.Inputs.worldTrans, DefaultShader.Setters.worldTrans);
 		register(DefaultShader.Inputs.projViewTrans, DefaultShader.Setters.projViewTrans);
 		register(DefaultShader.Inputs.normalMatrix, DefaultShader.Setters.normalMatrix);
+
 	}
 
 	@Override
