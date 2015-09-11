@@ -15,6 +15,7 @@ import com.hh.ghoststory.scene.lights.core.PointCaster;
  * Created by nils on 7/15/15.
  */
 public class Config {
+	// perhaps this should go to some other global object?
 	public static  Engine engine = new Engine();
 	public Config() {
 
