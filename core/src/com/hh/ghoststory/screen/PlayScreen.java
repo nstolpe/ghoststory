@@ -201,7 +201,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 				AnimationComponent animation = Mappers.animation.get(renderable);
 				animation.init(instance);
 				// the normal/default/rest animation should be defined on the entity somewhere, not just default to "normal".
-				ObjectMap<String, Object> normal = animation.animations.get("normal");
+				ObjectMap<String, Object> normal = animation.animations.get("default");
 				// this casting sucks. JSON import might be good to use, should fix that.
 				animation.controller.setAnimation(
 					(String) normal.get("id"),

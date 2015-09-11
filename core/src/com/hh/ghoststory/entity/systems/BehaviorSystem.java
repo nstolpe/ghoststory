@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.entity.Mappers;
 import com.hh.ghoststory.entity.components.BehaviorComponent;
 import com.hh.ghoststory.lib.tween.accessors.ColorAccessor;
@@ -34,10 +35,13 @@ public class BehaviorSystem extends EntitySystem {
         ImmutableArray<Entity> entities = getEngine().getEntitiesFor(Family.all(BehaviorComponent.class).get());
 
         for (final Entity entity: entities) {
+			ObjectMap<String, ObjectMap<String, Object>> foo = Mappers.behavior.get(entity).behaviors;
+
 			if (entity == entities.first()) {
 				bounce(entity);
 			} else {
 				colorCycle(entity);
+				followPath(entity);
 			}
         }
 
@@ -49,12 +53,12 @@ public class BehaviorSystem extends EntitySystem {
 			.push(
 					Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 5)
 							.ease(TweenEquations.easeInOutCubic)
-							.target(new float[]{0f, 6f, 20f})
+							.target(new float[]{ 0f, 6f, 20f })
 			)
 			.push(
 					Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 5)
 							.ease(TweenEquations.easeInOutCubic)
-							.target(new float[]{0f, 6f, -20f})
+							.target(new float[]{ 0f, 6f, -20f })
 			)
 			.repeat(Tween.INFINITY, 0)
 			.start(tweenManager);
@@ -75,4 +79,31 @@ public class BehaviorSystem extends EntitySystem {
 		};
 		Tween.call(callback).start(tweenManager);
     }
+
+	public void followPath(final Entity entity) {
+		Timeline.createSequence()
+			.push(
+				Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 2)
+					.ease(TweenEquations.easeOutCirc)
+					.target(new float[]{ -20f, 6f, 20f })
+			)
+			.push(
+				Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 2)
+					.ease(TweenEquations.easeOutCirc)
+					.target(new float[]{ -20f, 6f, -20f })
+			)
+			.push(
+				Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 2)
+					.ease(TweenEquations.easeOutCirc)
+					.target(new float[]{ 20f, 6f, -20f })
+			)
+			.push(
+				Tween.to(Mappers.position.get(entity).position, Vector3Accessor.POSITION_XYZ, 2)
+					.ease(TweenEquations.easeOutCirc)
+					.target(new float[]{ 20f, 6f, 20f })
+			)
+			.repeat(Tween.INFINITY, 0)
+			.start(tweenManager);
+
+	}
 }
