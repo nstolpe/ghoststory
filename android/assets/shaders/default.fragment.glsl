@@ -108,6 +108,20 @@ varying float v_fog;
 uniform sampler2D u_shadows;
 uniform float u_screenWidth;
 uniform float u_screenHeight;
+
+float PCF(sampler2D u_shadows, vec2 uv) {
+    float result = 0.0;
+    float depth = texture2D(u_shadows, uv).a;
+    for (int x = -2; x <= 2; x++) {
+        for (int y = -2; y <= 2; y++) {
+            vec2 off = vec2(x, y) / 1024;
+            float alpha = texture2D(u_shadows, uv + off).a;
+            result += texture2D(u_shadows, uv + off).a;
+        }
+    }
+    return result/25.0;
+}
+
 void main() {
 	#if defined(normalFlag)
 		vec3 normal = v_normal;
@@ -197,8 +211,9 @@ void main() {
 
 	// get the color from u_shadows
 	vec4 color = texture2D(u_shadows, c);
+//	color.a = PCF(u_shadows, c);
 //	vec4 color = texture(u_shadows, vec3(c, gl_FragCoord.z));
-	gl_FragColor.rgb *= (0.4 + 0.6 * color.a);
+	gl_FragColor.rgb *= (0.4 + 1.0 * color.a);
 // uncomment to just render shadow map
 //	gl_FragColor = color;
 }
