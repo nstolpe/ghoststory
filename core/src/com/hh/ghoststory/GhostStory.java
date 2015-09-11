@@ -12,7 +12,6 @@ import com.hh.ghoststory.screen.PlayScreen;
 
 public class GhostStory extends Game {
     public Config config;
-//    public Engine engine = new Engine();
 
 	@Override
 	public void create() {
