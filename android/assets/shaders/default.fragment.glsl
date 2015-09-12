@@ -105,9 +105,9 @@ varying float v_fog;
 #endif // fogFlag
 
 //uniform sampler2DShadow u_shadows;
-uniform sampler2D u_shadows;
-uniform float u_screenWidth;
-uniform float u_screenHeight;
+//uniform sampler2D u_shadows;
+//uniform float u_screenWidth;
+//uniform float u_screenHeight;
 
 float PCF(sampler2D u_shadows, vec2 uv) {
     float result = 0.0;
@@ -205,15 +205,15 @@ void main() {
 
 	// get the xy coordinates of the current scene, then divide them by width and height
 	// to convert to the depth map.
-	vec2 c = gl_FragCoord.xy;
-	c.x /= u_screenWidth;
-	c.y /= u_screenHeight;
+//	vec2 c = gl_FragCoord.xy;
+//	c.x /= u_screenWidth;
+//	c.y /= u_screenHeight;
 
 	// get the color from u_shadows
-	vec4 color = texture2D(u_shadows, c);
+//	vec4 color = texture2D(u_shadows, c);
 //	color.a = PCF(u_shadows, c);
 //	vec4 color = texture(u_shadows, vec3(c, gl_FragCoord.z));
-	gl_FragColor.rgb *= (0.4 + 1.0 * color.a);
+//	gl_FragColor.rgb *= (0.4 + 1.0 * color.a);
 // uncomment to just render shadow map
 //	gl_FragColor = color;
 }
