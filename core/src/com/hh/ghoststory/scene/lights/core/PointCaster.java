@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.glutils.FrameBufferCubemap;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.DepthMapShader;
@@ -63,6 +64,25 @@ public class PointCaster extends PointLight implements Caster {
 		camera.update();
 	}
 
+	/**
+	 * It binds the depthmap to the shader and sets some normals.
+	 * @TODO This is called from ShadowMapShader.applyToShader(). It's different for other light types, so it makes sense,
+	 * but it might be better to handle it in the shader w/ some createprefix thing. Since Shadow might go into Play,
+	 * then that logic could go there too. Maybe.
+	 * @param shaderProgram
+	 *
+	 * For each light: light position, camera.far
+	 * need depthmap size (i think)
+	 * and the sampler (u_shadows, already have).
+	 *
+	 * use all that to process the pcf and interpolation and let's see how it works.
+	 *
+	 * For each light w/ casting enabled,
+	 * set a light position array (if it's directional or spot we need facing vec too, but do that later)
+	 *
+	 * Look at shadow.fragment.glsl for handling of point vs spot lights. The handling of PCF/VSM might be better done there,
+	 * then sample it here like usual.
+	 */
 	@Override
 	public void applyToShader(final ShaderProgram shaderProgram) {
 		final int textureNum = 2;
@@ -71,6 +91,7 @@ public class PointCaster extends PointLight implements Caster {
 		shaderProgram.setUniformi("u_depthMapCube", textureNum);
 		shaderProgram.setUniformf("u_cameraFar", camera.far);
 		shaderProgram.setUniformf("u_lightPosition", position);
+		shaderProgram.setUniformf("depthMapSize", depthMapSize);
 	}
 
 	@Override

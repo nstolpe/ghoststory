@@ -47,6 +47,17 @@ public class PlayShader extends DefaultShader {
 		final SpotLightsAttribute sla = attributes.get(SpotLightsAttribute.class, SpotLightsAttribute.Type);
 		final Array<SpotLight> spots = sla == null ? null : sla.lights;
 		String prefix = DefaultShader.createPrefix(renderable, config);
+		// For each light: light position, camera.far
+		// need depthmap size (i think)
+		// and the sampler (u_shadows, already have).
+		//
+		// use all that to process the pcf and interpolation and let's see how it works.
+		//
+		// For each light w/ casting enabled,
+		// set a light position array (if it's directional or spot we need facing vec too, but do that later)
+		//
+		// Look at shadow.fragment.glsl for handling of point vs spot lights. The handling of PCF/VSM might be better done there,
+		// then sample it here like usual.
 		return prefix;
 	}
 
