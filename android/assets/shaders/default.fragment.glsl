@@ -211,7 +211,7 @@ void main() {
 
 	// get the color from u_shadows
 	vec4 color = texture2D(u_shadows, c);
-//	color.a = PCF(u_shadows, c);
+	color.a = PCF(u_shadows, c);
 //	vec4 color = texture(u_shadows, vec3(c, gl_FragCoord.z));
 	gl_FragColor.rgb *= (0.4 + 1.0 * color.a);
 // uncomment to just render shadow map

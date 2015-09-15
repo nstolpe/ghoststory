@@ -14,7 +14,7 @@ uniform samplerCube u_depthMapCube;
 uniform float u_cameraFar;
 uniform vec3 u_lightPosition;
 uniform float u_type;
-uniform int depthMapSize;
+//uniform int depthMapSize;
 
 varying vec4 v_position;
 varying vec4 v_positionLightTrans;
@@ -42,8 +42,35 @@ float texture2DShadowLerp(sampler2D depths, vec2 size, vec2 uv, float compare) {
 float cubePCF() {
 	return 1.0;
 }
-void main()
-{
+//float sampleShadowMap(vec3 baseDirection, in vec3 baseOffset, float curDistance) {
+//   return texture(u_depthMapCube, vec4(baseDirection + baseOffset, curDistance));
+//}
+
+vec3 gridSamplingDisk[20];
+
+void main() {
+//	vec3 gridSamplingDisk[20];
+	gridSamplingDisk[0]  = vec3( 1,  1,  1);
+	gridSamplingDisk[1]  = vec3( 1, -1,  1);
+	gridSamplingDisk[2]  = vec3(-1, -1,  1);
+	gridSamplingDisk[3]  = vec3(-1,  1,  1);
+	gridSamplingDisk[4]  = vec3( 1,  1, -1);
+	gridSamplingDisk[5]  = vec3( 1, -1, -1);
+	gridSamplingDisk[6]  = vec3(-1, -1, -1);
+	gridSamplingDisk[7]  = vec3(-1,  1, -1);
+	gridSamplingDisk[8]  = vec3( 1,  1,  0);
+	gridSamplingDisk[9]  = vec3( 1, -1,  0);
+	gridSamplingDisk[10] = vec3(-1, -1,  0);
+	gridSamplingDisk[11] = vec3(-1,  1,  0);
+	gridSamplingDisk[12] = vec3( 1,  0,  1);
+	gridSamplingDisk[13] = vec3(-1,  0,  1);
+	gridSamplingDisk[14] = vec3( 1,  0, -1);
+	gridSamplingDisk[15] = vec3(-1,  0, -1);
+	gridSamplingDisk[16] = vec3( 0,  1,  1);
+	gridSamplingDisk[17] = vec3( 0, -1,  1);
+	gridSamplingDisk[18] = vec3( 0, -1, -1);
+	gridSamplingDisk[19] = vec3( 0,  1, -1);
+
 	// Default is to not add any color
 	float intensity = 0.0;
 	// Vector light-current position
@@ -62,29 +89,21 @@ void main()
 	// Point light, just get the depth given light vector
 	else if(u_type == 2.0){
 		lenDepthMap = textureCube(u_depthMapCube, lightDirection).a;
-//		float shadow = 0;
-//		for (float x = -2.0; x <= 2.0; x++) {
-//			for (float y = -2.0; y <= 2.0; y++) {
-//				shadow += textureCube(u_depthMapCube, vec3(v_positionLightTrans.x + x, v_positionLightTrans.y + y, v_positionLightTrans.z)).a;
-//			}
-//		}
-//		lenDepthMap = shadow/25;
-//		float shadow = 0;
-//		for (float i = -2.0; i <= 2.0; i++) {
-//			shadow += textureCube(u_depthMapCube, vec3(lightDirection.x + i, lightDirection.y + i, lightDirection.z + i)).a;
-//        }
-//        lenDepthMap = shadow / 5.0;
-//		float result = 0.0;
 
-//		for (float i = -2; i < 2; i++) {
-//			result += textureCube(u_depthMapCube, lightDirection * i).a;
-//		}
-//		lenDepthMap = result / 5;
+		float shadow = 0.0;
+		float diskRadius = (1.0 + (1.0 - lenToLight) * 3.0) / 1024.0;
+
+		for(int i = 0; i < 20; i++) {
+			shadow += textureCube(u_depthMapCube, lightDirection + gridSamplingDisk[i] * diskRadius).a;
+//			sampleShadowMap(-lightDirection, gridSamplingDisk[i] * diskRadius, lenToLight);
+		}
+//		lenDepthMap = shadow / 20.0;
+
 	}
 
 //PCF(u_depthMapCube, lightDepthSize, );
 	// If not in shadow, add some light
-	if(lenDepthMap >= lenToLight - 0.005){
+	if(lenDepthMap >= lenToLight - 0.05){
 		intensity = 0.5 * (1.0 - lenToLight);
 	}
 // not sure if below was here for some specific reason.
@@ -93,8 +112,8 @@ void main()
 //		intensity = 0.5 * (1.0 - lenToLight);
 //	}
 
-	intensity += depthMapSize;
-	intensity -= depthMapSize;
+//	intensity += depthMapSize;
+//	intensity -= depthMapSize;
 	gl_FragColor = vec4(intensity);
 
 }

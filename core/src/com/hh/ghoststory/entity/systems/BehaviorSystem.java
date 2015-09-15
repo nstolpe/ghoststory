@@ -37,12 +37,12 @@ public class BehaviorSystem extends EntitySystem {
         for (final Entity entity: entities) {
 			ObjectMap<String, ObjectMap<String, Object>> foo = Mappers.behavior.get(entity).behaviors;
 
-			if (entity == entities.first()) {
-				bounce(entity);
-			} else {
-				colorCycle(entity);
-				followPath(entity);
-			}
+//			if (entity == entities.first()) {
+//				bounce(entity);
+//			} else {
+//				colorCycle(entity);
+//				followPath(entity);
+//			}
         }
 
 	}
