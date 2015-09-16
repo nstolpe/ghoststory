@@ -89,16 +89,31 @@ void main() {
 	// Point light, just get the depth given light vector
 	else if(u_type == 2.0){
 		lenDepthMap = textureCube(u_depthMapCube, lightDirection).a;
+		vec3 perp = cross(lightDirection, vec3(0.0,0.0,1.0));
 
 		float shadow = 0.0;
 		float diskRadius = (1.0 + (1.0 - lenToLight) * 3.0) / 1024.0;
 
 		for(int i = 0; i < 20; i++) {
-			shadow += textureCube(u_depthMapCube, lightDirection + gridSamplingDisk[i] * diskRadius).a;
+//			shadow += textureCube(u_depthMapCube, lightDirection + gridSamplingDisk[i] * diskRadius).a;
 //			sampleShadowMap(-lightDirection, gridSamplingDisk[i] * diskRadius, lenToLight);
 		}
 //		lenDepthMap = shadow / 20.0;
 
+	    float result = 0.0;
+	    for (float x = -2.0; x <= 2.0; x++) {
+	        for (float y = -2.0; y <= 2.0; y++) {
+	            vec2 off = vec2(x, y) / 1024.0;
+	            off.x += perp.x;
+	            off.y += perp.y;
+	            // lenDepthMap is wrong to use here.
+	            // N_x*V_x + N_y*V_y + N_z*V_z=0
+	            //
+	            vec3 tmp = vec3(off.x, off.y, lenDepthMap);
+				result += textureCube(u_depthMapCube, tmp).a;
+	        }
+	    }
+//	    lenDepthMap = result / 25.0;
 	}
 
 //PCF(u_depthMapCube, lightDepthSize, );
