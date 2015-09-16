@@ -111,6 +111,16 @@ void main() {
 			}
 		}
 		lenDepthMap = result/25.0;
+		vec3 perp = cross(lightDirection, vec3(0.0,0.0,1.0));
+
+		float shadow = 0.0;
+		float diskRadius = (1.0 + (1.0 - lenToLight) * 3.0) / 1024.0;
+
+		for(int i = 0; i < 20; i++) {
+//			shadow += textureCube(u_depthMapCube, lightDirection + gridSamplingDisk[i] * diskRadius).a;
+//			sampleShadowMap(-lightDirection, gridSamplingDisk[i] * diskRadius, lenToLight);
+		}
+//		lenDepthMap = shadow / 20.0;
 	}
 
 //PCF(u_depthMapCube, lightDepthSize, );
