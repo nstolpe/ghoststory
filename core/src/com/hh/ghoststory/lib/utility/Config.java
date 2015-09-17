@@ -208,7 +208,7 @@ public class Config {
 				.add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
 				.add(new IntensityComponent(20))
 				.add(new LightTypeComponent(LightTypeComponent.SPOT))
-				.add(new SpotLightComponent(new SpotCaster(new Color(1f, 1f, 1f, 1f), new Vector3(0, 6, 0), new Vector3(0,-1,0), 10, 10, 10), true, true))
+				.add(new SpotLightComponent(new SpotCaster(new Color(1f, 1f, 1f, 1f), new Vector3(0, 6, 0), new Vector3(0,-1,0), 10f, 90f, 10f), true, true))
 				.add(new BehaviorComponent())
 				.add(new GeometryComponent().file("cube.g3dj"))
 			);
