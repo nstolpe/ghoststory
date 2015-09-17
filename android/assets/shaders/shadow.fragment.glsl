@@ -14,7 +14,7 @@ uniform samplerCube u_depthMapCube;
 uniform float u_cameraFar;
 uniform vec3 u_lightPosition;
 uniform float u_type;
-//uniform int depthMapSize;
+uniform float depthMapSize;
 
 varying vec4 v_position;
 varying vec4 v_positionLightTrans;
@@ -93,7 +93,7 @@ void main() {
 	}
 	// Point light, just get the depth given light vector
 	else if(u_type == 2.0){
-//		lenDepthMap = textureCube(u_depthMapCube, lightDirection).a;
+		lenDepthMap = textureCube(u_depthMapCube, lightDirection).a;
 
 //		float shadow = 0.0;
 //		float diskRadius = (1.0 + (1.0 - lenToLight) * 10.0) / 1024.0;
@@ -103,14 +103,14 @@ void main() {
 //		}
 //		lenDepthMap = shadow / 20.0;
 
-		float result = 0.0;
-		for (float x = -2.0; x <= 2.0; x++) {
-			for (float y = -2.0; y <= 2.0; y++) {
-				vec3 off = vec3(lightDirection.x + (x / 512.0), lightDirection.y + (y / 512.0), lightDirection.z);
-				result += textureCube(u_depthMapCube, off).a;
-			}
-		}
-		lenDepthMap = result/25.0;
+//		float result = 0.0;
+//		for (float x = -2.0; x <= 2.0; x++) {
+//			for (float y = -2.0; y <= 2.0; y++) {
+//				vec3 off = vec3(lightDirection.x + (x / 512.0), lightDirection.y + (y / 512.0), lightDirection.z);
+//				result += textureCube(u_depthMapCube, off).a;
+//			}
+//		}
+//		lenDepthMap = result/25.0;
 		vec3 perp = cross(lightDirection, vec3(0.0,0.0,1.0));
 
 		float shadow = 0.0;
@@ -134,8 +134,8 @@ void main() {
 //		intensity = 0.5 * (1.0 - lenToLight);
 //	}
 
-//	intensity += depthMapSize;
-//	intensity -= depthMapSize;
+	intensity += depthMapSize;
+	intensity -= depthMapSize;
 	gl_FragColor = vec4(intensity);
 
 }
