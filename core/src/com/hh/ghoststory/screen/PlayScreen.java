@@ -34,6 +34,7 @@ import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
+import com.hh.ghoststory.scene.lights.core.SpotCaster;
 import com.hh.ghoststory.screen.input.PlayDetector;
 
 /**
@@ -93,8 +94,14 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 			if (Mappers.ambient.has(Config.engine.getEntitiesFor(EntityTypes.SCENE).get(0)))
 				lighting.set(Mappers.ambient.get(Config.engine.getEntitiesFor(EntityTypes.SCENE).get(0)).colorAttribute);
 			// lights. this is ugly now and needs to be better. Entity system.
-			if (Mappers.light.has(entity)) {
-				PointCaster caster = Mappers.light.get(entity).caster(new PointCaster(Mappers.color.get(entity).color, Mappers.position.get(entity).position, Mappers.intensity.get(entity).intensity)).caster;
+			if (Mappers.pointLight.has(entity)) {
+				PointCaster caster = Mappers.pointLight.get(entity).caster(new PointCaster(Mappers.color.get(entity).color, Mappers.position.get(entity).position, Mappers.intensity.get(entity).intensity)).caster;
+				lighting.add(caster);
+				if (Mappers.shadowCasting.has(entity))
+					casters.add(caster);
+			}
+			if (Mappers.spotLight.has(entity)) {
+				Caster caster = Mappers.spotLight.get(entity).caster;
 				lighting.add(caster);
 				if (Mappers.shadowCasting.has(entity))
 					casters.add(caster);
@@ -165,12 +172,20 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 				instances.add(instance);
 			}
 
-			for (Entity light : Config.engine.getEntitiesFor(Family.all(LightComponent.class).get())) {
-				Mappers.light.get(light).caster.setPosition(Mappers.position.get(light).position);
-				Mappers.light.get(light).caster.setColor(Mappers.color.get(light).color);
+			for (Entity light : Config.engine.getEntitiesFor(Family.all(PointLightComponent.class).get())) {
+				Mappers.pointLight.get(light).caster.setPosition(Mappers.position.get(light).position);
+				Mappers.pointLight.get(light).caster.setColor(Mappers.color.get(light).color);
 
-				if (Mappers.light.get(light).shadowing)
-					casters.add(Mappers.light.get(light).caster);
+				if (Mappers.pointLight.get(light).shadowing)
+					casters.add(Mappers.pointLight.get(light).caster);
+			}
+
+			for (Entity light : Config.engine.getEntitiesFor(Family.all(SpotLightComponent.class).get())) {
+				Mappers.spotLight.get(light).caster.setPosition(Mappers.position.get(light).position);
+				Mappers.spotLight.get(light).caster.setColor(Mappers.color.get(light).color);
+
+				if (Mappers.spotLight.get(light).shadowing)
+					casters.add(Mappers.spotLight.get(light).caster);
 			}
 		}
 

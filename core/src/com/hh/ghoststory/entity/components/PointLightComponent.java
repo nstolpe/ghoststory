@@ -6,30 +6,30 @@ import com.hh.ghoststory.scene.lights.core.PointCaster;
 /**
  * Created by nils on 9/3/15.
  */
-public class LightComponent implements Component {
+public class PointLightComponent implements Component {
     public PointCaster caster = new PointCaster();
 	public boolean lighting;
 	public boolean shadowing;
 
-    public LightComponent() {}
+    public PointLightComponent() {}
 
-    public LightComponent(PointCaster caster, boolean lighting, boolean shadowing) {
+    public PointLightComponent(PointCaster caster, boolean lighting, boolean shadowing) {
 		this.caster = caster;
 		this.lighting = lighting;
 		this.shadowing = shadowing;
     }
 
-    public LightComponent caster(PointCaster caster) {
+    public PointLightComponent caster(PointCaster caster) {
         this.caster = caster;
         return this;
     }
 
-	public LightComponent lighting(boolean lighting) {
+	public PointLightComponent lighting(boolean lighting) {
 		this.lighting = lighting;
 		return this;
 	}
 
-	public LightComponent shadowing(boolean shadowing) {
+	public PointLightComponent shadowing(boolean shadowing) {
 		this.shadowing = shadowing;
 		return this;
 	}

@@ -38,7 +38,6 @@ public class PointCaster extends PointLight implements Caster {
 
     protected void setCameraPosition(Vector3 position) {
         camera.position.set(position);
-        // is update needed here? probably
         camera.update();
     }
 	/**
@@ -55,21 +54,6 @@ public class PointCaster extends PointLight implements Caster {
 		camera.update();
 	}
 
-	private void initModelBatch() {
-		modelBatch = new ModelBatch(new DefaultShaderProvider() {
-			@Override
-			protected com.badlogic.gdx.graphics.g3d.Shader createShader(final Renderable renderable) {
-				return new DepthMapShader(renderable, shaderProgram);
-			}
-		});
-	}
-
-	private void initShaderProgram() {
-		shaderProgram = new ShaderProgram(
-			Gdx.files.internal("shaders/depth.vertex.glsl"),
-			Gdx.files.internal("shaders/depth.fragment.glsl")
-		);
-	}
 	/**
 	 * It binds the depthmap to the shader and sets some normals.
 	 * @TODO This is called from ShadowMapShader.applyToShader(). It's different for other light types, so it makes sense,
@@ -105,6 +89,21 @@ public class PointCaster extends PointLight implements Caster {
 		if (frameBuffer != null) frameBuffer.dispose();
 
 		frameBuffer = new FrameBufferCubemap(Pixmap.Format.RGBA8888, depthMapSize, depthMapSize, true);
+	}
+	private void initModelBatch() {
+		modelBatch = new ModelBatch(new DefaultShaderProvider() {
+			@Override
+			protected com.badlogic.gdx.graphics.g3d.Shader createShader(final Renderable renderable) {
+				return new DepthMapShader(renderable, shaderProgram);
+			}
+		});
+	}
+
+	private void initShaderProgram() {
+		shaderProgram = new ShaderProgram(
+			Gdx.files.internal("shaders/depth.vertex.glsl"),
+			Gdx.files.internal("shaders/depth.fragment.glsl")
+		);
 	}
 
 	@Override

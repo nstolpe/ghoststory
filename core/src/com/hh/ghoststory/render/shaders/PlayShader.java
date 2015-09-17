@@ -68,4 +68,11 @@ public class PlayShader extends DefaultShader {
 		if (renderable.material != null) tmpAttributes.set(renderable.material);
 		return tmpAttributes;
 	}
+
+	public static class Config extends DefaultShader.Config {
+		public Config(final String vertexShader, final String fragmentShader) {
+			super(vertexShader, fragmentShader);
+			numSpotLights = 5;
+		}
+	}
 }

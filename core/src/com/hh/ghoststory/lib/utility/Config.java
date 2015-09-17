@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.entity.components.*;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
+import com.hh.ghoststory.scene.lights.core.SpotCaster;
 
 /**
  * Created by nils on 7/15/15.
@@ -153,64 +154,64 @@ public class Config {
 	};
 	public Array<Entity> lights = new Array<Entity>() {
 		{
-			// lights 1
-			add(new Entity()
-				.add(new IDComponent("light"))
-				.add(new NameComponent("Light One"))
-				.add(new PositionComponent(new Vector3(0, 6, -20)))
-				.add(new ColorComponent(new Color(1f, 0f, 0f, 1f)))
-				.add(new IntensityComponent(40))
-				.add(new LightTypeComponent(LightTypeComponent.POINT))
-				.add(new LightComponent(new PointCaster(), true, true))
-				.add(new BehaviorComponent(
-								new Array<ObjectMap<String, Object>>() {
-									{
-										add(new ObjectMap<String, Object>() {
-											{
-												put("id", "default");
-												put("type", "bounce");
-											}
-										});
-									}
-								})
-				)
-				.add(new GeometryComponent().file("cube.g3dj"))
-			);
-			// lights 2
-			add(new Entity()
-				.add(new IDComponent("light"))
-				.add(new NameComponent("Light two"))
-				.add(new PositionComponent(new Vector3(20, 6, 20)))
-				.add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
-				.add(new IntensityComponent(20))
-				.add(new LightTypeComponent(LightTypeComponent.POINT))
-				.add(new LightComponent(new PointCaster(), true, true))
-							.add(new BehaviorComponent(
-											new Array<ObjectMap<String, Object>>() {
-												{
-													add(new ObjectMap<String, Object>() {
-														{
-															put("id", "default");
-															put("type", "edges");
-														}
-													});
-												}
-											})
-							)
-				.add(new GeometryComponent().file("cube.g3dj"))
-			);
-//			// lights 3
+//			// lights 1
 //			add(new Entity()
 //				.add(new IDComponent("light"))
-//				.add(new NameComponent("Light three"))
-//				.add(new PositionComponent(new Vector3(-20, 6, 20)))
+//				.add(new NameComponent("Light One"))
+//				.add(new PositionComponent(new Vector3(0, 6, -20)))
+//				.add(new ColorComponent(new Color(1f, 0f, 0f, 1f)))
+//				.add(new IntensityComponent(40))
+//				.add(new LightTypeComponent(LightTypeComponent.POINT))
+//				.add(new PointLightComponent(new PointCaster(), true, true))
+//				.add(new BehaviorComponent(
+//								new Array<ObjectMap<String, Object>>() {
+//									{
+//										add(new ObjectMap<String, Object>() {
+//											{
+//												put("id", "default");
+//												put("type", "bounce");
+//											}
+//										});
+//									}
+//								})
+//				)
+//				.add(new GeometryComponent().file("cube.g3dj"))
+//			);
+//			// lights 2
+//			add(new Entity()
+//				.add(new IDComponent("light"))
+//				.add(new NameComponent("Light two"))
+//				.add(new PositionComponent(new Vector3(20, 6, 20)))
 //				.add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
 //				.add(new IntensityComponent(20))
 //				.add(new LightTypeComponent(LightTypeComponent.POINT))
-//				.add(new LightComponent(new PointCaster(), true, false))
-//				.add(new BehaviorComponent())
+//				.add(new PointLightComponent(new PointCaster(), true, true))
+//							.add(new BehaviorComponent(
+//											new Array<ObjectMap<String, Object>>() {
+//												{
+//													add(new ObjectMap<String, Object>() {
+//														{
+//															put("id", "default");
+//															put("type", "edges");
+//														}
+//													});
+//												}
+//											})
+//							)
 //				.add(new GeometryComponent().file("cube.g3dj"))
 //			);
+//			// lights 3
+			add(new Entity()
+				.add(new IDComponent("light"))
+				.add(new NameComponent("Light three"))
+				.add(new PositionComponent(new Vector3(0, 6, 0)))
+				.add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
+				.add(new IntensityComponent(20))
+				.add(new LightTypeComponent(LightTypeComponent.SPOT))
+				.add(new SpotLightComponent(new SpotCaster(new Color(1f, 1f, 1f, 1f), new Vector3(0, 6, 0), new Vector3(0,-1,0), 10, 10, 10), true, true))
+				.add(new BehaviorComponent())
+				.add(new GeometryComponent().file("cube.g3dj"))
+			);
 //			// lights 4
 //			add(new Entity()
 //				.add(new IDComponent("light"))
@@ -219,7 +220,7 @@ public class Config {
 //				.add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
 //				.add(new IntensityComponent(20))
 //				.add(new LightTypeComponent(LightTypeComponent.POINT))
-//				.add(new LightComponent(new PointCaster(), true, false))
+//				.add(new PointLightComponent(new PointCaster(), true, false))
 //				.add(new BehaviorComponent())
 //				.add(new GeometryComponent().file("cube.g3dj"))
 //			);
@@ -231,7 +232,7 @@ public class Config {
 //				.add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
 //				.add(new IntensityComponent(20))
 //				.add(new LightTypeComponent(LightTypeComponent.POINT))
-//				.add(new LightComponent(new PointCaster(), true, false))
+//				.add(new PointLightComponent(new PointCaster(), true, false))
 //				.add(new BehaviorComponent())
 //				.add(new GeometryComponent().file("cube.g3dj"))
 //			);

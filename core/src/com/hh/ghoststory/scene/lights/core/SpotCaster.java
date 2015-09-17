@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.DepthMapShader;
+import com.hh.ghoststory.ScreenshotFactory;
 
 /**
  * Created by nils on 9/3/15.
@@ -22,30 +23,21 @@ public class SpotCaster extends SpotLight implements Caster {
     public int depthMapSize = 1024;
 	public FrameBuffer frameBuffer;
 	public Texture depthMap;
-	public ShaderProgram shaderProgram = new ShaderProgram(
-			Gdx.files.internal("shaders/depth.vertex.glsl"),
-			Gdx.files.internal("shaders/depth.fragment.glsl")
-	);
-	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {
-		@Override
-		protected com.badlogic.gdx.graphics.g3d.Shader createShader(final Renderable renderable) {
-		return new DepthMapShader(renderable, shaderProgram);
-		}
-	});
+	public ShaderProgram shaderProgram;
+	public ModelBatch modelBatch;
 
 	public SpotCaster() {
 		initCamera();
-		initFrameBuffer();
 	}
 
-    public SpotCaster(Color color, Vector3 position, float intensity) {
-        this();
-//        set(color, position, intensity);
+    public SpotCaster(final Color color, final Vector3 position, final Vector3 direction, final float intensity,
+					  final float cutoffAngle, final float exponent ) {
+        set(color, position, direction, intensity, cutoffAngle, exponent);
+		initCamera();
     }
 
     protected void setCameraPosition(Vector3 position) {
         camera.position.set(position);
-        // is update needed here? probably
         camera.update();
     }
 	/**
@@ -59,6 +51,8 @@ public class SpotCaster extends SpotLight implements Caster {
 		camera.near = 0.5f;
 		camera.far = 30f;
 		camera.position.set(position);
+		camera.lookAt(0,0,0);
+//		camera.direction.set(direction);
 		camera.update();
 	}
 
@@ -85,7 +79,7 @@ public class SpotCaster extends SpotLight implements Caster {
 	public void applyToShader(final ShaderProgram shaderProgram) {
 		final int textureNum = 2;
 		depthMap.bind(textureNum);
-		shaderProgram.setUniformf("u_type", 3);
+		shaderProgram.setUniformf("u_type", 1);
 		shaderProgram.setUniformi("u_depthMapCube", textureNum);
 		shaderProgram.setUniformf("u_cameraFar", camera.far);
 		shaderProgram.setUniformf("u_lightPosition", position);
@@ -99,9 +93,27 @@ public class SpotCaster extends SpotLight implements Caster {
 		frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, depthMapSize, depthMapSize, true);
 	}
 
+	private void initModelBatch() {
+		modelBatch = new ModelBatch(new DefaultShaderProvider() {
+			@Override
+			protected com.badlogic.gdx.graphics.g3d.Shader createShader(final Renderable renderable) {
+				return new DepthMapShader(renderable, shaderProgram);
+			}
+		});
+	}
+
+	private void initShaderProgram() {
+		shaderProgram = new ShaderProgram(
+			Gdx.files.internal("shaders/depth.vertex.glsl"),
+			Gdx.files.internal("shaders/depth.fragment.glsl")
+		);
+	}
+
 	@Override
 	public void render(Array<ModelInstance> instances) {
 		if (frameBuffer == null) initFrameBuffer();
+		if (modelBatch == null) initModelBatch();
+		if (shaderProgram == null) initShaderProgram();
 
 		frameBuffer.begin();
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -115,7 +127,7 @@ public class SpotCaster extends SpotLight implements Caster {
 		modelBatch.begin(camera);
 		modelBatch.render(instances);
 		modelBatch.end();
-
+		ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmap");
 		frameBuffer.end();
 
 		depthMap = frameBuffer.getColorBufferTexture();

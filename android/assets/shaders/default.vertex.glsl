@@ -168,6 +168,16 @@ struct PointLight
 uniform PointLight u_pointLights[numPointLights];
 #endif // numPointLights
 
+#if defined(numSpotLights) && (numSpotLights > 0)
+struct SpotLight
+{
+	vec3 color;
+	vec3 position;
+	vec3 direction;
+};
+uniform SpotLight u_spotLights[numSpotLights];
+#endif // numPointLights
+
 #if	defined(ambientLightFlag) || defined(ambientCubemapFlag) || defined(sphericalHarmonicsFlag)
 #define ambientFlag
 #endif //ambientFlag

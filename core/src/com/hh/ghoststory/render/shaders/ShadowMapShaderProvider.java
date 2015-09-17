@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.entity.Mappers;
-import com.hh.ghoststory.entity.components.LightComponent;
+import com.hh.ghoststory.entity.components.PointLightComponent;
 import com.hh.ghoststory.lib.utility.Config;
 import com.hh.ghoststory.scene.lights.core.Caster;
 
@@ -23,9 +23,9 @@ public class ShadowMapShaderProvider extends DefaultShaderProvider {
 	}
 	@Override
 	protected Shader createShader(final Renderable renderable) {
-		ImmutableArray<Entity> lights = Config.engine.getEntitiesFor(Family.all(LightComponent.class).get());
+		ImmutableArray<Entity> lights = Config.engine.getEntitiesFor(Family.all(PointLightComponent.class).get());
 		for (Entity light : lights) {
-			if (Mappers.light.get(light).shadowing) casters.add(Mappers.light.get(light).caster);
+			if (Mappers.pointLight.get(light).shadowing) casters.add(Mappers.pointLight.get(light).caster);
 		}
 		return new ShadowMapShader(renderable, casters);
 	}
