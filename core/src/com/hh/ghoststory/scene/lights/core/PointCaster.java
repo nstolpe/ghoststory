@@ -24,20 +24,11 @@ public class PointCaster extends PointLight implements Caster {
     public int depthMapSize = 1024;
 	public FrameBufferCubemap frameBuffer;
 	public Cubemap depthMap;
-	public ShaderProgram shaderProgram = new ShaderProgram(
-			Gdx.files.internal("shaders/depth.vertex.glsl"),
-			Gdx.files.internal("shaders/depth.fragment.glsl")
-	);
-	public ModelBatch modelBatch = new ModelBatch(new DefaultShaderProvider() {
-		@Override
-		protected com.badlogic.gdx.graphics.g3d.Shader createShader(final Renderable renderable) {
-			return new DepthMapShader(renderable, shaderProgram);
-		}
-	});
+	public ShaderProgram shaderProgram;
+	public ModelBatch modelBatch;
 
 	public PointCaster() {
 		initCamera();
-		initFrameBuffer();
 	}
 
     public PointCaster(Color color, Vector3 position, float intensity) {
@@ -64,6 +55,21 @@ public class PointCaster extends PointLight implements Caster {
 		camera.update();
 	}
 
+	private void initModelBatch() {
+		modelBatch = new ModelBatch(new DefaultShaderProvider() {
+			@Override
+			protected com.badlogic.gdx.graphics.g3d.Shader createShader(final Renderable renderable) {
+				return new DepthMapShader(renderable, shaderProgram);
+			}
+		});
+	}
+
+	private void initShaderProgram() {
+		shaderProgram = new ShaderProgram(
+			Gdx.files.internal("shaders/depth.vertex.glsl"),
+			Gdx.files.internal("shaders/depth.fragment.glsl")
+		);
+	}
 	/**
 	 * It binds the depthmap to the shader and sets some normals.
 	 * @TODO This is called from ShadowMapShader.applyToShader(). It's different for other light types, so it makes sense,
@@ -104,6 +110,8 @@ public class PointCaster extends PointLight implements Caster {
 	@Override
 	public void render(Array<ModelInstance> instances) {
 		if (frameBuffer == null) initFrameBuffer();
+		if (modelBatch == null) initModelBatch();
+		if (shaderProgram == null) initShaderProgram();
 
 		shaderProgram.begin();
 		shaderProgram.setUniformf("u_cameraFar", camera.far);
@@ -114,9 +122,12 @@ public class PointCaster extends PointLight implements Caster {
 		while(frameBuffer.nextSide()) {
 			frameBuffer.getSide().getUp(camera.up);
 			frameBuffer.getSide().getDirection(camera.direction);
+
 			camera.update();
+
 			Gdx.gl.glClearColor(0, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
 			modelBatch.begin(camera);
 			modelBatch.render(instances);
 			modelBatch.end();
@@ -132,9 +143,9 @@ public class PointCaster extends PointLight implements Caster {
      */
 	@Override
 	public void dispose() {
-		frameBuffer.dispose();
-		shaderProgram.dispose();
-		depthMap.dispose();
+		if (frameBuffer != null)   frameBuffer.dispose();
+		if (shaderProgram != null) shaderProgram.dispose();
+		if (depthMap != null)      depthMap.dispose();
 	}
 	/**
 	 * extends overrides
