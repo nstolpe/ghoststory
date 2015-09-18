@@ -332,11 +332,12 @@ void main() {
 		// https://github.com/realitix/libgdx/commit/8d5d9ad9aea32cf8703018f9eee6222175821e89#diff-6401e444de7386027209557537e33a11R176
 		#if defined(numSpotLights) && (numSpotLights > 0) && defined(normalFlag)
 			for (int i = 0; i < numSpotLights; i++) {
-				vec3 lightDir = u_spotLights[i].direction - pos.xyz;
+				vec3 lightDir = u_spotLights[i].position - pos.xyz;
+//				vec3 lightDir = -u_spotLights[i].direction;
 				float dist2 = dot(lightDir, lightDir);
 				lightDir *= inversesqrt(dist2);
 				float NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
-				vec3 value = u_pointLights[i].color * (NdotL / (1.0 + dist2));
+				vec3 value = u_spotLights[i].color * (NdotL / (1.0 + dist2));
 				v_lightDiffuse += value;
 				#ifdef specularFlag
 					float halfDotView = max(0.0, dot(normal, normalize(lightDir + viewVec)));
