@@ -14,7 +14,7 @@ uniform samplerCube u_depthMapCube;
 uniform float u_cameraFar;
 uniform vec3 u_lightPosition;
 uniform float u_type;
-uniform float depthMapSize;
+//uniform float depthMapSize;
 
 varying vec4 v_position;
 varying vec4 v_positionLightTrans;
@@ -134,8 +134,8 @@ void main() {
 //		intensity = 0.5 * (1.0 - lenToLight);
 //	}
 
-	intensity += depthMapSize;
-	intensity -= depthMapSize;
+//	intensity += depthMapSize;
+//	intensity -= depthMapSize;
 	gl_FragColor = vec4(intensity);
 
 }
