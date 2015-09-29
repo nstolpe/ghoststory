@@ -93,7 +93,7 @@ public class BehaviorSystem extends EntitySystem {
 			.push(
 				Tween.to(Mappers.position.get(entity).position, Vector3Accessor.XYZ, 6)
 					.ease(TweenEquations.easeNone)
-					.target(new float[]{-20f, 6f, 20f})
+					.target(new float[]{-20f, 10f, 20f})
 			)
 			.push(
 				Tween.to(Mappers.direction.get(entity).direction, Vector3Accessor.XYZ, 3)
@@ -103,7 +103,7 @@ public class BehaviorSystem extends EntitySystem {
 			.push(
 				Tween.to(Mappers.position.get(entity).position, Vector3Accessor.XYZ, 6)
 					.ease(TweenEquations.easeNone)
-					.target(new float[]{-20f, 6f, -20f})
+					.target(new float[]{-20f, 10f, -20f})
 			)
 			.push(
 				Tween.to(Mappers.direction.get(entity).direction, Vector3Accessor.XYZ, 3)
@@ -113,7 +113,7 @@ public class BehaviorSystem extends EntitySystem {
 			.push(
 				Tween.to(Mappers.position.get(entity).position, Vector3Accessor.XYZ, 6)
 					.ease(TweenEquations.easeNone)
-					.target(new float[]{20f, 6f, -20f})
+					.target(new float[]{20f, 10f, -20f})
 			)
 			.push(
 				Tween.to(Mappers.direction.get(entity).direction, Vector3Accessor.XYZ, 3)
@@ -123,7 +123,7 @@ public class BehaviorSystem extends EntitySystem {
 			.push(
 				Tween.to(Mappers.position.get(entity).position, Vector3Accessor.XYZ, 6)
 					.ease(TweenEquations.easeNone)
-					.target(new float[]{20f, 6f, 20f})
+					.target(new float[]{20f, 10f, 20f})
 			)
 			.push(
 				Tween.to(Mappers.direction.get(entity).direction, Vector3Accessor.XYZ, 3)

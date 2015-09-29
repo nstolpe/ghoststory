@@ -204,7 +204,7 @@ public class Config {
 			add(new Entity()
 				.add(new IDComponent("light"))
 				.add(new NameComponent("Light three"))
-				.add(new PositionComponent(new Vector3(20, 6, 20)))
+				.add(new PositionComponent(new Vector3(20, 10, 20)))
 				.add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
 				.add(new IntensityComponent(40))
 				.add(new LightTypeComponent(LightTypeComponent.SPOT))
