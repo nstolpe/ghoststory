@@ -160,7 +160,7 @@ public class Config {
 				.add(new NameComponent("Light One"))
 				.add(new PositionComponent(new Vector3(0, 6, -20)))
 				.add(new ColorComponent(new Color(1f, 0f, 0f, 1f)))
-				.add(new IntensityComponent(40))
+				.add(new IntensityComponent(5))
 				.add(new LightTypeComponent(LightTypeComponent.POINT))
 				.add(new PointLightComponent(new PointCaster(), true, true))
 				.add(new BehaviorComponent(
@@ -183,7 +183,7 @@ public class Config {
 				.add(new NameComponent("Light two"))
 				.add(new PositionComponent(new Vector3(20, 6, 20)))
 				.add(new ColorComponent(new Color(1f, 1f, 1f, 1f)))
-				.add(new IntensityComponent(20))
+				.add(new IntensityComponent(5))
 				.add(new LightTypeComponent(LightTypeComponent.POINT))
 				.add(new PointLightComponent(new PointCaster(), true, true))
 							.add(new BehaviorComponent(
