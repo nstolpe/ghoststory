@@ -95,38 +95,10 @@ void main() {
 	else if(u_type == 2.0){
 		lenDepthMap = textureCube(u_depthMapCube, lightDirection).a;
 
-//		float shadow = 0.0;
-//		float diskRadius = (1.0 + (1.0 - lenToLight) * 10.0) / 1024.0;
-//
-//		for(int i = 0; i < 20; i++) {
-//			shadow += textureCube(u_depthMapCube, lightDirection + gridSamplingDisk[i] * diskRadius).a;
-//		}
-//		lenDepthMap = shadow / 20.0;
-
-//		float result = 0.0;
-//		for (float x = -2.0; x <= 2.0; x++) {
-//			for (float y = -2.0; y <= 2.0; y++) {
-//				vec3 off = vec3(lightDirection.x + (x / 512.0), lightDirection.y + (y / 512.0), lightDirection.z);
-//				result += textureCube(u_depthMapCube, off).a;
-//			}
-//		}
-//		lenDepthMap = result/25.0;
-		vec3 perp = cross(lightDirection, vec3(0.0,0.0,1.0));
-
-		float shadow = 0.0;
-		float diskRadius = (1.0 + (1.0 - lenToLight) * 3.0) / 1024.0;
-
-		for(int i = 0; i < 20; i++) {
-//			shadow += textureCube(u_depthMapCube, lightDirection + gridSamplingDisk[i] * diskRadius).a;
-//			sampleShadowMap(-lightDirection, gridSamplingDisk[i] * diskRadius, lenToLight);
-		}
-//		lenDepthMap = shadow / 20.0;
 	}
 
-//PCF(u_depthMapCube, lightDepthSize, );
-	// If not in shadow, add some light
 	if(lenDepthMap >= lenToLight - 0.005){
-		intensity = 0.5 * (1.0 - lenToLight);
+		intensity = 1 * (1.0 - lenToLight);
 	}
 // not sure if below was here for some specific reason.
 //	if(lenDepthMap < lenToLight - 0.005){
@@ -134,8 +106,6 @@ void main() {
 //		intensity = 0.5 * (1.0 - lenToLight);
 //	}
 
-//	intensity += depthMapSize;
-//	intensity -= depthMapSize;
 	gl_FragColor = vec4(intensity);
 
 }

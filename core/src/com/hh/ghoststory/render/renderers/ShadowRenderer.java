@@ -51,8 +51,8 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	    Gdx.gl.glClearColor(screen.clearRed, screen.clearGreen, screen.clearBlue, screen.clearAlpha);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-//	    renderDepth(casters, instances);
-//	    renderShadows(camera, instances);
+	    renderDepth(casters, instances);
+	    renderShadows(camera, instances);
 	    renderScene(camera, instances, environment);
     }
 	public void renderDepth(Array<Caster> caster, Array<ModelInstance> instances) {

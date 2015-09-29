@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.entity.EntityTypes;
 import com.hh.ghoststory.entity.Mappers;
 import com.hh.ghoststory.entity.components.*;
@@ -80,10 +81,6 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 		Tween.registerAccessor(Vector3.class, new Vector3Accessor());
 		Tween.registerAccessor(Quaternion.class, new QuaternionAccessor());
 		Tween.registerAccessor(Color.class, new ColorAccessor());
-
-		// entity engine setup
-//		Config.engine.addSystem(new BoundingBoxSystem());
-//		Config.engine.addSystem(new BehaviorSystem(tweenManager));
 
 		shadowSystem = new RealisticShadowSystem(active, instances);
 		lighting.addListener(shadowSystem);
@@ -201,12 +198,8 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 					casters.add(Mappers.spotLight.get(light).caster);
 
 				Mappers.spotLight.get(light).caster.direction.set(Mappers.direction.get(light).direction);
-//				if (Mappers.direction.has(light)) {
-//					float x = Mappers.rotation.get(light).rotation.getAngleAround(1,0,0);
-//					float y = Mappers.rotation.get(light).rotation.getAngleAround(0,1,0);
-//					float z = Mappers.rotation.get(light).rotation.getAngleAround(0, 0,1);
-//					Mappers.spotLight.get(light).caster.direction.set(-x, -y, -z);
-//				}
+				Mappers.spotLight.get(light).caster.camera.direction.set(Mappers.direction.get(light).direction);
+
 			}
 		}
 
@@ -215,28 +208,30 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 		active.update();
 		playDetector.update();
 
-//		renderer.render(active, instances, casters, lighting);
+		renderer.render(active, instances, casters, lighting);
 
-		shadowSystem.update();
-
-		for (int i = 0; i < shadowSystem.getPassQuantity(); i++) {
-			shadowSystem.begin(i);
-			Camera camera;
-			while ((camera = shadowSystem.next()) != null) {
-				passBatches.get(i).begin(camera);
-				passBatches.get(i).render(instances, lighting);
-				passBatches.get(i).end();
-			}
-			camera = null;
-			shadowSystem.end(i);
-		}
-		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-		shadowModelBatch.begin(active);
-		shadowModelBatch.render(instances, lighting);
-		shadowModelBatch.end();
+//		shadowSystem.update();
+//
+//		for (int i = 0; i < shadowSystem.getPassQuantity(); i++) {
+//			shadowSystem.begin(i);
+//			Camera camera;
+//			while ((camera = shadowSystem.next()) != null) {
+//				passBatches.get(i).begin(camera);
+//				passBatches.get(i).render(instances, lighting);
+//				passBatches.get(i).end();
+//			}
+//			camera = null;
+//			shadowSystem.end(i);
+//		}
+//
+//		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//		Gdx.gl.glClearColor(0, 0, 0, 1);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+//
+//		shadowModelBatch.begin(active);
+//		shadowModelBatch.render(instances, lighting);
+//		shadowModelBatch.end();
+//		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "scene");
 		logger.log();
 	}
 
@@ -257,7 +252,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 			if (Mappers.animation.has(renderable)) {
 				AnimationComponent animation = Mappers.animation.get(renderable);
 				animation.init(instance);
-				// the normal/default/rest animation should be defined on the entity somewhere, not just default to "normal".
+				// the normal/default/rest animation should be defined on the entity somewhere, not just default to "default".
 				ObjectMap<String, Object> normal = animation.animations.get("default");
 				// this casting sucks. JSON import might be good to use, should fix that.
 				animation.controller.setAnimation(

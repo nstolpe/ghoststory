@@ -51,8 +51,8 @@ public class SpotCaster extends SpotLight implements Caster {
 		camera.near = 0.5f;
 		camera.far = 30f;
 		camera.position.set(position);
-		camera.lookAt(0,0,0);
-//		camera.direction.set(direction);
+//		camera.lookAt(0,0,0);
+		camera.direction.set(direction);
 		camera.update();
 	}
 
@@ -77,12 +77,13 @@ public class SpotCaster extends SpotLight implements Caster {
 	 */
 	@Override
 	public void applyToShader(final ShaderProgram shaderProgram) {
-		final int textureNum = 2;
+		final int textureNum = 3;
 		depthMap.bind(textureNum);
 		shaderProgram.setUniformf("u_type", 1);
-		shaderProgram.setUniformi("u_depthMapCube", textureNum);
+		shaderProgram.setUniformi("u_depthMapDir", textureNum);
 		shaderProgram.setUniformf("u_cameraFar", camera.far);
 		shaderProgram.setUniformf("u_lightPosition", position);
+		shaderProgram.setUniformMatrix("u_lightTrans", camera.combined);
 //		shaderProgram.setUniformf("depthMapSize", depthMapSize);
 	}
 
@@ -127,7 +128,7 @@ public class SpotCaster extends SpotLight implements Caster {
 		modelBatch.begin(camera);
 		modelBatch.render(instances);
 		modelBatch.end();
-		ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmap");
+//		ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmap");
 		frameBuffer.end();
 
 		depthMap = frameBuffer.getColorBufferTexture();
