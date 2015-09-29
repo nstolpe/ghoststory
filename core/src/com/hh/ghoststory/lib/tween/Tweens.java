@@ -45,6 +45,6 @@ public class Tweens {
 		targets[1] = target.y;
 		targets[2] = target.z;
 
-		return Tween.to(current, Vector3Accessor.POSITION_XYZ, duration).target(targets).ease(easing);
+		return Tween.to(current, Vector3Accessor.XYZ, duration).target(targets).ease(easing);
 	}
 }

@@ -25,8 +25,6 @@ public class Mappers {
     public static final ComponentMapper<AnimationComponent> animation = ComponentMapper.getFor(AnimationComponent.class);
     public static final ComponentMapper<BehaviorComponent> behavior = ComponentMapper.getFor(BehaviorComponent.class);
 
-
-
 	// Meta
     public static final ComponentMapper<IDComponent> id = ComponentMapper.getFor(IDComponent.class);
     public static final ComponentMapper<NameComponent> name = ComponentMapper.getFor(NameComponent.class);
@@ -34,6 +32,7 @@ public class Mappers {
     public static final ComponentMapper<PlayerComponent> player = ComponentMapper.getFor(PlayerComponent.class);
     public static final ComponentMapper<PositionComponent> position = ComponentMapper.getFor(PositionComponent.class);
     public static final ComponentMapper<RotationComponent> rotation = ComponentMapper.getFor(RotationComponent.class);
+    public static final ComponentMapper<DirectionComponent> direction = ComponentMapper.getFor(DirectionComponent.class);
     public static final ComponentMapper<ShadowCastingComponent> shadowCasting = ComponentMapper.getFor(ShadowCastingComponent.class);
 
 }

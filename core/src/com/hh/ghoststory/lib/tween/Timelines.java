@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * Using these functions to get new Timelines:
  *
- * Timeline bounce = Timelines.bounce(pointLight.position, Vector3Accessor.POSITION_XYZ, 1, new Vector3(0,0,0), new Vector3(10,0,10), TweenEquations.easeInSine);
+ * Timeline bounce = Timelines.bounce(pointLight.position, Vector3Accessor.XYZ, 1, new Vector3(0,0,0), new Vector3(10,0,10), TweenEquations.easeInSine);
  * bounce.start(tweenManager);
  *
  * Example of using these tweens as looping callbacks:
@@ -20,7 +20,7 @@ import java.util.Random;
  * TweenCallback callback = new TweenCallback() {
  *     @Override
  *     public void onEvent(int type, BaseTween<?> source) {
- *         Timeline timeline = Timelines.bounce(modelInstance.position, Vector3Accessor.POSITION_XYZ, 1, new Vector3(0,0,0), new Vector3(10,0,10), TweenEquations.easeInSine);
+ *         Timeline timeline = Timelines.bounce(modelInstance.position, Vector3Accessor.XYZ, 1, new Vector3(0,0,0), new Vector3(10,0,10), TweenEquations.easeInSine);
  *         timeline.setCallback(this);
  *         timeline.start(tweenManager);
  *     }

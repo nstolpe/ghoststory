@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.shadow.system.classical.ClassicalShadowSystem;
 import com.badlogic.gdx.graphics.g3d.shadow.system.realistic.RealisticShadowSystem;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Quaternion;
@@ -37,7 +36,6 @@ import com.hh.ghoststory.render.renderers.ShadowRenderer;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
-import com.hh.ghoststory.scene.lights.core.SpotCaster;
 import com.hh.ghoststory.screen.input.PlayDetector;
 
 /**
@@ -84,8 +82,8 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 		Tween.registerAccessor(Color.class, new ColorAccessor());
 
 		// entity engine setup
-		Config.engine.addSystem(new BoundingBoxSystem());
-		Config.engine.addSystem(new BehaviorSystem(tweenManager));
+//		Config.engine.addSystem(new BoundingBoxSystem());
+//		Config.engine.addSystem(new BehaviorSystem(tweenManager));
 
 		shadowSystem = new RealisticShadowSystem(active, instances);
 		lighting.addListener(shadowSystem);
@@ -201,6 +199,14 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 
 				if (Mappers.spotLight.get(light).shadowing)
 					casters.add(Mappers.spotLight.get(light).caster);
+
+				Mappers.spotLight.get(light).caster.direction.set(Mappers.direction.get(light).direction);
+//				if (Mappers.direction.has(light)) {
+//					float x = Mappers.rotation.get(light).rotation.getAngleAround(1,0,0);
+//					float y = Mappers.rotation.get(light).rotation.getAngleAround(0,1,0);
+//					float z = Mappers.rotation.get(light).rotation.getAngleAround(0, 0,1);
+//					Mappers.spotLight.get(light).caster.direction.set(-x, -y, -z);
+//				}
 			}
 		}
 
@@ -264,6 +270,8 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 				);
 			}
 		}
+		Config.engine.addSystem(new BoundingBoxSystem());
+		Config.engine.addSystem(new BehaviorSystem(tweenManager));
 	}
 
 	/** Camera Section */
@@ -534,7 +542,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 				Quaternion rotation = Mappers.rotation.get(Config.engine.getEntitiesFor(Family.all(PlayerComponent.class).get()).get(0)).rotation;
 				Vector3 position = Mappers.position.get(pc).position;
 
-				tweenManager.killTarget(position, Vector3Accessor.POSITION_XYZ);
+				tweenManager.killTarget(position, Vector3Accessor.XYZ);
 				tweenManager.killTarget(rotation, QuaternionAccessor.ROTATION);
 
 				// @TODO change that 3 to a character Entity Component value.
