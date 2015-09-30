@@ -84,6 +84,7 @@ public class SpotCaster extends SpotLight implements Caster {
 		shaderProgram.setUniformf("u_cameraFar", camera.far);
 		shaderProgram.setUniformf("u_lightPosition", position);
 		shaderProgram.setUniformMatrix("u_lightTrans", camera.combined);
+		shaderProgram.setUniformf("u_lightColor", color);
 //		shaderProgram.setUniformf("depthMapSize", depthMapSize);
 	}
 

@@ -81,6 +81,7 @@ public class PointCaster extends PointLight implements Caster {
 		shaderProgram.setUniformi("u_depthMapCube", textureNum);
 		shaderProgram.setUniformf("u_cameraFar", camera.far);
 		shaderProgram.setUniformf("u_lightPosition", position);
+		shaderProgram.setUniformf("u_lightColor", color);
 //		shaderProgram.setUniformf("depthMapSize", depthMapSize);
 	}
 

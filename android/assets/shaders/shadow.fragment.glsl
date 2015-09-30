@@ -13,6 +13,8 @@ uniform sampler2D u_depthMapDir;
 uniform samplerCube u_depthMapCube;
 uniform float u_cameraFar;
 uniform vec3 u_lightPosition;
+uniform vec3 u_lightColor;
+
 uniform float u_type;
 //uniform float depthMapSize;
 
@@ -86,7 +88,7 @@ void main() {
 	// Directional light, check if in field of view and get the depth
 	if(u_type == 1.0) {
 		vec3 depth = (v_positionLightTrans.xyz / v_positionLightTrans.w) * 0.5 + 0.5;
-		float tmp = 0.0;
+//		float tmp = 0.0;
 		if (v_positionLightTrans.z >= 0.0 && (depth.x >= 0.0) && (depth.x <= 1.0) && (depth.y >= 0.0) && (depth.y <= 1.0)) {
 			lenDepthMap = texture2D(u_depthMapDir, depth.xy).a;
 //			for (float x = 0; x <= 0; x++) {
@@ -105,15 +107,15 @@ void main() {
 	}
 
 	if(lenDepthMap >= lenToLight - 0.005){
-		intensity = 1 * (1.0 - lenToLight);
+		intensity = 1.0 * (1.0 - lenToLight);
 	}
 // not sure if below was here for some specific reason.
 //	if(lenDepthMap < lenToLight - 0.005){
 //	}else{
 //		intensity = 0.5 * (1.0 - lenToLight);
 //	}
-
-	gl_FragColor = vec4(intensity);
+	vec3 nc = u_lightColor * intensity;
+	gl_FragColor = vec4(u_lightColor, intensity);
 
 }
 
