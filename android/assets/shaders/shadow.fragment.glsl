@@ -14,7 +14,7 @@ uniform samplerCube u_depthMapCube;
 uniform float u_cameraFar;
 uniform vec3 u_lightPosition;
 uniform float u_type;
-//uniform float depthMapSize;
+uniform float depthMapSize;
 
 varying vec4 v_position;
 varying vec4 v_positionLightTrans;
@@ -83,18 +83,27 @@ void main() {
 	float lenToLight = length(lightDirection) / u_cameraFar;
 	// By default assume shadow
 	float lenDepthMap = -1.0;
-
+		lenDepthMap += depthMapSize;
+        lenDepthMap -= depthMapSize;
 	// Directional light, check if in field of view and get the depth
 	if(u_type == 1.0) {
 		vec3 depth = (v_positionLightTrans.xyz / v_positionLightTrans.w) * 0.5 + 0.5;
+		float tmp = 0.0;
 		if (v_positionLightTrans.z >= 0.0 && (depth.x >= 0.0) && (depth.x <= 1.0) && (depth.y >= 0.0) && (depth.y <= 1.0)) {
 			lenDepthMap = texture2D(u_depthMapDir, depth.xy).a;
+			for (float x = -1; x <= 1; x++) {
+				for (float y = -1; y <= 1; y++) {
+					vec2 offset = vec2(x / depthMapSize, y / depthMapSize);
+					tmp += texture2D(u_depthMapDir, depth.xy + offset).a;
+				}
+			}
+			lenDepthMap = tmp/9.0;
 		}
+
 	}
 	// Point light, just get the depth given light vector
 	else if(u_type == 2.0){
 		lenDepthMap = textureCube(u_depthMapCube, lightDirection).a;
-
 	}
 
 	if(lenDepthMap >= lenToLight - 0.005){
