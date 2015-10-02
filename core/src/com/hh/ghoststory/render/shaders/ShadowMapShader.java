@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.scene.lights.core.Caster;
 
 /**
@@ -99,5 +100,6 @@ public class ShadowMapShader extends BaseShader {
 				renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize, false);
 			}
 		}
+		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "shadow");
 	}
 }
