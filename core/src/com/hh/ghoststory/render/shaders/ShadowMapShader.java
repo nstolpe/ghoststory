@@ -100,6 +100,5 @@ public class ShadowMapShader extends BaseShader {
 				renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize, false);
 			}
 		}
-		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "shadow");
 	}
 }
