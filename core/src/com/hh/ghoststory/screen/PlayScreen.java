@@ -208,29 +208,29 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 		active.update();
 		playDetector.update();
 
-		renderer.render(active, instances, casters, lighting);
+//		renderer.render(active, instances, casters, lighting);
 
-//		shadowSystem.update();
-//
-//		for (int i = 0; i < shadowSystem.getPassQuantity(); i++) {
-//			shadowSystem.begin(i);
-//			Camera camera;
-//			while ((camera = shadowSystem.next()) != null) {
-//				passBatches.get(i).begin(camera);
-//				passBatches.get(i).render(instances, lighting);
-//				passBatches.get(i).end();
-//			}
-//			camera = null;
-//			shadowSystem.end(i);
-//		}
-//
-//		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//		Gdx.gl.glClearColor(0, 0, 0, 1);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-//
-//		shadowModelBatch.begin(active);
-//		shadowModelBatch.render(instances, lighting);
-//		shadowModelBatch.end();
+		shadowSystem.update();
+
+		for (int i = 0; i < shadowSystem.getPassQuantity(); i++) {
+			shadowSystem.begin(i);
+			Camera camera;
+			while ((camera = shadowSystem.next()) != null) {
+				passBatches.get(i).begin(camera);
+				passBatches.get(i).render(instances, lighting);
+				passBatches.get(i).end();
+			}
+			camera = null;
+			shadowSystem.end(i);
+		}
+
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+		shadowModelBatch.begin(active);
+		shadowModelBatch.render(instances, lighting);
+		shadowModelBatch.end();
 //		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "scene");
 		logger.log();
 	}
