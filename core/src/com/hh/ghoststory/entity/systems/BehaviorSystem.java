@@ -39,7 +39,7 @@ public class BehaviorSystem extends EntitySystem {
 		for (int i = 0; i < entities.size(); i++) {
 			switch (i) {
 				case(0):
-//					bounce(entities.get(i));
+					bounce(entities.get(i));
 					break;
 				case(1):
 					colorCycle(entities.get(i));
