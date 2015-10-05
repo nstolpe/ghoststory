@@ -29,6 +29,12 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	public FrameBuffer frameBufferShadows;
 	public ModelBatch modelBatch;
 	public ModelBatch modelBatchShadows;
+	public ModelBatch outlineBatch = new ModelBatch(
+		Gdx.files.internal("shaders/default.vertex.glsl").readString(),
+		"void main()\n" +
+		"{\n" +
+		"    gl_FragColor = vec4(0.04, 0.28, 0.26, 1.0);\n" +
+		"}");
 	private MessageDispatcher frameworkDispatcher;
 
     public ShadowRenderer(PlayScreen screen) {
@@ -75,13 +81,50 @@ public class ShadowRenderer implements Telegraph, Disposable {
 
 	public void renderScene(Camera camera, Array<ModelInstance> instances, Lighting environment) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
 		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
+//		Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+//		Gdx.gl.glStencilFunc(Gdx.gl.GL_ALWAYS, 1, 1);
+//		Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, Gdx.gl.GL_REPLACE);
+//		Gdx.gl.glStencilMask(1);
+//		Gdx.gl.glClearStencil(0);
+////		Gdx.gl.glClear(Gdx.gl.GL_STENCIL_BUFFER_BIT);
+////		Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 0, 1);
+//		Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, -1);
+//		Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
+//		Gdx.gl.glStencilMask(0x00);
+//		Gdx.gl.glLineWidth(3.0f);
+//		Gdx.gl.glPolygonOffset(-1f, -1f);
 
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+		Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
+//		Gdx.gl.glStencilMask(0x00);
+		Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xFF);
+		Gdx.gl.glStencilMask(0xFF);
 		modelBatch.begin(camera);
 		modelBatch.render(instances, environment);
 		modelBatch.end();
+
+		Array<ModelInstance> scaledInstances = new Array<ModelInstance>();
+		for (ModelInstance instance : instances) {
+			ModelInstance copy = instance.copy();
+			copy.transform.scl(1.01f);
+			scaledInstances.add(copy);
+		}
+
+		Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, 0xFF);
+		Gdx.gl.glStencilMask(0x00);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+
+		outlineBatch.begin(camera);
+		outlineBatch.render(scaledInstances);
+		outlineBatch.end();
+		Gdx.gl.glStencilMask(0xFF);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+
+
 //		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "scene");
 	}
 

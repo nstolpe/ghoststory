@@ -49,7 +49,6 @@ public class BehaviorSystem extends EntitySystem {
 					break;
 				default:
 					break;
-
 			}
 		}
 
