@@ -23,7 +23,7 @@ public class Config {
 	}
 
 	public void populateEntities() {
-		engine.addEntity(scene);
+//		engine.addEntity(scene);
 		for (Entity actor : actors)
 			engine.addEntity(actor);
 		for (Entity light : lights)

@@ -30,7 +30,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	public ModelBatch modelBatch;
 	public ModelBatch modelBatchShadows;
 	public ModelBatch outlineBatch = new ModelBatch(
-		Gdx.files.internal("shaders/default.vertex.glsl").readString(),
+		Gdx.files.classpath("com/badlogic/gdx/graphics/g3d/shadow/system/classical/main.vertex.glsl").readString(),
 		"void main()\n" +
 		"{\n" +
 		"    gl_FragColor = vec4(0.04, 0.28, 0.26, 1.0);\n" +
@@ -97,33 +97,67 @@ public class ShadowRenderer implements Telegraph, Disposable {
 //		Gdx.gl.glLineWidth(3.0f);
 //		Gdx.gl.glPolygonOffset(-1f, -1f);
 
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-		Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
-//		Gdx.gl.glStencilMask(0x00);
-		Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xFF);
-		Gdx.gl.glStencilMask(0xFF);
-		modelBatch.begin(camera);
-		modelBatch.render(instances, environment);
-		modelBatch.end();
-
 		Array<ModelInstance> scaledInstances = new Array<ModelInstance>();
 		for (ModelInstance instance : instances) {
 			ModelInstance copy = instance.copy();
-			copy.transform.scl(1.01f);
+			copy.transform.scl(1.1f);
 			scaledInstances.add(copy);
 		}
 
-		Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, 0xFF);
-		Gdx.gl.glStencilMask(0x00);
-		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+		int outline = 0;
 
-		outlineBatch.begin(camera);
-		outlineBatch.render(scaledInstances);
-		outlineBatch.end();
-		Gdx.gl.glStencilMask(0xFF);
-		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+		switch (outline) {
+			case 0:
+				Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+				Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
+				Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
+				Gdx.gl.glStencilMask(1);
+				Gdx.gl.glClearStencil(0);
+				Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
 
+				modelBatch.begin(camera);
+				modelBatch.render(instances, environment);
+				modelBatch.end();
+
+				Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 0, 1);
+				Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
+				Gdx.gl.glStencilMask(0x00);
+				for (ModelInstance instance : instances) {
+					instance.transform.scl(1.1f);
+				}
+				outlineBatch.begin(camera);
+				outlineBatch.render(instances, environment);
+				outlineBatch.end();
+				for (ModelInstance instance : instances) {
+					instance.transform.scl(100f/110f);
+				}
+				break;
+			case 1:
+				// Gdx.gl.glStencilMask(0x00);
+				// modelBatch.render(nonoutlined);
+				Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+				Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+				Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
+				// Gdx.gl.glStencilMask(0x00);
+				Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xFF);
+				Gdx.gl.glStencilMask(0xFF);
+				modelBatch.begin(camera);
+				modelBatch.render(instances, environment);
+				modelBatch.end();
+
+				Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, 0xFF);
+				Gdx.gl.glStencilMask(0x00);
+				Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+
+				outlineBatch.begin(camera);
+				outlineBatch.render(scaledInstances);
+				outlineBatch.end();
+				Gdx.gl.glStencilMask(0xFF);
+				Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+				break;
+			default:
+				break;
+		}
 
 //		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "scene");
 	}
