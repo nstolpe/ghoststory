@@ -121,7 +121,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 		if (instances.size >= 4) {
 //			ShaderProgram.pedantic = false;
 			fooBuffer.begin();
-			Gdx.gl.glClearColor(1, 1, 1, 1);
+			Gdx.gl.glClearColor(1, 0, 1, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 			barBatch.begin(camera);
 			barBatch.render(instances.get(3));
@@ -133,20 +133,19 @@ public class ShadowRenderer implements Telegraph, Disposable {
 
 			TextureRegion textureRegion = new TextureRegion(tmpTexture);
 			textureRegion.flip(false, true);
-			Gdx.gl.glActiveTexture(GL20.GL_TEXTURE2);
-			tmpTexture.bind();
-			Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
 
 			edgeBuffer.begin();
-//			Gdx.gl.glClearColor(1, 0, 0, 1);
+			Gdx.gl.glClearColor(1, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-//			edgeShader.setUniformi("u_mask", 2);
-			edgeShader.setUniformf("u_screenWidth", 1.0f);
-			edgeShader.setUniformf("u_screenHeight", 1.0f);
+
 			edgeBatch.setShader(edgeShader);
+
 			edgeBatch.begin();
-			edgeBatch.draw(tmpTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			// set uniforms here, shader is bound when batch begins.
+			edgeShader.setUniformf("u_screenWidth", edgeBuffer.getWidth());
+			edgeShader.setUniformf("u_screenHeight", edgeBuffer.getHeight());
+			edgeBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			edgeBatch.end();
 			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
 			edgeBuffer.end();
