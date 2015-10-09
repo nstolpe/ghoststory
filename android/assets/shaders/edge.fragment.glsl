@@ -2,7 +2,7 @@ varying vec4 v_color;
 varying vec2 v_texCoords;
 
 uniform sampler2D u_texture;
-uniform sampler2D u_mask;
+//uniform sampler2D u_mask;
 
 uniform float u_screenWidth;
 uniform float u_screenHeight;
@@ -19,13 +19,13 @@ float avg_intensity(in vec4 pix) {
 }
 
 vec4 get_pixel(in vec2 coords, in float dx, in float dy) {
- return texture2D(u_mask, coords + vec2(dx, dy));
+ return texture2D(u_texture, coords + vec2(dx, dy));
 }
 
 // returns pixel color
 float IsEdge(in vec2 coords) {
-  float dxtex = 1.0 / 200 /*image width*/;
-  float dytex = 1.0 / 200 /*image height*/;
+  float dxtex = 1.0 / u_screenWidth /*image width*/;
+  float dytex = 1.0 / u_screenHeight /*image height*/;
   float pix[9];
   int k = -1;
   float delta;
@@ -51,7 +51,8 @@ float IsEdge(in vec2 coords) {
 
 void main() {
   vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
-  color.a = IsEdge(v_texCoords);
+  color.g = IsEdge(v_texCoords);
   gl_FragColor = color;
+//  gl_FragColor = texture2d(u_mask, v_texCoords);
 //  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);
 }
