@@ -50,7 +50,7 @@ public class TestScreen extends AbstractScreen {
 			frameBuffer1.begin();
 
 			Gdx.gl.glClearColor(1, 0, 0, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 			modelBatch.begin(mainCamera);
 			modelBatch.render(instance);
@@ -65,7 +65,7 @@ public class TestScreen extends AbstractScreen {
 			spriteBatch.begin();
 
 			Gdx.gl.glClearColor(0, 0, 1, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 			spriteBatch.draw(tmpTexture, 0, 0, 200, 200);
 			spriteBatch.end();

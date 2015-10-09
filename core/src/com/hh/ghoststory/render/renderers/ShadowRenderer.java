@@ -4,12 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.hh.ghoststory.ScreenshotFactory;
@@ -27,17 +28,52 @@ import com.hh.ghoststory.screen.PlayScreen;
 public class ShadowRenderer implements Telegraph, Disposable {
     public PlayScreen screen;
 	public FrameBuffer frameBufferShadows;
+	private FrameBuffer fooBuffer;
+	private FrameBuffer edgeBuffer;
+	private OrthographicCamera edgeCamera = new OrthographicCamera();
 	public ModelBatch modelBatch;
 	public ModelBatch modelBatchShadows;
-	public ModelBatch outlineBatch = new ModelBatch(
+	private ModelBatch barBatch = new ModelBatch(
 		Gdx.files.classpath("com/badlogic/gdx/graphics/g3d/shadow/system/classical/main.vertex.glsl").readString(),
 		"void main()\n" +
 		"{\n" +
-		"    gl_FragColor = vec4(0.04, 0.28, 0.26, 1.0);\n" +
+		"    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n" +
 		"}");
+	private ShaderProgram edgeShader = new ShaderProgram(
+			"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+					+ "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+					+ "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+					+ "uniform mat4 u_projTrans;\n" //
+					+ "varying vec4 v_color;\n" //
+					+ "varying vec2 v_texCoords;\n" //
+					+ "\n" //
+					+ "void main()\n" //
+					+ "{\n" //
+					+ "   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+					+ "   v_color.a = v_color.a * (255.0/254.0);\n" //
+					+ "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+					+ "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+					+ "}\n",
+//			"#ifdef GL_ES\n" //
+//					+ "#define LOWP lowp\n" //
+//					+ "precision mediump float;\n" //
+//					+ "#else\n" //
+//					+ "#define LOWP \n" //
+//					+ "#endif\n" //
+//					+ "varying LOWP vec4 v_color;\n" //
+//					+ "varying vec2 v_texCoords;\n" //
+//					+ "uniform sampler2D u_texture;\n" //
+//					+ "void main()\n"//
+//					+ "{\n" //
+//					+ "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" //
+//					+ "}"
+			Gdx.files.internal("shaders/edge.fragment.glsl").readString()
+			);
+	private SpriteBatch edgeBatch = new SpriteBatch();
 	private MessageDispatcher frameworkDispatcher;
+	private Texture tmpTexture;
 
-    public ShadowRenderer(PlayScreen screen) {
+	public ShadowRenderer(PlayScreen screen) {
 	    this(screen, screen.frameworkDispatcher);
     }
 
@@ -80,91 +116,60 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	}
 
 	public void renderScene(Camera camera, Array<ModelInstance> instances, Lighting environment) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+//		Gdx.gl.glClearColor(1, 1, 1, 1);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+		if (instances.size >= 4) {
+			ShaderProgram.pedantic = false;
+			fooBuffer.begin();
+			Gdx.gl.glClearColor(1, 0, 1, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+			barBatch.begin(camera);
+			barBatch.render(instances.get(3));
+			barBatch.end();
+			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
+			fooBuffer.end();
+
+			tmpTexture = fooBuffer.getColorBufferTexture();
+
+			TextureRegion textureRegion = new TextureRegion(tmpTexture);
+			textureRegion.flip(false, true);
+			Gdx.gl.glActiveTexture(GL20.GL_TEXTURE2);
+			tmpTexture.bind();
+			Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
+
+			edgeBuffer.begin();
+			Gdx.gl.glClearColor(1, 0, 0, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+			edgeShader.setUniformi("u_mask", 2);
+			edgeShader.setUniformf("u_screenWidth", fooBuffer.getWidth());
+			edgeShader.setUniformf("u_screenHeight", fooBuffer.getHeight());
+			edgeBatch.setShader(edgeShader);
+			edgeBatch.begin();
+			edgeBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			edgeBatch.end();
+			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
+			edgeBuffer.end();
+		}
+
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
 		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
-//		Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-//		Gdx.gl.glStencilFunc(Gdx.gl.GL_ALWAYS, 1, 1);
-//		Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, Gdx.gl.GL_REPLACE);
-//		Gdx.gl.glStencilMask(1);
-//		Gdx.gl.glClearStencil(0);
-////		Gdx.gl.glClear(Gdx.gl.GL_STENCIL_BUFFER_BIT);
-////		Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 0, 1);
-//		Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, -1);
-//		Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
-//		Gdx.gl.glStencilMask(0x00);
-//		Gdx.gl.glLineWidth(3.0f);
-//		Gdx.gl.glPolygonOffset(-1f, -1f);
-
-		Array<ModelInstance> scaledInstances = new Array<ModelInstance>();
-		for (ModelInstance instance : instances) {
-			ModelInstance copy = instance.copy();
-			copy.transform.scl(1.1f);
-			scaledInstances.add(copy);
-		}
-
-		int outline = 0;
-
-		switch (outline) {
-			case 0:
-				Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-				Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
-				Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
-				Gdx.gl.glStencilMask(1);
-				Gdx.gl.glClearStencil(0);
-				Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
-
-				modelBatch.begin(camera);
-				modelBatch.render(instances, environment);
-				modelBatch.end();
-
-				Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 0, 1);
-				Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
-				Gdx.gl.glStencilMask(0x00);
-				for (ModelInstance instance : instances) {
-					instance.transform.scl(1.1f);
-				}
-				outlineBatch.begin(camera);
-				outlineBatch.render(instances, environment);
-				outlineBatch.end();
-				for (ModelInstance instance : instances) {
-					instance.transform.scl(100f/110f);
-				}
-				break;
-			case 1:
-				// Gdx.gl.glStencilMask(0x00);
-				// modelBatch.render(nonoutlined);
-				Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-				Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-				Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
-				// Gdx.gl.glStencilMask(0x00);
-				Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xFF);
-				Gdx.gl.glStencilMask(0xFF);
-				modelBatch.begin(camera);
-				modelBatch.render(instances, environment);
-				modelBatch.end();
-
-				Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, 0xFF);
-				Gdx.gl.glStencilMask(0x00);
-				Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-
-				outlineBatch.begin(camera);
-				outlineBatch.render(scaledInstances);
-				outlineBatch.end();
-				Gdx.gl.glStencilMask(0xFF);
-				Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-				break;
-			default:
-				break;
-		}
-
-//		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "scene");
+		modelBatch.begin(camera);
+		modelBatch.render(instances, environment);
+		modelBatch.end();
 	}
 
     public void initShadowBuffer() {
 	    if (frameBufferShadows != null) frameBufferShadows.dispose();
-        frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+            frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+	    if (fooBuffer != null) fooBuffer.dispose();
+            fooBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+	    if (edgeBuffer != null) edgeBuffer.dispose();
+            edgeBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
     }
 
 	@Override

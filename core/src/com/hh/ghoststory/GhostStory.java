@@ -9,6 +9,7 @@ import com.hh.ghoststory.lib.utility.Config;
 import com.hh.ghoststory.screen.CreateScreen;
 import com.hh.ghoststory.screen.MainScreen;
 import com.hh.ghoststory.screen.PlayScreen;
+import com.hh.ghoststory.screen.TestScreen;
 
 public class GhostStory extends Game {
     public Config config;
@@ -24,7 +25,9 @@ public class GhostStory extends Game {
 //		file.writeString("{}", false);
 //		setScreen(getMainScreen());
 //		setScreen(getCreateScreen());
-		setScreen(getPlayScreen());
+//		setScreen(getPlayScreen());
+		setScreen(new PlayScreen(this));
+//		setScreen(new TestScreen(this));
 	}
 
 	/**

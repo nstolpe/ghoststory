@@ -101,8 +101,8 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 			if (Mappers.geometry.has(entity))
 				assetManager.load("models/" + Mappers.geometry.get(entity).file, Model.class);
 			// set ambient if it's there.
-//			if (Mappers.ambient.has(Config.engine.getEntitiesFor(EntityTypes.SCENE).get(0)))
-//				lighting.set(Mappers.ambient.get(Config.engine.getEntitiesFor(EntityTypes.SCENE).get(0)).colorAttribute);
+			if (Mappers.ambient.has(Config.engine.getEntitiesFor(EntityTypes.SCENE).get(0)))
+				lighting.set(Mappers.ambient.get(Config.engine.getEntitiesFor(EntityTypes.SCENE).get(0)).colorAttribute);
 			// lights. this is ugly now and needs to be better. Entity system.
 			if (Mappers.pointLight.has(entity)) {
 				PointCaster caster = Mappers.pointLight.get(entity).caster(new PointCaster(Mappers.color.get(entity).color, Mappers.position.get(entity).position, Mappers.intensity.get(entity).intensity)).caster;
