@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
@@ -17,6 +18,12 @@ import com.hh.ghoststory.ScreenshotFactory;
 public class TestScreen extends AbstractScreen {
 	private SpriteBatch spriteBatch = new SpriteBatch();
 	private ModelBatch modelBatch = new ModelBatch();
+	public ModelBatch outlineBatch = new ModelBatch(
+		Gdx.files.internal("shaders/default.vertex.glsl").readString(),
+		"void main()\n" +
+			"{\n" +
+			"    gl_FragColor = vec4(0.04, 0.28, 0.26, 1.0);\n" +
+			"}");
 
 	private AssetManager assets = new AssetManager();
 	private PerspectiveCamera mainCamera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -28,6 +35,8 @@ public class TestScreen extends AbstractScreen {
 	private Texture tmpTexture;
 	private ModelInstance instance;
 
+	private final CameraInputController camController;
+
 	public TestScreen(GhostStory game) {
 		super(game);
 		initFBOS();
@@ -37,6 +46,9 @@ public class TestScreen extends AbstractScreen {
 		mainCamera.near = 1;
 		mainCamera.far = 300;
 		mainCamera.update();
+
+		camController = new CameraInputController(mainCamera);
+		Gdx.input.setInputProcessor(camController);
 	}
 
 	@Override
@@ -47,35 +59,69 @@ public class TestScreen extends AbstractScreen {
 			instance = new ModelInstance(assets.get("models/ghost_blue.g3dj", Model.class));
 
 		if (instance != null) {
-			frameBuffer1.begin();
+			int mode = 1;
+			switch (mode) {
+				case 0:
+					frameBuffer1.begin();
 
-			Gdx.gl.glClearColor(1, 0, 0, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+					Gdx.gl.glClearColor(1, 0, 0, 1);
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-			modelBatch.begin(mainCamera);
-			modelBatch.render(instance);
-			modelBatch.end();
+					modelBatch.begin(mainCamera);
+					modelBatch.render(instance);
+					modelBatch.end();
 
-			frameBuffer1.end();
+					frameBuffer1.end();
 
-			tmpTexture = frameBuffer1.getColorBufferTexture();
+					tmpTexture = frameBuffer1.getColorBufferTexture();
 
-			spriteCamera.setToOrtho(false, frameBuffer1.getWidth(), frameBuffer1.getWidth());
-			spriteBatch.setProjectionMatrix(spriteCamera.combined);
-			spriteBatch.begin();
+					spriteCamera.setToOrtho(false, frameBuffer1.getWidth(), frameBuffer1.getWidth());
+					spriteBatch.setProjectionMatrix(spriteCamera.combined);
+					spriteBatch.begin();
 
-			Gdx.gl.glClearColor(0, 0, 1, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+					Gdx.gl.glClearColor(0, 0, 1, 1);
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-			spriteBatch.draw(tmpTexture, 0, 0, 200, 200);
-			spriteBatch.end();
-			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
+					spriteBatch.draw(tmpTexture, 0, 0, 200, 200);
+					spriteBatch.end();
+					break;
+				case 1:
+					Gdx.gl.glClearColor(1, 0, 0, 1);
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
+					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
+					Gdx.gl.glStencilMask(1);
+					Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
+					modelBatch.begin(mainCamera);
+					modelBatch.render(instance);
+					modelBatch.end();
+
+					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 0, 1);
+					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
+					Gdx.gl.glStencilMask(0x00);
+					instance.transform.scl(1.1f);
+					outlineBatch.begin(mainCamera);
+					outlineBatch.render(instance);
+					outlineBatch.end();
+					instance.transform.scl(100f / 110f);
+					Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);
+					break;
+				default:
+					break;
+			}
+
 		}
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		initFBOS();
+		mainCamera.position.set(mainCamera.position);
+		mainCamera.viewportWidth = width;
+		mainCamera.viewportHeight = height;
+		mainCamera.update();
 	}
 
 	@Override

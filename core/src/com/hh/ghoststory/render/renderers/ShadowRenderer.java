@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.render.shaders.PlayShader;
 import com.hh.ghoststory.render.shaders.PlayShaderProvider;
@@ -29,7 +28,7 @@ import com.hh.ghoststory.screen.PlayScreen;
 public class ShadowRenderer implements Telegraph, Disposable {
     public PlayScreen screen;
 	public FrameBuffer frameBufferShadows;
-	private FrameBuffer fooBuffer;
+	private FrameBuffer outlinedBuffer;
 	private FrameBuffer edgeBuffer;
 	private OrthographicCamera edgeCamera = new OrthographicCamera();
 	public ModelBatch modelBatch;
@@ -56,6 +55,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 					+ "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
 					+ "}\n",
 			Gdx.files.internal("shaders/edge.fragment.glsl").readString()
+//			Gdx.files.classpath("com/hh/ghoststory/render/shaders/edge.fragment.glsl").readString()
 			);
 	private SpriteBatch edgeBatch = new SpriteBatch();
 	private MessageDispatcher frameworkDispatcher;
@@ -107,15 +107,14 @@ public class ShadowRenderer implements Telegraph, Disposable {
 //		Gdx.gl.glClearColor(1, 1, 1, 1);
 //		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 		if (instances.size >= 4) {
-//			ShaderProgram.pedantic = false;
-			fooBuffer.begin();
+			outlinedBuffer.begin();
 			Gdx.gl.glClearColor(1, 0, 1, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 			barBatch.begin(camera);
 			barBatch.render(instances.get(3));
 			barBatch.end();
 //			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
-			fooBuffer.end();
+			outlinedBuffer.end();
 		}
 
 		Gdx.gl.glClearColor(1, 1, 1, 1);
@@ -127,7 +126,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 		modelBatch.end();
 
 		if (instances.size >= 4) {
-			tmpTexture = fooBuffer.getColorBufferTexture();
+			tmpTexture = outlinedBuffer.getColorBufferTexture();
 
 			TextureRegion textureRegion = new TextureRegion(tmpTexture);
 			textureRegion.flip(false, true);
@@ -156,8 +155,8 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	    if (frameBufferShadows != null) frameBufferShadows.dispose();
             frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
 
-	    if (fooBuffer != null) fooBuffer.dispose();
-            fooBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
+	    if (outlinedBuffer != null) outlinedBuffer.dispose();
+            outlinedBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
 
 	    if (edgeBuffer != null) edgeBuffer.dispose();
             edgeBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);

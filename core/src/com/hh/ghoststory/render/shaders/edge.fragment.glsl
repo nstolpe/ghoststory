@@ -23,8 +23,8 @@ vec4 get_pixel(in vec2 coords, in float dx, in float dy) {
 
 // returns pixel color
 float IsEdge(in vec2 coords) {
-  float dxtex = 4.0 / u_screenWidth /*image width*/;
-  float dytex = 4.0 / u_screenHeight /*image height*/;
+  float dxtex = 1.0 / u_screenWidth /*image width*/;
+  float dytex = 1.0 / u_screenHeight /*image height*/;
   float pix[9];
   int k = -1;
   float delta;
@@ -51,7 +51,5 @@ float IsEdge(in vec2 coords) {
 void main() {
   vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
   color.a = IsEdge(v_texCoords);
-  color.b = IsEdge(v_texCoords) * 0.9;
-  color.g = IsEdge(v_texCoords) * 0.3;
   gl_FragColor = color;
 }
