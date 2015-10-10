@@ -52,5 +52,4 @@ void main() {
   vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
   color.a = IsEdge(v_texCoords);
   gl_FragColor = color;
-//  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);
 }

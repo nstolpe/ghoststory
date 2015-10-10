@@ -146,18 +146,21 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 	 */
 	@Override
 	public void resize(int width, int height) {
+		active.position.set(active.position);
 		active.viewportWidth = width;
 		active.viewportHeight = height;
+		active.update();
 
 		if (active instanceof OrthographicCamera)
 			activateOrthographicCamera((OrthographicCamera) active);
 
-		renderer.initShadowBuffer();
+		renderer.initShadowBuffer(width, height);
 	}
 
 	@Override
 	public void render(float delta) {
 		super.render(delta);
+		active.update();
 		instances.clear();
 		casters.clear();
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.hh.ghoststory.ScreenshotFactory;
@@ -54,19 +55,6 @@ public class ShadowRenderer implements Telegraph, Disposable {
 					+ "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
 					+ "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
 					+ "}\n",
-//			"#ifdef GL_ES\n" //
-//					+ "#define LOWP lowp\n" //
-//					+ "precision mediump float;\n" //
-//					+ "#else\n" //
-//					+ "#define LOWP \n" //
-//					+ "#endif\n" //
-//					+ "varying LOWP vec4 v_color;\n" //
-//					+ "varying vec2 v_texCoords;\n" //
-//					+ "uniform sampler2D u_texture;\n" //
-//					+ "void main()\n"//
-//					+ "{\n" //
-//					+ "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" //
-//					+ "}"
 			Gdx.files.internal("shaders/edge.fragment.glsl").readString()
 			);
 	private SpriteBatch edgeBatch = new SpriteBatch();
@@ -83,7 +71,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 		frameworkDispatcher.addListener(this, MessageTypes.Framework.INIT_SHADOW_BUFFER);
 		modelBatch = new ModelBatch(new PlayShaderProvider());
 		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider());
-		initShadowBuffer();
+		initShadowBuffer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void render(Camera camera, Array<ModelInstance> instances, Array<Caster> casters, Lighting environment) {
@@ -126,7 +114,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 			barBatch.begin(camera);
 			barBatch.render(instances.get(3));
 			barBatch.end();
-			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
+//			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
 			fooBuffer.end();
 
 			tmpTexture = fooBuffer.getColorBufferTexture();
@@ -134,7 +122,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 			TextureRegion textureRegion = new TextureRegion(tmpTexture);
 			textureRegion.flip(false, true);
 
-			edgeBuffer.begin();
+//			edgeBuffer.begin();
 			Gdx.gl.glClearColor(1, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -147,28 +135,31 @@ public class ShadowRenderer implements Telegraph, Disposable {
 			edgeShader.setUniformf("u_screenHeight", edgeBuffer.getHeight());
 			edgeBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			edgeBatch.end();
-			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
-			edgeBuffer.end();
+//			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
+//			edgeBuffer.end();
 		}
 
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
-
-		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
-		modelBatch.begin(camera);
-		modelBatch.render(instances, environment);
-		modelBatch.end();
+//		Gdx.gl.glClearColor(1, 1, 1, 1);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+//
+//		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
+//		modelBatch.begin(camera);
+//		modelBatch.render(instances, environment);
+//		modelBatch.end();
 	}
 
-    public void initShadowBuffer() {
+    public void initShadowBuffer(int width, int height) {
 	    if (frameBufferShadows != null) frameBufferShadows.dispose();
-            frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+            frameBufferShadows = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
 
 	    if (fooBuffer != null) fooBuffer.dispose();
-            fooBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+            fooBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
 
 	    if (edgeBuffer != null) edgeBuffer.dispose();
-            edgeBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+            edgeBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
+
+	    // this should prolly be a separate camera instead of the matrix. need this so outline stays in the right place
+	    edgeBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
     }
 
 	@Override
@@ -182,7 +173,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	public boolean handleMessage(Telegram msg) {
 		switch (msg.message) {
 			case MessageTypes.Framework.INIT_SHADOW_BUFFER:
-				initShadowBuffer();
+				initShadowBuffer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				break;
 			default:
 				break;
