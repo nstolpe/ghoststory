@@ -116,15 +116,25 @@ public class ShadowRenderer implements Telegraph, Disposable {
 			barBatch.end();
 //			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
 			fooBuffer.end();
+		}
 
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+
+		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
+		modelBatch.begin(camera);
+		modelBatch.render(instances, environment);
+		modelBatch.end();
+
+		if (instances.size >= 4) {
 			tmpTexture = fooBuffer.getColorBufferTexture();
 
 			TextureRegion textureRegion = new TextureRegion(tmpTexture);
 			textureRegion.flip(false, true);
 
 //			edgeBuffer.begin();
-			Gdx.gl.glClearColor(1, 0, 0, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+//			Gdx.gl.glClearColor(1, 0, 0, 1);
+//			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 
 			edgeBatch.setShader(edgeShader);
@@ -139,13 +149,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 //			edgeBuffer.end();
 		}
 
-//		Gdx.gl.glClearColor(1, 1, 1, 1);
-//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
-//
-//		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
-//		modelBatch.begin(camera);
-//		modelBatch.render(instances, environment);
-//		modelBatch.end();
+
 	}
 
     public void initShadowBuffer(int width, int height) {
