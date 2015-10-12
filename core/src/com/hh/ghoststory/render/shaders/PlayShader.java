@@ -38,14 +38,14 @@ public class PlayShader extends DefaultShader {
 	}
 
 	public static String createPrefix(final Renderable renderable, final Config config) {
-		final Attributes attributes = combineAttributes(renderable);
-		final Environment lights = renderable.environment;
-		final DirectionalLightsAttribute dla = attributes.get(DirectionalLightsAttribute.class, DirectionalLightsAttribute.Type);
-		final Array<DirectionalLight> dirs = dla == null ? null : dla.lights;
-		final PointLightsAttribute pla = attributes.get(PointLightsAttribute.class, PointLightsAttribute.Type);
-		final Array<PointLight> points = pla == null ? null : pla.lights;
-		final SpotLightsAttribute sla = attributes.get(SpotLightsAttribute.class, SpotLightsAttribute.Type);
-		final Array<SpotLight> spots = sla == null ? null : sla.lights;
+//		final Attributes attributes = combineAttributes(renderable);
+//		final Environment lights = renderable.environment;
+//		final DirectionalLightsAttribute dla = attributes.get(DirectionalLightsAttribute.class, DirectionalLightsAttribute.Type);
+//		final Array<DirectionalLight> dirs = dla == null ? null : dla.lights;
+//		final PointLightsAttribute pla = attributes.get(PointLightsAttribute.class, PointLightsAttribute.Type);
+//		final Array<PointLight> points = pla == null ? null : pla.lights;
+//		final SpotLightsAttribute sla = attributes.get(SpotLightsAttribute.class, SpotLightsAttribute.Type);
+//		final Array<SpotLight> spots = sla == null ? null : sla.lights;
 		String prefix = DefaultShader.createPrefix(renderable, config);
 		// For each light: light position, camera.far
 		// need depthmap size (i think)
