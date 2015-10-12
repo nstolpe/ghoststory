@@ -216,4 +216,9 @@ void main() {
 	gl_FragColor.rgb *= (0.4 + 1.0 * color.a);
 // uncomment to just render shadow map
 //	gl_FragColor = color;
+	#ifdef alphaFlag
+		gl_FragColor.a = 0.0;
+	#else
+		gl_FragColor.a = 1.0;
+	#endif
 }

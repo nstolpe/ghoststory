@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.lib.MessageTypes;
+import com.hh.ghoststory.lib.utility.UserData;
 import com.hh.ghoststory.render.shaders.PlayShader;
 import com.hh.ghoststory.render.shaders.PlayShaderProvider;
 import com.hh.ghoststory.render.shaders.ShadowMapShaderProvider;
@@ -58,6 +60,35 @@ public class ShadowRenderer implements Telegraph, Disposable {
 			Gdx.files.internal("shaders/edge.fragment.glsl").readString()
 //			Gdx.files.classpath("com/hh/ghoststory/render/shaders/edge.fragment.glsl").readString()
 			);
+	private ShaderProgram addAlphaShader = new ShaderProgram(
+		"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+		+ "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+		+ "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+		+ "uniform mat4 u_projTrans;\n" //
+		+ "varying vec4 v_color;\n" //
+		+ "varying vec2 v_texCoords;\n" //
+		+ "\n" //
+		+ "void main()\n" //
+		+ "{\n" //
+		+ "   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+		+ "   v_color.a = v_color.a * (255.0/254.0);\n" //
+		+ "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+		+ "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+		+ "}\n",
+		"#ifdef GL_ES\n" //
+		+ "#define LOWP lowp\n" //
+		+ "precision mediump float;\n" //
+		+ "#else\n" //
+		+ "#define LOWP \n" //
+		+ "#endif\n" //
+		+ "varying LOWP vec4 v_color;\n" //
+		+ "varying vec2 v_texCoords;\n" //
+		+ "uniform sampler2D u_texture;\n" //
+		+ "void main()\n"//
+		+ "{\n" //
+		+ "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" //
+		+ "  gl_FragColor.a = 1.0;\n" //
+		+ "}");
 	private SpriteBatch edgeBatch = new SpriteBatch();
 	private MessageDispatcher frameworkDispatcher;
 	private Texture tmpTexture;
@@ -107,50 +138,71 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	public void renderScene(Camera camera, Array<ModelInstance> instances, Lighting environment) {
 //		Gdx.gl.glClearColor(1, 1, 1, 1);
 //		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
-		if (instances.size >= 4) {
-			outlinedBuffer.begin();
-			Gdx.gl.glClearColor(1, 0, 1, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-			barBatch.begin(camera);
-			barBatch.render(instances.get(3));
-			barBatch.end();
-//			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
-			outlinedBuffer.end();
-		}
+//		if (instances.size >= 4) {
+//			outlinedBuffer.begin();
+//			Gdx.gl.glClearColor(1, 0, 1, 1);
+//			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+//			barBatch.begin(camera);
+//			barBatch.render(instances.get(3));
+//			barBatch.end();
+////			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
+//			outlinedBuffer.end();
+//		}
 
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+//		Gdx.gl.glClearColor(1, 1, 1, 1);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
 		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
+
+		// capture scene in buffer.
+		outlinedBuffer.begin();
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 		modelBatch.begin(camera);
-		for (ModelInstance instance : instances) {
-			if (instances.size >= 4) {
-				if (instance == instances.get(3)) PlayShader.alphaInstance = instance;
-			}
-			modelBatch.render(instance, environment);
-		}
-//		modelBatch.render(instances, environment);
+		modelBatch.render(instances, environment);
 		modelBatch.end();
+//		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
+		outlinedBuffer.end();
+
+		tmpTexture = outlinedBuffer.getColorBufferTexture();
+		TextureRegion textureRegion = new TextureRegion(tmpTexture);
+		textureRegion.flip(false, true);
+
+//		Gdx.gl.glClearColor(1, 0, 1, 1);
+//		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
+		edgeBatch.setShader(addAlphaShader);
+		edgeBatch.begin();
+		edgeBatch.draw(textureRegion, 0, 0);
+		edgeBatch.end();
+
+		edgeBatch.setShader(edgeShader);
+		edgeBatch.begin();
+		// set uniforms here, shader is bound when batch begins.
+		edgeShader.setUniformf("u_screenWidth", edgeBuffer.getWidth());
+		edgeShader.setUniformf("u_screenHeight", edgeBuffer.getHeight());
+		edgeBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		edgeBatch.end();
+//		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
 
 		if (instances.size >= 4) {
-			tmpTexture = outlinedBuffer.getColorBufferTexture();
-
-			TextureRegion textureRegion = new TextureRegion(tmpTexture);
-			textureRegion.flip(false, true);
+//			tmpTexture = outlinedBuffer.getColorBufferTexture();
+//
+//			TextureRegion textureRegion = new TextureRegion(tmpTexture);
+//			textureRegion.flip(false, true);
 
 //			edgeBuffer.begin();
 //			Gdx.gl.glClearColor(1, 0, 0, 1);
 //			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 
-			edgeBatch.setShader(edgeShader);
-
-			edgeBatch.begin();
-			// set uniforms here, shader is bound when batch begins.
-			edgeShader.setUniformf("u_screenWidth", edgeBuffer.getWidth());
-			edgeShader.setUniformf("u_screenHeight", edgeBuffer.getHeight());
-			edgeBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			edgeBatch.end();
+//			edgeBatch.setShader(edgeShader);
+//
+//			edgeBatch.begin();
+//			// set uniforms here, shader is bound when batch begins.
+//			edgeShader.setUniformf("u_screenWidth", edgeBuffer.getWidth());
+//			edgeShader.setUniformf("u_screenHeight", edgeBuffer.getHeight());
+//			edgeBatch.draw(textureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//			edgeBatch.end();
 //			ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
 //			edgeBuffer.end();
 		}

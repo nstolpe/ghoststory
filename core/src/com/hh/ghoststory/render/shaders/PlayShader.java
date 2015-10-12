@@ -2,11 +2,14 @@ package com.hh.ghoststory.render.shaders;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g3d.Attribute;
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.math.MathUtils;
+import com.hh.ghoststory.lib.utility.UserData;
 
 /**
  * Created by nils on 8/24/15.
@@ -16,7 +19,11 @@ public class PlayShader extends DefaultShader {
 //	private static final String vertex = Gdx.files.internal("shaders/default.vertex.glsl").readString();
 //	private static final String fragment = Gdx.files.internal("shaders/default.fragment.glsl").readString();
 	private static final Config config = new Config(Gdx.files.internal("shaders/default.vertex.glsl").readString(), Gdx.files.internal("shaders/default.fragment.glsl").readString());
-	public static ModelInstance alphaInstance;
+	public boolean alpha = false;
+
+	public void alpha(boolean alpha) {
+		this.alpha = alpha;
+	}
 
 	public PlayShader(Renderable renderable) {
 		super(renderable, config, createPrefix(renderable, config));
@@ -30,23 +37,6 @@ public class PlayShader extends DefaultShader {
 		program.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
 	}
 
-	@Override
-	public boolean canRender (final Renderable renderable) {
-		boolean val = super.canRender(renderable);
-
-//		if (!val) return val;
-//
-//		// val is true if it passes above.
-//		if (alphaInstance != null) {
-//			Renderable ren = new Renderable();
-//			alphaInstance.getRenderable(ren);
-//			if (ren != renderable) val = false;
-//			// reset until set in render loop again.
-//			else alphaInstance = null;
-//		}
-
-		return val;
-	}
 	public static String createPrefix(final Renderable renderable, final Config config) {
 //		final Attributes attributes = combineAttributes(renderable);
 //		final Environment lights = renderable.environment;
@@ -68,6 +58,8 @@ public class PlayShader extends DefaultShader {
 		//
 		// Look at shadow.fragment.glsl for handling of point vs spot lights. The handling of PCF/VSM might be better done there,
 		// then sample it here like usual.
+		if (renderable.material.has(AlphaAttribute.ID)) prefix += "#define alphaFlag\n";
+
 //		if (alphaInstance != null) {
 //			Renderable ren = new Renderable();
 //			alphaInstance.getRenderable(ren);
@@ -88,6 +80,36 @@ public class PlayShader extends DefaultShader {
 		public Config(final String vertexShader, final String fragmentShader) {
 			super(vertexShader, fragmentShader);
 			numSpotLights = 5;
+		}
+	}
+
+	public static class AlphaAttribute extends Attribute {
+
+		public final static String Alias = "Alpha";
+		public final static long ID = register(Alias);
+
+		public float value;
+
+		public AlphaAttribute (final float value) {
+			super(ID);
+			this.value = value;
+		}
+
+		@Override
+		public Attribute copy () {
+			return new AlphaAttribute(value);
+		}
+
+		@Override
+		protected boolean equals (Attribute other) {
+			return ((AlphaAttribute)other).value == value;
+		}
+
+		@Override
+		public int compareTo (Attribute o) {
+			if (type != o.type) return type < o.type ? -1 : 1;
+			float otherValue = ((AlphaAttribute)o).value;
+			return MathUtils.isEqual(value, otherValue) ? 0 : (value < otherValue ? -1 : 1);
 		}
 	}
 }

@@ -33,7 +33,9 @@ import com.hh.ghoststory.lib.tween.accessors.ColorAccessor;
 import com.hh.ghoststory.lib.tween.accessors.QuaternionAccessor;
 import com.hh.ghoststory.lib.tween.accessors.Vector3Accessor;
 import com.hh.ghoststory.lib.utility.Config;
+import com.hh.ghoststory.lib.utility.UserData;
 import com.hh.ghoststory.render.renderers.ShadowRenderer;
+import com.hh.ghoststory.render.shaders.PlayShader;
 import com.hh.ghoststory.scene.Lighting;
 import com.hh.ghoststory.scene.lights.core.Caster;
 import com.hh.ghoststory.scene.lights.core.PointCaster;
@@ -249,7 +251,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 		for (Entity entity : Config.engine.getEntitiesFor(Family.all(GeometryComponent.class).get())) {
 			ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(entity).file, Model.class));
 
-			if (Mappers.id.get(entity).id == "select_ghost") instance.userData = new Object() { public boolean alpha = true; };
+			if (Mappers.id.get(entity).id == "select_ghost") instance.getMaterial("skin").set(new PlayShader.AlphaAttribute(1.0f));
 
 			// need to get an editable version of the entity since we add a component.
 			Config.engine.getEntity(entity.getId()).add(new InstanceComponent(instance));
