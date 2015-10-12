@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.lib.MessageTypes;
 import com.hh.ghoststory.render.shaders.PlayShader;
 import com.hh.ghoststory.render.shaders.PlayShaderProvider;
@@ -122,7 +123,13 @@ public class ShadowRenderer implements Telegraph, Disposable {
 
 		frameBufferShadows.getColorBufferTexture().bind(PlayShader.textureNum);
 		modelBatch.begin(camera);
-		modelBatch.render(instances, environment);
+		for (ModelInstance instance : instances) {
+			if (instances.size >= 4) {
+				if (instance == instances.get(3)) PlayShader.alphaInstance = instance;
+			}
+			modelBatch.render(instance, environment);
+		}
+//		modelBatch.render(instances, environment);
 		modelBatch.end();
 
 		if (instances.size >= 4) {

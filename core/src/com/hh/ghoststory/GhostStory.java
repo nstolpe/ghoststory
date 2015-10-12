@@ -26,8 +26,8 @@ public class GhostStory extends Game {
 //		setScreen(getMainScreen());
 //		setScreen(getCreateScreen());
 //		setScreen(getPlayScreen());
-//		setScreen(new PlayScreen(this));
-		setScreen(new TestScreen(this));
+		setScreen(new PlayScreen(this));
+//		setScreen(new TestScreen(this));
 	}
 
 	/**

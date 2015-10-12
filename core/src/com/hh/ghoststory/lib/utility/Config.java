@@ -100,7 +100,7 @@ public class Config {
 			);
 			// ghost 2
 			add(new Entity()
-					.add(new IDComponent("red_ghost"))
+					.add(new IDComponent("select_ghost"))
 					.add(new NameComponent("Red Ghost Two"))
 					.add(new GeometryComponent().file("ghost_red.g3dj"))
 					.add(new PositionComponent(new Vector3(0, 0, 0)))

@@ -3,17 +3,10 @@ package com.hh.ghoststory.render.shaders;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.Attributes;
-import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.Renderable;
-import com.badlogic.gdx.graphics.g3d.attributes.DirectionalLightsAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.PointLightsAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.SpotLightsAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.environment.PointLight;
-import com.badlogic.gdx.graphics.g3d.environment.SpotLight;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
-import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by nils on 8/24/15.
@@ -23,7 +16,7 @@ public class PlayShader extends DefaultShader {
 //	private static final String vertex = Gdx.files.internal("shaders/default.vertex.glsl").readString();
 //	private static final String fragment = Gdx.files.internal("shaders/default.fragment.glsl").readString();
 	private static final Config config = new Config(Gdx.files.internal("shaders/default.vertex.glsl").readString(), Gdx.files.internal("shaders/default.fragment.glsl").readString());
-
+	public static ModelInstance alphaInstance;
 
 	public PlayShader(Renderable renderable) {
 		super(renderable, config, createPrefix(renderable, config));
@@ -37,6 +30,23 @@ public class PlayShader extends DefaultShader {
 		program.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
 	}
 
+	@Override
+	public boolean canRender (final Renderable renderable) {
+		boolean val = super.canRender(renderable);
+
+//		if (!val) return val;
+//
+//		// val is true if it passes above.
+//		if (alphaInstance != null) {
+//			Renderable ren = new Renderable();
+//			alphaInstance.getRenderable(ren);
+//			if (ren != renderable) val = false;
+//			// reset until set in render loop again.
+//			else alphaInstance = null;
+//		}
+
+		return val;
+	}
 	public static String createPrefix(final Renderable renderable, final Config config) {
 //		final Attributes attributes = combineAttributes(renderable);
 //		final Environment lights = renderable.environment;
@@ -58,6 +68,11 @@ public class PlayShader extends DefaultShader {
 		//
 		// Look at shadow.fragment.glsl for handling of point vs spot lights. The handling of PCF/VSM might be better done there,
 		// then sample it here like usual.
+//		if (alphaInstance != null) {
+//			Renderable ren = new Renderable();
+//			alphaInstance.getRenderable(ren);
+//			if (ren == renderable) prefix += "#define alphaFlag\n";
+//		}
 		return prefix;
 	}
 

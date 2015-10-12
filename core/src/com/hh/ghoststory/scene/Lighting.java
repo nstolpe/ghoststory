@@ -15,6 +15,7 @@ public class Lighting extends Environment {
 	// array if shadowcasters. see if these can be implemented as Attributes later,
 	// like the lights.
 	public Array<Caster> casters = new Array<Caster>();
+//	public
 
 	/*
      * Adds a Caster to casters. See note above it's declaration.

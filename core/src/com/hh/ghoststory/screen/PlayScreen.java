@@ -246,17 +246,23 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 	protected void doneLoading() {
 		super.doneLoading();
 		// retrieve ModelInstances from the assetManager and assign them to the renderable Entity.
-		for (Entity renderable : Config.engine.getEntitiesFor(Family.all(GeometryComponent.class).get())) {
-			ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(renderable).file, Model.class));
+		for (Entity entity : Config.engine.getEntitiesFor(Family.all(GeometryComponent.class).get())) {
+			ModelInstance instance = new ModelInstance(assetManager.get("models/" + Mappers.geometry.get(entity).file, Model.class));
+
+			if (Mappers.id.get(entity).id == "select_ghost") instance.userData = new Object() { public boolean alpha = true; };
+
 			// need to get an editable version of the entity since we add a component.
-			Config.engine.getEntity(renderable.getId()).add(new InstanceComponent(instance));
+			Config.engine.getEntity(entity.getId()).add(new InstanceComponent(instance));
+
 			// if the renderable Entity has a default/standing animation, set that up.
 			// @TODO refactor normal/default animation selection. Check if a normal should even be played.
-			if (Mappers.animation.has(renderable)) {
-				AnimationComponent animation = Mappers.animation.get(renderable);
+			if (Mappers.animation.has(entity)) {
+				AnimationComponent animation = Mappers.animation.get(entity);
 				animation.init(instance);
+
 				// the normal/default/rest animation should be defined on the entity somewhere, not just default to "default".
 				ObjectMap<String, Object> normal = animation.animations.get("default");
+
 				// this casting sucks. JSON import might be good to use, should fix that.
 				animation.controller.setAnimation(
 					(String) normal.get("id"),
