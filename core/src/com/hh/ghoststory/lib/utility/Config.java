@@ -74,7 +74,7 @@ public class Config {
 			);
 			// ghost 1
 			add(new Entity()
-					.add(new IDComponent("red_ghost"))
+					.add(new IDComponent("select_ghost"))
 					.add(new NameComponent("Red Ghost One"))
 					.add(new GeometryComponent().file("ghost_red.g3dj"))
 					.add(new PositionComponent(new Vector3(5, 0, 5)))
