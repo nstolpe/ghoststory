@@ -50,25 +50,25 @@ public class Config {
 				.add(new IDComponent("player_character"))
 				.add(new NameComponent("Mr Player"))
 				.add(new NameComponent("Mr Player"))
-				.add(new GeometryComponent().file("ghost_blue.g3dj"))
+				.add(new GeometryComponent().file("spider.g3dj"))
 				.add(new PositionComponent(new Vector3(-5, 0, -5)))
 				.add(new RotationComponent(new Quaternion()))
-				.add(new AnimationComponent(
-								new Array<ObjectMap<String, Object>>() {
-									{
-										add(new ObjectMap<String, Object>() {
-											{
-												put("id", "default");
-												put("offset", 0.0f);
-												put("duration", -1.0f);
-												put("loopcount", -1);
-												put("speed", 1.0f);
-												put("listener", null);
-											}
-										});
-									}
-								})
-				)
+//				.add(new AnimationComponent(
+//								new Array<ObjectMap<String, Object>>() {
+//									{
+//										add(new ObjectMap<String, Object>() {
+//											{
+//												put("id", "default");
+//												put("offset", 0.0f);
+//												put("duration", -1.0f);
+//												put("loopcount", -1);
+//												put("speed", 1.0f);
+//												put("listener", null);
+//											}
+//										});
+//									}
+//								})
+//				)
 				.add(new RenderComponent())
 				.add(new PlayerComponent())
 			);
@@ -76,25 +76,25 @@ public class Config {
 			add(new Entity()
 					.add(new IDComponent("select_ghost"))
 					.add(new NameComponent("Red Ghost One"))
-					.add(new GeometryComponent().file("ghost_red.g3dj"))
+					.add(new GeometryComponent().file("spider.g3dj"))
 					.add(new PositionComponent(new Vector3(5, 0, 5)))
 					.add(new RotationComponent(new Quaternion()))
-					.add(new AnimationComponent(
-									new Array<ObjectMap<String, Object>>() {
-										{
-											add(new ObjectMap<String, Object>() {
-												{
-													put("id", "default");
-													put("offset", 0.0f);
-													put("duration", -1.0f);
-													put("loopcount", -1);
-													put("speed", 1.0f);
-													put("listener", null);
-												}
-											});
-										}
-									})
-					)
+//					.add(new AnimationComponent(
+//									new Array<ObjectMap<String, Object>>() {
+//										{
+//											add(new ObjectMap<String, Object>() {
+//												{
+//													put("id", "default");
+//													put("offset", 0.0f);
+//													put("duration", -1.0f);
+//													put("loopcount", -1);
+//													put("speed", 1.0f);
+//													put("listener", null);
+//												}
+//											});
+//										}
+//									})
+//					)
 					.add(new RenderComponent())
 					.add(new MobComponent())
 			);
