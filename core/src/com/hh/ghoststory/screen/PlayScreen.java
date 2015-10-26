@@ -237,9 +237,9 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 //		shadowModelBatch.render(instances, lighting);
 //		shadowModelBatch.end();
 //		ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "scene");
+
 		logger.log();
 	}
-
 	/**
 	 * Called when the asset manager has finished updating. Associate models with game entities and start animations..
 	 * @TODO Add more stuff that needs to happen after loading.
@@ -448,6 +448,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 //		camera.direction.set(-1, -1, -1);
 		camera.lookAt(0, 0, 0);
 		camera.near = 1;
+		camera.far = 300;
 		return camera;
 	}
 
