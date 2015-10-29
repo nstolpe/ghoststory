@@ -20,13 +20,13 @@ public class TestScreen extends AbstractScreen {
 	private SpriteBatch spriteBatch = new SpriteBatch();
 	private ModelBatch modelBatch = new ModelBatch();
 	public ModelBatch outlineBatch = new ModelBatch(
-//		Gdx.files.internal("shaders/default.vertex.glsl").readString(),
-		"attribute vec4 a_position;\n" +
-		"uniform mat4 u_projViewTrans;\n" +
-		"void main()\n" +
-		"{\n" +
-		"    gl_Position =  u_projViewTrans * a_position;\n" +
-		"}",
+		Gdx.files.internal("shaders/default.vertex.glsl").readString(),
+//		"attribute vec4 a_position;\n" +
+//		"uniform mat4 u_projViewTrans;\n" +
+//		"void main()\n" +
+//		"{\n" +
+//		"    gl_Position =  u_projViewTrans * a_position;\n" +
+//		"}",
 		"void main()\n" +
 		"{\n" +
 		"    gl_FragColor = vec4(0.04, 0.28, 0.26, 1.0);\n" +
@@ -97,27 +97,27 @@ public class TestScreen extends AbstractScreen {
 				// stencil
 				case 1:
 					Gdx.gl.glClearColor(1, 0, 0, 1);
-
-					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
-					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
-					Gdx.gl.glStencilMask(1);
-					Gdx.gl.glClearStencil(0);
-					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-
-					modelBatch.begin(mainCamera);
-					modelBatch.render(instance);
-					modelBatch.end();
-
-					Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 0, 1);
-					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
-					Gdx.gl.glStencilMask(0x00);
-
-					ModelInstance copy = instance.copy();
-					copy.transform.scl(2.1f);
-					outlineBatch.begin(mainCamera);
-					outlineBatch.render(copy);
-					outlineBatch.end();
+//
+//					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+//					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
+//					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
+//					Gdx.gl.glStencilMask(1);
+//					Gdx.gl.glClearStencil(0);
+//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
+//
+//					modelBatch.begin(mainCamera);
+//					modelBatch.render(instance);
+//					modelBatch.end();
+//
+//					Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 0, 1);
+//					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
+//					Gdx.gl.glStencilMask(0x00);
+//
+//					ModelInstance copy = instance.copy();
+//					copy.transform.scl(1.1f);
+//					outlineBatch.begin(mainCamera);
+//					outlineBatch.render(copy);
+//					outlineBatch.end();
 
 
 
@@ -137,39 +137,39 @@ public class TestScreen extends AbstractScreen {
 //					Gdx.gl.glStencilMask(0x00);
 //					Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 //
-//					instance.transform.scl(1.1f);
+//					ModelInstance copy = instance.copy();
+//					copy.transform.scl(1.1f);
 //					outlineBatch.begin(mainCamera);
-//					outlineBatch.render(instance);
+//					outlineBatch.render(copy);
 //					outlineBatch.end();
-//					instance.transform.scl(100f / 110f);
 //
 //					Gdx.gl.glStencilMask(0xFF);
 //					Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 
 
-//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-//
-//					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-//					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
-//					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
-//					Gdx.gl.glStencilMask(0x00);
-//					Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
-//
-//					modelBatch.begin(mainCamera);
-//					modelBatch.render(instance);
-//					modelBatch.end();
-//
-//					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 0, 1);
-//					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
-//					Gdx.gl.glStencilMask(0x00);
-//
-//					instance.transform.scl(1.2f);
-//					outlineBatch.begin(mainCamera);
-//					outlineBatch.render(instance);
-//					outlineBatch.end();
-//					instance.transform.scl(100f / 120f);
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
 
-					Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);
+					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
+					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
+					Gdx.gl.glStencilMask(0x00);
+					Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
+
+					modelBatch.begin(mainCamera);
+					modelBatch.render(instance);
+					modelBatch.end();
+
+					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 0, 1);
+					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
+					Gdx.gl.glStencilMask(0x00);
+
+					instance.transform.scl(1.2f);
+					outlineBatch.begin(mainCamera);
+					outlineBatch.render(instance);
+					outlineBatch.end();
+					instance.transform.scl(100f / 120f);
+
+//					Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);
 					break;
 				default:
 					break;
