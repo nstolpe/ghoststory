@@ -97,7 +97,6 @@ public class ShadowRenderer implements Telegraph, Disposable {
 		modelBatch = new ModelBatch(new PlayShaderProvider());
 		modelBatchShadows = new ModelBatch(new ShadowMapShaderProvider());
 		initShadowBuffer(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		quad = createFullScreenQuad();
     }
 
     public void render(Camera camera, Array<ModelInstance> instances, Array<Caster> casters, Lighting environment) {
