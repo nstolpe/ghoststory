@@ -183,56 +183,7 @@ public class ShadowRenderer implements Telegraph, Disposable {
 	    // this should prolly be a separate camera instead of the matrix. need this so outline stays in the right place
 	    spriteBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
     }
-	public Mesh createFullScreenQuad(){
-		float[] verts = new float[16];
-		int i = 0;
-		verts[i++] = -1.f; // x1
-		verts[i++] = -1.f; // y1
-		verts[i++] =  0.f; // u1
-		verts[i++] =  0.f; // v1
-		verts[i++] =  1.f; // x2
-		verts[i++] = -1.f; // y2
-		verts[i++] =  1.f; // u2
-		verts[i++] =  0.f; // v2
-		verts[i++] =  1.f; // x3
-		verts[i++] =  1.f; // y2
-		verts[i++] =  1.f; // u3
-		verts[i++] =  1.f; // v3
-		verts[i++] = -1.f; // x4
-		verts[i++] =  1.f; // y4
-		verts[i++] =  0.f; // u4
-		verts[i++] =  1.f; // v4
-		Mesh tmpMesh = new Mesh(true, 4, 0
-			, new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position")
-			, new VertexAttribute(VertexAttributes.Usage.TextureCoordinates
-			, 2, "a_texCoord0"));
-		tmpMesh.setVertices(verts);
-		return tmpMesh;
-	}
 
-	public Mesh createFullScreenTri(){
-		float[] verts = new float[12];
-		int i = 0;
-		verts[i++] = -1.f; // x1
-		verts[i++] = -1.f; // y1
-		verts[i++] =  0.f; // u1
-		verts[i++] =  0.f; // v1
-		verts[i++] = -1.f; // x2
-		verts[i++] = -3.f; // y2
-		verts[i++] =  0.f; // u2
-		verts[i++] =  2.f; // v2
-		verts[i++] =  3.f; // x3
-		verts[i++] = -1.f; // y2
-		verts[i++] =  2.f; // u3
-		verts[i++] =  0.f; // v3
-
-		Mesh tmpMesh = new Mesh(true, 3, 0
-			, new VertexAttribute(VertexAttributes.Usage.Position, 2, "a_position")
-			, new VertexAttribute(VertexAttributes.Usage.TextureCoordinates
-			, 2, "a_texCoord0"));
-		tmpMesh.setVertices(verts);
-		return tmpMesh;
-	}
 	@Override
 	public void dispose() {
 		modelBatch.dispose();
