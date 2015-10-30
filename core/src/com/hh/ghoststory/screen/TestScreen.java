@@ -4,12 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
 
@@ -20,15 +20,27 @@ public class TestScreen extends AbstractScreen {
 	private SpriteBatch spriteBatch = new SpriteBatch();
 	private ModelBatch modelBatch = new ModelBatch();
 	public ModelBatch outlineBatch = new ModelBatch(
-		Gdx.files.internal("shaders/default.vertex.glsl").readString(),
-//		"attribute vec4 a_position;\n" +
-//		"uniform mat4 u_projViewTrans;\n" +
-//		"void main()\n" +
-//		"{\n" +
-//		"    gl_Position =  u_projViewTrans * a_position;\n" +
-//		"}",
-		"void main()\n" +
-		"{\n" +
+//		Gdx.files.internal("shaders/default.vertex.glsl").readString(),
+		"attribute vec3 a_position;\n" +
+		"attribute vec3 a_normal;\n" +
+		"attribute vec2 a_texCoord0;\n" +
+		"\n" +
+		"uniform mat4 u_worldTrans;\n" +
+		"uniform mat4 u_projViewTrans;\n" +
+		"\n" +
+		"varying vec2 v_texCoord0;\n" +
+		"\n" +
+		"void main() {\n" +
+		"    v_texCoord0 = a_texCoord0;\n" +
+		"    gl_Position = u_projViewTrans * u_worldTrans * vec4(a_position, 1.0);\n" +
+		"}",
+		"#ifdef GL_ES \n" +
+		"precision mediump float;\n" +
+		"#endif\n" +
+		"\n" +
+		"varying vec2 v_texCoord0;\n" +
+		"\n" +
+		"void main() {\n" +
 		"    gl_FragColor = vec4(0.04, 0.28, 0.26, 1.0);\n" +
 		"}"
 	);
