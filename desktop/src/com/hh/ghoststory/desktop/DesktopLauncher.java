@@ -10,6 +10,7 @@ public class DesktopLauncher {
 //		config.vSyncEnabled = false;
 //		config.foregroundFPS = 0;
 //		config.backgroundFPS = 0;
+		config.stencil = 8;
 		new LwjglApplication(new GhostStory(), config);
 	}
 }

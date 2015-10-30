@@ -63,7 +63,7 @@ public class TestScreen extends AbstractScreen {
 	public TestScreen(GhostStory game) {
 		super(game);
 		initFBOS();
-		assets.load("models/cube.g3dj", Model.class);
+		assets.load("models/ghost_blue.g3dj", Model.class);
 		mainCamera.position.set(5, 5, 5);
 		mainCamera.lookAt(0, 0, 0);
 		mainCamera.near = 1;
@@ -79,7 +79,7 @@ public class TestScreen extends AbstractScreen {
 		mainCamera.update();
 
 		if (assets.update() && instance == null)
-			instance = new ModelInstance(assets.get("models/cube.g3dj", Model.class));
+			instance = new ModelInstance(assets.get("models/ghost_blue.g3dj", Model.class));
 
 		if (instance != null) {
 			int mode = 1;
@@ -112,11 +112,6 @@ public class TestScreen extends AbstractScreen {
 				// stencil
 				case 1:
 					Gdx.gl.glClearColor(1, 0, 0, 1);
-					IntBuffer max = BufferUtils.newIntBuffer(16);
-					max.clear();
-					System.out.println(max.get(0));
-					Gdx.gl.glGetIntegerv(GL20.GL_STENCIL_BITS, max);
-					System.out.println(max.get(0));
 //
 //					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
 //					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
@@ -158,7 +153,6 @@ public class TestScreen extends AbstractScreen {
 					Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
 					ModelInstance copy = instance.copy();
-					copy.transform.rotate(new Vector3(1.0f,0.0f,0.0f), 90f);
 					copy.transform.scl(1.1f);
 					outlineBatch.begin(mainCamera);
 					outlineBatch.render(copy);
