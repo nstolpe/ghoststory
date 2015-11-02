@@ -20,14 +20,14 @@ public class GhostStory extends Game {
         config = new Config();
         config.populateEntities();
 
-		FileHandle file = Gdx.files.local(".ghost_story/character.json");
+//		FileHandle file = Gdx.files.local(".ghost_story/character.json");
 //		file.file().getParentFile().mkdirs();
 //		file.writeString("{}", false);
 //		setScreen(getMainScreen());
 //		setScreen(getCreateScreen());
 //		setScreen(getPlayScreen());
-//		setScreen(new PlayScreen(this));
-		setScreen(new TestScreen(this));
+		setScreen(new PlayScreen(this));
+//		setScreen(new TestScreen(this));
 	}
 
 	/**
