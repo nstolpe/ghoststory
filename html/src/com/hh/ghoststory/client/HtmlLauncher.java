@@ -7,13 +7,15 @@ import com.hh.ghoststory.GhostStory;
 
 public class HtmlLauncher extends GwtApplication {
 
-        @Override
-        public GwtApplicationConfiguration getConfig () {
-                return new GwtApplicationConfiguration(480, 320);
-        }
+    @Override
+    public GwtApplicationConfiguration getConfig () {
+        GwtApplicationConfiguration config = new GwtApplicationConfiguration(800, 400);
+        config.stencil = true;
+        return config;
+    }
 
-        @Override
-        public ApplicationListener getApplicationListener () {
-                return new GhostStory();
-        }
+    @Override
+    public ApplicationListener getApplicationListener () {
+        return new GhostStory();
+    }
 }
