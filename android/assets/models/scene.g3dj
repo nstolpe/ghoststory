@@ -4015,7 +4015,7 @@
 			"textures": [
 				{
 					"id": "BG_REPEA.JPG",
-					"filename": "bg_repeat.tga",
+					"filename": "bg_repeat.png",
 					"type": "DIFFUSE"
 				}
 			]

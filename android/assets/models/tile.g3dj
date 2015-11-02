@@ -28,7 +28,7 @@
 			"textures": [
 				{
 					"id": "Material__49", 
-					"filename": "bg_repeat.tga", 
+					"filename": "bg_repeat.png", 
 					"type": "DIFFUSE"
 				}
 			]
