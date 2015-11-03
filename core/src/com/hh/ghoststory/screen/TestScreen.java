@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 /**
@@ -105,32 +108,29 @@ public class TestScreen extends AbstractScreen {
 			instances.add(cube);
 		}
 		if (instances != null) {
-			int mode = 1;
+			int mode = 0;
 			switch (mode) {
-				// multiple frame buffers
+				// multiple frame buff
+				// ers
 				case 0:
-					frameBuffer1.begin();
-Gdx.gl.glReadPixels();
 					Gdx.gl.glClearColor(1, 0, 0, 1);
-					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+					Gdx.gl.glClearStencil(200);
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
+					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
 
-					modelBatch.begin(mainCamera);
-					modelBatch.render(instances);
-					modelBatch.end();
+					for (int i = 0; i < instances.size; i++) {
+						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, i + 1, 0xff);
+						modelBatch.begin(mainCamera);
+						modelBatch.render(instances.get(i));
+						modelBatch.end();
+					}
 
-					frameBuffer1.end();
-
-					tmpTexture = frameBuffer1.getColorBufferTexture();
-
-					spriteCamera.setToOrtho(false, frameBuffer1.getWidth(), frameBuffer1.getWidth());
-					spriteBatch.setProjectionMatrix(spriteCamera.combined);
-					spriteBatch.begin();
-
-					Gdx.gl.glClearColor(0, 0, 1, 1);
-					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-					spriteBatch.draw(tmpTexture, 0, 0, 200, 200);
-					spriteBatch.end();
+					ByteBuffer pixels = ByteBuffer.allocateDirect(8);
+					Gdx.gl.glReadPixels(100, 100, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
+					int stencil = (int) pixels.get();
+					System.out.println(stencil + " " + (stencil < 0 ? stencil + 256 : stencil)); //-128 to 127. 0 is clear
+					Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);
 					break;
 				// stencil
 				case 1:
@@ -163,15 +163,23 @@ Gdx.gl.glReadPixels();
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
 					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-
-					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xFF);
+					Gdx.gl.glClearStencil(0x00);
+//					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xFF);
 					Gdx.gl.glStencilMask(0xFF);
 
 					modelBatch.begin(mainCamera);
-					for (ModelInstance instance : instances) modelBatch.render(instance);
+					for (int i = 0; i < instances.size; i++) {
+						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, i + 1, -1);
+						modelBatch.render(instances.get(i));
+					}
 					modelBatch.end();
 
 					Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, 0xFF);
+
+//					ByteBuffer pixels = ByteBuffer.allocateDirect(8);
+//					Gdx.gl.glReadPixels(100, 100, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
+//					System.out.println(pixels.get()); //-128 to 127. 0 is clear
+
 					Gdx.gl.glStencilMask(0x00);
 					Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
