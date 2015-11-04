@@ -6,20 +6,12 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.BufferUtils;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.ScreenshotFactory;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 /**
  * Created by nils on 10/8/15.
@@ -72,21 +64,16 @@ public class TestScreen extends AbstractScreen {
 
 		camController = new CameraInputController(mainCamera) {
 			@Override
-			public boolean touchUp (int screenX, int screenY, int pointer, int button) {
-				System.out.println(screenX);
-				System.out.println(screenY);
+			public boolean touchDown (int screenX, int screenY, int pointer, int button) {
 				TestScreen.this.getObject(screenX, screenY);
-				return super.touchUp(screenX, screenY, pointer, button);
+				return super.touchDown(screenX, screenY, pointer, button);
 			}
 		};
 		Gdx.input.setInputProcessor(camController);
 		Array<Array<Float>> output = new Array<Array<Float>>();
 		Array<Float> values = new Array<Float>() {
 			{
-				add(0.0f); add(0.1f); add(0.2f); add(0.3f); add(0.4f); add(0.5f); add(0.6f);
-				add(0.7f);
-				add(0.8f);
-				add(0.9f);
+				add(0.0f); add(0.1f); add(0.2f); add(0.3f); add(0.4f); add(0.5f); add(0.6f); add(0.7f); add(0.8f); add(0.9f);
 			}
 		};
 		perm(values, 3, new Array<Float>(), output);
@@ -95,9 +82,9 @@ public class TestScreen extends AbstractScreen {
 
 	private void getObject(int screenX, int screenY) {
 		ByteBuffer pixels = ByteBuffer.allocateDirect(8);
-		Gdx.gl.glReadPixels(screenX, screenY, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
+		Gdx.gl.glReadPixels(screenX, Gdx.graphics.getHeight() - screenY, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
 		int stencil = (int) pixels.get();
-		System.out.println(stencil + " " + (stencil < 0 ? stencil + 256 : stencil)); //-128 to 127. 0 is clear
+		System.out.println("Stencil: " + (stencil < 0 ? stencil + 256 : stencil)); //-128 to 127. 0 is clear
 	}
 
 	public void perm(Array<Float> values, int size, Array<Float> initialStuff, Array<Array<Float>> output) {
@@ -122,8 +109,11 @@ public class TestScreen extends AbstractScreen {
 		if (assets.update() && instances.size == 0) {
 			ModelInstance ghost = new ModelInstance(assets.get("models/ghost_blue.g3dj", Model.class));
 			ghost.transform.translate(1.0f, 0.0f, 4.0f);
+			ghost.getMaterial("skin").set(new StencilIndexAttribute(1));
 			ModelInstance cube = new ModelInstance(assets.get("models/cube.g3dj", Model.class));
 			cube.transform.translate(2.0f, 0.0f, 2.0f);
+			cube.getMaterial("skin").set(new StencilIndexAttribute(2));
+
 			instances.add(ghost);
 			instances.add(cube);
 		}
@@ -139,6 +129,10 @@ public class TestScreen extends AbstractScreen {
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
 					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
 
+					for (ModelInstance instance : instances) {
+						StencilIndexAttribute stencilAttr = (StencilIndexAttribute) instance.getMaterial("skin").get(StencilIndexAttribute.ID);
+						System.out.println(stencilAttr.value);
+					}
 					for (int i = 0; i < instances.size; i++) {
 						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, i + 1, 0xff);
 						modelBatch.begin(mainCamera);
@@ -265,5 +259,35 @@ public class TestScreen extends AbstractScreen {
 
 		if (frameBuffer2 != null) frameBuffer2.dispose();
 			frameBuffer2 = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+	}
+
+	public static class StencilIndexAttribute extends Attribute {
+
+		public final static String Alias = "StencilIndex";
+		public final static long ID = register(Alias);
+
+		public int value;
+
+		public StencilIndexAttribute (final int value) {
+			super(ID);
+			this.value = value;
+		}
+
+		@Override
+		public Attribute copy () {
+			return new StencilIndexAttribute(value);
+		}
+
+		@Override
+		protected boolean equals (Attribute other) {
+			return ((StencilIndexAttribute)other).value == value;
+		}
+
+		@Override
+		public int compareTo (Attribute o) {
+			if (type != o.type) return type < o.type ? -1 : 1;
+			float otherValue = ((StencilIndexAttribute)o).value;
+			return MathUtils.isEqual(value, otherValue) ? 0 : (value < otherValue ? -1 : 1);
+		}
 	}
 }
