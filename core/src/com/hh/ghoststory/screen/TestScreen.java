@@ -70,17 +70,36 @@ public class TestScreen extends AbstractScreen {
 		mainCamera.far = 300;
 		mainCamera.update();
 
-		camController = new CameraInputController(mainCamera);
+		camController = new CameraInputController(mainCamera) {
+			@Override
+			public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+				System.out.println(screenX);
+				System.out.println(screenY);
+				TestScreen.this.getObject(screenX, screenY);
+				return super.touchUp(screenX, screenY, pointer, button);
+			}
+		};
 		Gdx.input.setInputProcessor(camController);
 		Array<Array<Float>> output = new Array<Array<Float>>();
 		Array<Float> values = new Array<Float>() {
 			{
-				add(0.0f); add(0.1f); add(0.2f); add(0.3f); add(0.4f); add(0.5f); add(0.6f); add(0.7f); add(0.8f); add(0.9f);
+				add(0.0f); add(0.1f); add(0.2f); add(0.3f); add(0.4f); add(0.5f); add(0.6f);
+				add(0.7f);
+				add(0.8f);
+				add(0.9f);
 			}
 		};
 		perm(values, 3, new Array<Float>(), output);
 		System.out.println(output.size);
 	}
+
+	private void getObject(int screenX, int screenY) {
+		ByteBuffer pixels = ByteBuffer.allocateDirect(8);
+		Gdx.gl.glReadPixels(screenX, screenY, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
+		int stencil = (int) pixels.get();
+		System.out.println(stencil + " " + (stencil < 0 ? stencil + 256 : stencil)); //-128 to 127. 0 is clear
+	}
+
 	public void perm(Array<Float> values, int size, Array<Float> initialStuff, Array<Array<Float>> output) {
 		if (initialStuff.size>= size) {
 			output.add(initialStuff);
@@ -98,6 +117,7 @@ public class TestScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		mainCamera.update();
+		camController.update();
 
 		if (assets.update() && instances.size == 0) {
 			ModelInstance ghost = new ModelInstance(assets.get("models/ghost_blue.g3dj", Model.class));
@@ -125,12 +145,6 @@ public class TestScreen extends AbstractScreen {
 						modelBatch.render(instances.get(i));
 						modelBatch.end();
 					}
-
-					ByteBuffer pixels = ByteBuffer.allocateDirect(8);
-					Gdx.gl.glReadPixels(100, 100, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
-					int stencil = (int) pixels.get();
-					System.out.println(stencil + " " + (stencil < 0 ? stencil + 256 : stencil)); //-128 to 127. 0 is clear
-					Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);
 					break;
 				// stencil
 				case 1:
