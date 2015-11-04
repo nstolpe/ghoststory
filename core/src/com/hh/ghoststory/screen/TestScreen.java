@@ -141,29 +141,43 @@ public class TestScreen extends AbstractScreen {
 				// multiple frame buff
 				// ers
 				case 0:
-					// handle the drawing and stenciling of values
+					// enable stencil test. clear color, stencil, depth
+					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
 					Gdx.gl.glClearColor(0, 0, 0, 1);
 					Gdx.gl.glClearStencil(0x00);
+
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+
+					// set stencil to replace only when depth and stencil pass
 					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
 
+					// render the instances. is it ok to begin and end the ModelBach for each object?
+					// it doesn't work w/o cause you need to modify glStencilFunc and can only do that
+					// correctly outside of the batch.
 					for (int i = 0; i < instances.size; i++) {
 						StencilIndexAttribute stencilAttr = (StencilIndexAttribute) instances.get(i).getMaterial("skin").get(StencilIndexAttribute.ID);
+						// write the StencilIndexAttribute to the stencil buffer.
 						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, stencilAttr.value, 0xff);
+
 						modelBatch.begin(mainCamera);
 						modelBatch.render(instances.get(i));
 						modelBatch.end();
 					}
 
-//					frameBuffer1.begin();
+					frameBuffer1.begin();
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 1, 0xFF);
+					Gdx.gl.glStencilMask(~0);
 					outlineBatch.begin(mainCamera);
 					outlineBatch.render(instances);
 					outlineBatch.end();
 //					ScreenshotFactory.saveScreenshot(frameBuffer1.getWidth(), frameBuffer1.getHeight(), "thing");
-//					frameBuffer1.end();
+					frameBuffer1.end();
+
+//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//					spriteBatch.begin();
+//					spriteBatch.draw(frameBuffer1.getColorBufferTexture(), 0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
+//					spriteBatch.end();
 
 					break;
 				// stencil
