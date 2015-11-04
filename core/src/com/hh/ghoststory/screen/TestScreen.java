@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.ScreenshotFactory;
 
 import java.nio.ByteBuffer;
 
@@ -38,7 +40,23 @@ public class TestScreen extends AbstractScreen {
 		"    gl_FragColor = vec4(0.04, 0.28, 0.26, 1.0);\n" +
 		"}"
 	);
-
+	private ShaderProgram edgeShader = new ShaderProgram(
+		"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+			+ "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+			+ "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+			+ "uniform mat4 u_projTrans;\n" //
+			+ "varying vec4 v_color;\n" //
+			+ "varying vec2 v_texCoords;\n" //
+			+ "\n" //
+			+ "void main()\n" //
+			+ "{\n" //
+			+ "   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+			+ "   v_color.a = v_color.a * (255.0/254.0);\n" //
+			+ "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+			+ "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+			+ "}\n",
+		Gdx.files.internal("shaders/edge.fragment.glsl").readString()
+	);
 	private AssetManager assets = new AssetManager();
 	private PerspectiveCamera mainCamera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	private OrthographicCamera spriteCamera = new OrthographicCamera();
@@ -123,22 +141,30 @@ public class TestScreen extends AbstractScreen {
 				// multiple frame buff
 				// ers
 				case 0:
-					Gdx.gl.glClearColor(1, 0, 0, 1);
-					Gdx.gl.glClearStencil(200);
+					// handle the drawing and stenciling of values
+					Gdx.gl.glClearColor(0, 0, 0, 1);
+					Gdx.gl.glClearStencil(0x00);
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
 					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
 
-					for (ModelInstance instance : instances) {
-						StencilIndexAttribute stencilAttr = (StencilIndexAttribute) instance.getMaterial("skin").get(StencilIndexAttribute.ID);
-						System.out.println(stencilAttr.value);
-					}
 					for (int i = 0; i < instances.size; i++) {
-						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, i + 1, 0xff);
+						StencilIndexAttribute stencilAttr = (StencilIndexAttribute) instances.get(i).getMaterial("skin").get(StencilIndexAttribute.ID);
+						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, stencilAttr.value, 0xff);
 						modelBatch.begin(mainCamera);
 						modelBatch.render(instances.get(i));
 						modelBatch.end();
 					}
+
+//					frameBuffer1.begin();
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 1, 0xFF);
+					outlineBatch.begin(mainCamera);
+					outlineBatch.render(instances);
+					outlineBatch.end();
+//					ScreenshotFactory.saveScreenshot(frameBuffer1.getWidth(), frameBuffer1.getHeight(), "thing");
+//					frameBuffer1.end();
+
 					break;
 				// stencil
 				case 1:
@@ -183,10 +209,6 @@ public class TestScreen extends AbstractScreen {
 					modelBatch.end();
 
 					Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, 0xFF);
-
-//					ByteBuffer pixels = ByteBuffer.allocateDirect(8);
-//					Gdx.gl.glReadPixels(100, 100, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
-//					System.out.println(pixels.get()); //-128 to 127. 0 is clear
 
 					Gdx.gl.glStencilMask(0x00);
 					Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
