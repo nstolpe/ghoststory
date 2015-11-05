@@ -106,6 +106,10 @@ public class TestScreen extends AbstractScreen {
 		Gdx.gl.glReadPixels(screenX, Gdx.graphics.getHeight() - screenY, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
 		int stencil = (int) pixels.get();
 		System.out.println("Stencil: " + (stencil < 0 ? stencil + 256 : stencil)); //-128 to 127. 0 is clear
+
+		for (int i = 0; i < instances.size; i++) {
+
+		}
 	}
 
 	public void perm(Array<Float> values, int size, Array<Float> initialStuff, Array<Array<Float>> output) {
@@ -150,9 +154,6 @@ public class TestScreen extends AbstractScreen {
 					Gdx.gl.glClearStencil(0x00);
 
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-
-					// enable writing to stencil buffer
-//					Gdx.gl.glStencilMask(0xFF);
 
 					// set stencil to replace only when depth and stencil pass
 					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
