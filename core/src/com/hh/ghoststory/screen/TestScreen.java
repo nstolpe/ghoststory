@@ -9,11 +9,11 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
+import sun.java2d.pipe.OutlineTextRenderer;
 
 import java.nio.ByteBuffer;
 
@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 public class TestScreen extends AbstractScreen {
 	private SpriteBatch spriteBatch = new SpriteBatch();
 	private ModelBatch modelBatch = new ModelBatch();
-	public ModelBatch outlineBatch = new ModelBatch(
+	public ModelBatch overlayBatch = new ModelBatch(
 		"attribute vec3 a_position;\n" +
 		"\n" +
 		"uniform mat4 u_worldTrans;\n" +
@@ -39,7 +39,7 @@ public class TestScreen extends AbstractScreen {
 		"\n" +
 		"\n" +
 		"void main() {\n" +
-		"    gl_FragColor = vec4(0.3, 0.15, 0.84, 0.5);\n" +
+		"    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n" +
 		"}"
 	);
 	private ShaderProgram edgeShader = new ShaderProgram(
@@ -71,6 +71,8 @@ public class TestScreen extends AbstractScreen {
 
 	private final CameraInputController camController;
 	private TextureRegion tmpTextureRegion;
+
+	private int activeStencilIndex = 0;
 
 	public TestScreen(GhostStory game) {
 		super(game);
@@ -104,10 +106,17 @@ public class TestScreen extends AbstractScreen {
 	private void getObject(int screenX, int screenY) {
 		ByteBuffer pixels = ByteBuffer.allocateDirect(8);
 		Gdx.gl.glReadPixels(screenX, Gdx.graphics.getHeight() - screenY, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
-		int stencil = (int) pixels.get();
-		System.out.println("Stencil: " + (stencil < 0 ? stencil + 256 : stencil)); //-128 to 127. 0 is clear
+		int stencilIndex = (int) pixels.get();
+		System.out.println("Stencil: " + (stencilIndex < 0 ? stencilIndex + 256 : stencilIndex)); //-128 to 127. 0 is clear
 
 		for (int i = 0; i < instances.size; i++) {
+			StencilIndexAttribute stencilAttr = (StencilIndexAttribute) instances.get(i).getMaterial("skin").get(StencilIndexAttribute.ID);
+			SelectOutlineAttribute outlineAttr = (SelectOutlineAttribute ) instances.get(i).getMaterial("skin").get(SelectOutlineAttribute.ID);
+			activeStencilIndex = stencilIndex;
+			if (stencilAttr.value == stencilIndex)
+				outlineAttr.value = true;
+			else
+				outlineAttr.value = false;
 
 		}
 	}
@@ -135,9 +144,11 @@ public class TestScreen extends AbstractScreen {
 			ModelInstance ghost = new ModelInstance(assets.get("models/ghost_blue.g3dj", Model.class));
 			ghost.transform.translate(1.0f, 0.0f, 4.0f);
 			ghost.getMaterial("skin").set(new StencilIndexAttribute(1));
+			ghost.getMaterial("skin").set(new SelectOutlineAttribute(false));
 			ModelInstance cube = new ModelInstance(assets.get("models/cube.g3dj", Model.class));
 			cube.transform.translate(2.0f, 0.0f, 2.0f);
 			cube.getMaterial("skin").set(new StencilIndexAttribute(2));
+			cube.getMaterial("skin").set(new SelectOutlineAttribute(false));
 
 			instances.add(ghost);
 			instances.add(cube);
@@ -150,7 +161,7 @@ public class TestScreen extends AbstractScreen {
 				case 0:
 					// enable stencil test. clear color, stencil, depth
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-					Gdx.gl.glClearColor(0, 0, 0, 1);
+					Gdx.gl.glClearColor(1, 1, 1, 1);
 					Gdx.gl.glClearStencil(0x00);
 
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
@@ -171,30 +182,42 @@ public class TestScreen extends AbstractScreen {
 						modelBatch.end();
 					}
 
-					// don't update the stencil buffer anymore.
-					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
-					// only write when stencil buffer = 1 (1st instance, ghost). this should change on touch. parameterize
-					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 1, 0xff);
+					if (activeStencilIndex > 0) {
+						// don't update the stencil buffer anymore.
+						Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
+						// only write when stencil buffer = 1 (1st instance, ghost). this should change on touch. parameterize
+						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0xff);
 
-					// start fbo to get draw the selected silhouette
-					frameBuffer2.begin();
+						// start fbo to get draw the selected silhouette
+						frameBuffer1.begin();
 						Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-						// outlineBatch writes a solid color. change name.
-						outlineBatch.begin(mainCamera);
-							outlineBatch.render(instances);
-						outlineBatch.end();
+						// overlayBatch writes a solid color. change name.
+						overlayBatch.begin(mainCamera);
+						overlayBatch.render(instances);
+						overlayBatch.end();
 //						ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
-					frameBuffer2.end();
+						frameBuffer1.end();
 
-					// flip the frame buffer output since it's upside down.
-					tmpTexture = frameBuffer2.getColorBufferTexture();
-					tmpTextureRegion = new TextureRegion(tmpTexture);
-					tmpTextureRegion.flip(false, true);
-//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-					// draw the silhouette w/ a sprite batch.
-					spriteBatch.begin();
+						// flip the frame buffer output since it's upside down.
+						tmpTexture = frameBuffer1.getColorBufferTexture();
+						tmpTextureRegion = new TextureRegion(tmpTexture);
+						tmpTextureRegion.flip(false, true);
+
+						edgeShader.setUniformf("u_screenWidth", Gdx.graphics.getWidth());
+						edgeShader.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
+
+						spriteBatch.setShader(edgeShader);
+						spriteBatch.begin();
 						spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					spriteBatch.end();
+						spriteBatch.end();
+
+//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+						// draw the silhouette w/ a sprite batch.
+						spriteBatch.setShader(SpriteBatch.createDefaultShader());
+						spriteBatch.begin();
+						spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+						spriteBatch.end();
+					}
 					break;
 				// stencil
 				case 1:
@@ -217,9 +240,9 @@ public class TestScreen extends AbstractScreen {
 //
 //					ModelInstance copy = instance.copy();
 //					copy.transform.scl(1.1f);
-//					outlineBatch.begin(mainCamera);
-//					outlineBatch.render(copy);
-//					outlineBatch.end();
+//					overlayBatch.begin(mainCamera);
+//					overlayBatch.render(copy);
+//					overlayBatch.end();
 
 
 
@@ -243,13 +266,13 @@ public class TestScreen extends AbstractScreen {
 					Gdx.gl.glStencilMask(0x00);
 					Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
-					outlineBatch.begin(mainCamera);
+					overlayBatch.begin(mainCamera);
 					for (ModelInstance instance : instances) {
 						instance.transform.scl(1.1f);
-						outlineBatch.render(instance);
+						overlayBatch.render(instance);
 						instance.transform.scl(100f / 110f);
 					}
-					outlineBatch.end();
+					overlayBatch.end();
 
 					Gdx.gl.glStencilMask(0xFF);
 					Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
@@ -272,9 +295,9 @@ public class TestScreen extends AbstractScreen {
 //					Gdx.gl.glStencilMask(0x00);
 //
 //					instance.transform.scl(1.2f);
-//					outlineBatch.begin(mainCamera);
-//					outlineBatch.render(instance);
-//					outlineBatch.end();
+//					overlayBatch.begin(mainCamera);
+//					overlayBatch.render(instance);
+//					overlayBatch.end();
 //					instance.transform.scl(100f / 120f);
 
 //					Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);
@@ -340,8 +363,38 @@ public class TestScreen extends AbstractScreen {
 		@Override
 		public int compareTo (Attribute o) {
 			if (type != o.type) return type < o.type ? -1 : 1;
-			float otherValue = ((StencilIndexAttribute)o).value;
-			return MathUtils.isEqual(value, otherValue) ? 0 : (value < otherValue ? -1 : 1);
+			int otherValue = ((StencilIndexAttribute)o).value;
+			return value == otherValue ? 0 : (value < otherValue ? -1 : 1);
+		}
+	}
+
+	public static class SelectOutlineAttribute extends Attribute {
+
+		public final static String Alias = "SelectOutline";
+		public final static long ID = register(Alias);
+
+		public boolean value;
+
+		public SelectOutlineAttribute (final boolean value) {
+			super(ID);
+			this.value = value;
+		}
+
+		@Override
+		public Attribute copy () {
+			return new SelectOutlineAttribute(value);
+		}
+
+		@Override
+		protected boolean equals (Attribute other) {
+			return ((SelectOutlineAttribute)other).value == value;
+		}
+
+		@Override
+		public int compareTo (Attribute o) {
+			if (type != o.type) return type < o.type ? -1 : 1;
+			boolean otherValue = ((SelectOutlineAttribute)o).value;
+			return value == otherValue ? 0 : (value ? 1 : -1);
 		}
 	}
 }
