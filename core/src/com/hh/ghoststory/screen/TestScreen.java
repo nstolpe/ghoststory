@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
@@ -37,7 +39,7 @@ public class TestScreen extends AbstractScreen {
 		"\n" +
 		"\n" +
 		"void main() {\n" +
-		"    gl_FragColor = vec4(0.04, 0.28, 0.26, 1.0);\n" +
+		"    gl_FragColor = vec4(0.3, 0.15, 0.84, 0.5);\n" +
 		"}"
 	);
 	private ShaderProgram edgeShader = new ShaderProgram(
@@ -68,6 +70,7 @@ public class TestScreen extends AbstractScreen {
 	private Array<ModelInstance> instances = new Array<ModelInstance>();
 
 	private final CameraInputController camController;
+	private TextureRegion tmpTextureRegion;
 
 	public TestScreen(GhostStory game) {
 		super(game);
@@ -77,7 +80,7 @@ public class TestScreen extends AbstractScreen {
 		mainCamera.position.set(5, 5, 5);
 		mainCamera.lookAt(0, 0, 0);
 		mainCamera.near = 1;
-		mainCamera.far = 300;
+		mainCamera.far = 1000;
 		mainCamera.update();
 
 		camController = new CameraInputController(mainCamera) {
@@ -148,6 +151,9 @@ public class TestScreen extends AbstractScreen {
 
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
 
+					// enable writing to stencil buffer
+//					Gdx.gl.glStencilMask(0xFF);
+
 					// set stencil to replace only when depth and stencil pass
 					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
 
@@ -156,29 +162,38 @@ public class TestScreen extends AbstractScreen {
 					// correctly outside of the batch.
 					for (int i = 0; i < instances.size; i++) {
 						StencilIndexAttribute stencilAttr = (StencilIndexAttribute) instances.get(i).getMaterial("skin").get(StencilIndexAttribute.ID);
-						// write the StencilIndexAttribute to the stencil buffer.
-						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, stencilAttr.value, 0xff);
-
+						// set stencil buffer to write the StencilIndexAttribute to the stencil buffer.
+						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, stencilAttr.value, 0xFF);
+						// render the scene and write the stencil buffer
 						modelBatch.begin(mainCamera);
-						modelBatch.render(instances.get(i));
+							modelBatch.render(instances.get(i));
 						modelBatch.end();
 					}
 
-					frameBuffer1.begin();
-					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 1, 0xFF);
-					Gdx.gl.glStencilMask(~0);
-					outlineBatch.begin(mainCamera);
-					outlineBatch.render(instances);
-					outlineBatch.end();
-//					ScreenshotFactory.saveScreenshot(frameBuffer1.getWidth(), frameBuffer1.getHeight(), "thing");
-					frameBuffer1.end();
+					// don't update the stencil buffer anymore.
+					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
+					// only write when stencil buffer = 1 (1st instance, ghost). this should change on touch. parameterize
+					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 1, 0xff);
 
-//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-//					spriteBatch.begin();
-//					spriteBatch.draw(frameBuffer1.getColorBufferTexture(), 0, 0, frameBuffer1.getWidth(), frameBuffer1.getHeight());
-//					spriteBatch.end();
+					// start fbo to get draw the selected silhouette
+					frameBuffer2.begin();
+						Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+						// outlineBatch writes a solid color. change name.
+						outlineBatch.begin(mainCamera);
+							outlineBatch.render(instances);
+						outlineBatch.end();
+//						ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
+					frameBuffer2.end();
 
+					// flip the frame buffer output since it's upside down.
+					tmpTexture = frameBuffer2.getColorBufferTexture();
+					tmpTextureRegion = new TextureRegion(tmpTexture);
+					tmpTextureRegion.flip(false, true);
+//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+					// draw the silhouette w/ a sprite batch.
+					spriteBatch.begin();
+						spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.end();
 					break;
 				// stencil
 				case 1:
@@ -295,6 +310,8 @@ public class TestScreen extends AbstractScreen {
 
 		if (frameBuffer2 != null) frameBuffer2.dispose();
 			frameBuffer2 = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+		spriteBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	}
 
 	public static class StencilIndexAttribute extends Attribute {
