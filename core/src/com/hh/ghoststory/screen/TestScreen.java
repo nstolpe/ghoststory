@@ -65,6 +65,7 @@ public class TestScreen extends AbstractScreen {
 
 	private FrameBuffer frameBuffer1;
 	private FrameBuffer frameBuffer2;
+	private FrameBuffer frameBuffer3;
 
 	private Array<ModelInstance> instances = new Array<ModelInstance>();
 
@@ -73,6 +74,8 @@ public class TestScreen extends AbstractScreen {
 	private TextureRegion tmpTextureRegion;
 	private Texture tmpTexture2;
 	private TextureRegion tmpTextureRegion2;
+	private Texture tmpTexture3;
+	private TextureRegion tmpTextureRegion3;
 	private int activeStencilIndex = 0;
 
 
@@ -166,32 +169,43 @@ public class TestScreen extends AbstractScreen {
 					// render the instances. is it ok to begin and end the ModelBach for each object?
 					// it doesn't work w/o cause you need to modify glStencilFunc and can only do that
 					// correctly outside of the batch.
+					frameBuffer3.begin();
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+					Gdx.gl.glClearColor(0, 0, 0, 0);
 					for (int i = 0; i < instances.size; i++) {
 						StencilIndexAttribute stencilAttr = (StencilIndexAttribute) instances.get(i).getMaterial("skin").get(StencilIndexAttribute.ID);
 						// set stencil buffer to write the StencilIndexAttribute.value to the stencil buffer.
 						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, stencilAttr.value, 0xFF);
-						// render the scene and write the stencil buffer
+						// render each object. Its StencilIndexAttribute.value is written to the stencil buffer.
 						modelBatch.begin(mainCamera);
 							modelBatch.render(instances.get(i));
 						modelBatch.end();
 					}
+					ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
+					frameBuffer3.end();
 
-					// need to do the highlight
+					tmpTexture3 = frameBuffer3.getColorBufferTexture();
+					tmpTextureRegion3 = new TextureRegion(tmpTexture3);
+					tmpTextureRegion3.flip(false, true);
+					// do the overlay part of highlight, if activeStencilIndex is above 0
+					// overlay for inactive is rendered too, and considered when calculating the outline
+					// but it is not drawn over the inactive object.
 					if (activeStencilIndex > 0) {
 						// don't update the stencil buffer anymore.
 						Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
 						// only write pixels when stencil buffer = activeStencilIndex
-						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0xff);
+						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0xFF);
 
-						// start fbo to draw the selected silhouette
+						// start fbo to draw the selected silhouette. both objects are being drawn, should only be the one that matches
+						// the stencil value in activeStencilIndex.
 						frameBuffer1.begin();
 						Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-						Gdx.gl.glClearColor(0, 0, 0, 0);
-						// overlayBatch writes a solid color.
-						overlayBatch.begin(mainCamera);
-						overlayBatch.render(instances);
-						overlayBatch.end();
-						ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
+							Gdx.gl.glClearColor(0, 0, 0, 0);
+							// overlayBatch writes a solid color.
+							overlayBatch.begin(mainCamera);
+								overlayBatch.render(instances);
+							overlayBatch.end();
+//							ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
 						frameBuffer1.end();
 
 						// flip the frame buffer output since it's upside down.
@@ -199,15 +213,17 @@ public class TestScreen extends AbstractScreen {
 						tmpTextureRegion = new TextureRegion(tmpTexture);
 						tmpTextureRegion.flip(false, true);
 
+						// draw edges around the activeIndex object.
 						frameBuffer2.begin();
-						Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-						spriteBatch.setShader(edgeShader);
-						spriteBatch.begin();
-						edgeShader.setUniformf("u_screenWidth", Gdx.graphics.getWidth());
-						edgeShader.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
-						spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-						spriteBatch.end();
-//						ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
+							Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+							Gdx.gl.glClearColor(0, 0, 0, 0);
+							spriteBatch.setShader(edgeShader);
+							spriteBatch.begin();
+								edgeShader.setUniformf("u_screenWidth", Gdx.graphics.getWidth());
+								edgeShader.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
+								spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+							spriteBatch.end();
+	//						ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
 						frameBuffer2.end();
 
 						// flip the frame buffer output since it's upside down.
@@ -219,8 +235,9 @@ public class TestScreen extends AbstractScreen {
 						// draw the silhouette w/ a sprite batch.
 						spriteBatch.setShader(SpriteBatch.createDefaultShader());
 						spriteBatch.begin();
-						spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-						spriteBatch.draw(tmpTextureRegion2, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+							spriteBatch.draw(tmpTextureRegion3, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//							spriteBatch.draw(tmpTextureRegion2, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
 					}
 					break;
@@ -339,6 +356,9 @@ public class TestScreen extends AbstractScreen {
 
 		if (frameBuffer2 != null) frameBuffer2.dispose();
 			frameBuffer2 = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+		if (frameBuffer3 != null) frameBuffer3.dispose();
+			frameBuffer3 = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
 		spriteBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	}
