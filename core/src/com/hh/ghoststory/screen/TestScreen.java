@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.render.shaders.LocationShader;
 import com.hh.ghoststory.render.shaders.LocationShaderProvider;
 
@@ -207,10 +208,10 @@ public class TestScreen extends AbstractScreen {
 		}
 
 		if (instances != null) {
-			int mode = 0;
+			int mode = 1;
 			switch (mode) {
 				case 0:
-					Gdx.gl.glClearColor(0, 0, 0, 0);
+					Gdx.gl.glClearColor(1, 0, 0, 0);
 					Gdx.gl.glClearStencil(0x00);
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
 					// enable stencil test and clear stencil buffer
@@ -219,7 +220,6 @@ public class TestScreen extends AbstractScreen {
 					// disable color and depth writes. might not need depth
 					Gdx.gl.glColorMask(false, false, false, false);
 					Gdx.gl.glDepthMask(false);
-
 
 					// only write to stencil buffer when depth and stencil pass
 					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
@@ -245,17 +245,24 @@ public class TestScreen extends AbstractScreen {
 					Gdx.gl.glDepthMask(true);
 
 					if (activeStencilIndex > 0) {
-
-						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0xFF);
 						// draw black silhouette w/ stencil test on.
-						for (int i = 0; i < instances.size; i++) {
-							instances.get(i).getMaterial("skin").set(new LocationShader.SilhouetteAttribute(1));
-							locationBatch.begin(mainCamera);
-								locationBatch.render(instances.get(i));
-							locationBatch.end();
-							instances.get(i).getMaterial("skin").remove(LocationShader.SilhouetteAttribute.ID);
-						}
-						tmpTextureRegion = ScreenUtils.getFrameBufferTexture();
+						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0xFF);
+
+						frameBuffer3.begin();
+							for (int i = 0; i < instances.size; i++) {
+								instances.get(i).getMaterial("skin").set(new LocationShader.SilhouetteAttribute(1));
+								locationBatch.begin(mainCamera);
+									locationBatch.render(instances.get(i));
+								locationBatch.end();
+								instances.get(i).getMaterial("skin").remove(LocationShader.SilhouetteAttribute.ID);
+							}
+							ScreenshotFactory.saveScreenshot(frameBuffer3.getWidth(), frameBuffer3.getHeight(), "stuff");
+						frameBuffer3.end();
+
+						tmpTexture = frameBuffer3.getColorBufferTexture();
+						tmpTextureRegion = new TextureRegion(tmpTexture);
+						tmpTextureRegion.flip(false, true);
+
 						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, activeStencilIndex, 0xFF);
 						Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 					}
@@ -282,7 +289,7 @@ public class TestScreen extends AbstractScreen {
 						spriteBatch.begin();
 							silhouetteShader.setUniformf("u_color", drawColor);
 							silhouetteShader.setUniformf("u_alpha", 0.6f);
-							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
 
 						// create the outline passing the silhouette to the spritebatch shader.
@@ -293,81 +300,18 @@ public class TestScreen extends AbstractScreen {
 							edgeShader.setUniformf("u_rFactor", drawColor.x);
 							edgeShader.setUniformf("u_gFactor", drawColor.y);
 							edgeShader.setUniformf("u_bFactor", drawColor.z);
-							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
 
-						tmpTextureRegion.getTexture().dispose();
+						spriteBatch.begin();
+							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+						spriteBatch.end();
+						tmpTexture.dispose();
 						tmpTextureRegion = null;
 					}
 					break;
 				case 1:
-					// set clear color to transparent black. clear color, stencil, depth
-					Gdx.gl.glClearColor(0, 0, 0, 0);
-					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-
-					// draw a single color silhouette for each object. it will be sampled, then cleared and drawn over.
-					locationBatch.begin(mainCamera);
-					locationBatch.render(instances);
-					locationBatch.end();
-
-					// cache the output here, a framebuffer won't work
-					// https://code.google.com/p/libgdx/issues/detail?id=1626
-					if (locationMap != null) locationMap.dispose();
-					locationMap = ScreenUtils.getFrameBufferPixmap(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-
-					// begin the real batch, where the scene is rendered.
-					modelBatch.begin(mainCamera);
-					modelBatch.render(instances);
-					modelBatch.end();
-
-					// something has been selected, draw the overlay and outline.
-					if (selectMask != null) {
-						// use temp objects to extract only the silhouette of the active object
-						tmpTexture = new Texture(locationMap);
-						tmpTextureRegion = new TextureRegion(tmpTexture);
-						tmpTextureRegion.flip(false, true);
-
-//						overlayBuffer.begin();
-							spriteBatch.setShader(silhouetteShader);
-							spriteBatch.begin();
-								silhouetteShader.setUniformf("u_color", overlayData.highlightRGB);
-								silhouetteShader.setUniformf("u_alpha", 1.0f);
-								spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-							spriteBatch.end();
-//							ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
-//						overlayBuffer.end();
-
-						tmpTexture.dispose();
-					}
-					break;
-				// stencil
-				case 2:
 					Gdx.gl.glClearColor(1, 0, 0, 1);
-//
-//					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-//					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
-//					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
-//					Gdx.gl.glStencilMask(1);
-//					Gdx.gl.glClearStencil(0);
-//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-//
-//					modelBatch.begin(mainCamera);
-//					modelBatch.render(instance);
-//					modelBatch.end();
-//
-//					Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 0, 1);
-//					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
-//					Gdx.gl.glStencilMask(0x00);
-//
-//					ModelInstance copy = instance.copy();
-//					copy.transform.scl(1.1f);
-//					locationBatch.begin(mainCamera);
-//					locationBatch.render(copy);
-//					locationBatch.end();
-
-
 
 					Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
@@ -399,31 +343,6 @@ public class TestScreen extends AbstractScreen {
 
 					Gdx.gl.glStencilMask(0xFF);
 					Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-
-
-//					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-//
-//					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-//					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 1);
-//					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
-//					Gdx.gl.glStencilMask(0x00);
-//					Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
-//
-//					modelBatch.begin(mainCamera);
-//					modelBatch.render(instance);
-//					modelBatch.end();
-//
-//					Gdx.gl.glStencilFunc(GL20.GL_EQUAL, 0, 1);
-//					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
-//					Gdx.gl.glStencilMask(0x00);
-//
-//					instance.transform.scl(1.2f);
-//					locationBatch.begin(mainCamera);
-//					locationBatch.render(instance);
-//					locationBatch.end();
-//					instance.transform.scl(100f / 120f);
-
-//					Gdx.gl.glDisable(GL20.GL_STENCIL_TEST);
 					break;
 				default:
 					break;
@@ -458,7 +377,7 @@ public class TestScreen extends AbstractScreen {
 	private void initFBOS() {
 		if (overlayBuffer != null) overlayBuffer.dispose();
 
-		overlayBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		overlayBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true, true);
 
 		if (edgeBuffer != null) edgeBuffer.dispose();
 
