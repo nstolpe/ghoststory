@@ -108,7 +108,7 @@ public class TestScreen extends AbstractScreen {
 
 	private FPSLogger logger = new FPSLogger();
 
-	private int activeStencilIndex = 0;
+	private int activeStencilIndex = 1;
 	private ByteBuffer pixels = ByteBuffer.allocateDirect(8);
 
 	public TestScreen(GhostStory game) {
@@ -211,10 +211,10 @@ public class TestScreen extends AbstractScreen {
 			switch (mode) {
 				case 0:
 					Gdx.gl.glClearColor(0, 0, 0, 0);
+					Gdx.gl.glClearStencil(0x00);
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
 					// enable stencil test and clear stencil buffer
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
-					Gdx.gl.glClearStencil(0x00);
 
 					// disable color and depth writes. might not need depth
 					Gdx.gl.glColorMask(false, false, false, false);
@@ -235,6 +235,8 @@ public class TestScreen extends AbstractScreen {
 							modelBatch.render(instances.get(i));
 						modelBatch.end();
 					}
+					// clear depth buffer
+					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 
 					// set stencil op to always keep, we don't want to update the buffer anymore.
 					// enable writing to color and depth. depth might not be needed, if it doesn't need to go off up above.
@@ -243,6 +245,7 @@ public class TestScreen extends AbstractScreen {
 					Gdx.gl.glDepthMask(true);
 
 					if (activeStencilIndex > 0) {
+
 						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0xFF);
 						// draw black silhouette w/ stencil test on.
 						for (int i = 0; i < instances.size; i++) {
@@ -254,14 +257,15 @@ public class TestScreen extends AbstractScreen {
 						}
 						tmpTextureRegion = ScreenUtils.getFrameBufferTexture();
 						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, activeStencilIndex, 0xFF);
+						Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
 					}
 
-					// clear color buffer.
 					// draw scene to color buffer.
 					modelBatch.begin(mainCamera);
 						modelBatch.render(instances);
 					modelBatch.end();
 
+//					Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 					if (activeStencilIndex > 0) {
 						Vector3 drawColor = new Vector3();
 						for (int i = 0; i < instances.size; i++) {
@@ -272,6 +276,8 @@ public class TestScreen extends AbstractScreen {
 							}
 						}
 
+						// pass silhouette as sample to spritebatch shader
+						// render the silhouetted pixels as the highlight at the alpha passed in (u_alpha)
 						spriteBatch.setShader(silhouetteShader);
 						spriteBatch.begin();
 							silhouetteShader.setUniformf("u_color", drawColor);
@@ -279,6 +285,7 @@ public class TestScreen extends AbstractScreen {
 							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
 
+						// create the outline passing the silhouette to the spritebatch shader.
 						spriteBatch.setShader(edgeShader);
 						spriteBatch.begin();
 							edgeShader.setUniformf("u_screenWidth", Gdx.graphics.getWidth());
@@ -292,14 +299,7 @@ public class TestScreen extends AbstractScreen {
 						tmpTextureRegion.getTexture().dispose();
 						tmpTextureRegion = null;
 					}
-					// pass silhouette as sample to spritebatch shader
-					// render the silhouetted pixels as the highlight at the alpha passed in (u_alpha)
-
-					// create the outline passing the silhouette to the spritebatch shader.
-					// this might need to happen multiple times
 					break;
-				// multiple frame buff
-				// ers
 				case 1:
 					// set clear color to transparent black. clear color, stencil, depth
 					Gdx.gl.glClearColor(0, 0, 0, 0);

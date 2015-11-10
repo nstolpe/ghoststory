@@ -97,7 +97,7 @@ public class ShadowMapShader extends BaseShader {
 				// Activate additive blending
 				context.setBlending(true, GL20.GL_ONE, GL20.GL_ONE);
 				// Render the mesh again
-				renderable.mesh.render(program, renderable.primitiveType, renderable.meshPartOffset, renderable.meshPartSize, false);
+				renderable.meshPart.render(program);
 			}
 		}
 	}

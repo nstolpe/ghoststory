@@ -33,7 +33,7 @@ public class LocationShader extends DefaultShader {
 		"uniform vec3 u_color;\n" +
 		"uniform int u_black;\n" +
 		"void main() {\n" +
-		"    if (u_black == true) {\n" +
+		"    if (u_black == 1) {\n" +
 		"        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n" +
 		"    } else {\n" +
 		"        gl_FragColor = vec4(u_color, 1.0);\n" +

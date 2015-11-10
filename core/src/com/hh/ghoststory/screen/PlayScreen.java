@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.shadow.system.classical.ClassicalShadowSystem;
+//import com.badlogic.gdx.graphics.g3d.shadow.system.classical.ClassicalShadowSystem;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -61,7 +61,7 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 
 	private FPSLogger logger = new FPSLogger();
 
-	private ClassicalShadowSystem shadowSystem;
+//	private ClassicalShadowSystem shadowSystem;
 	private Array<ModelBatch> passBatches = new Array<ModelBatch>();
 	private ModelBatch shadowModelBatch;
 
@@ -84,13 +84,13 @@ public class PlayScreen extends AbstractScreen implements Telegraph {
 		Tween.registerAccessor(Quaternion.class, new QuaternionAccessor());
 		Tween.registerAccessor(Color.class, new ColorAccessor());
 
-		shadowSystem = new ClassicalShadowSystem(active, instances);
-		lighting.addListener(shadowSystem);
-
-		for (int i = 0; i < shadowSystem.getPassQuantity(); i++) {
-			passBatches.add(new ModelBatch(shadowSystem.getPassShaderProvider(i)));
-		}
-		shadowModelBatch = new ModelBatch(shadowSystem.getShaderProvider());
+//		shadowSystem = new ClassicalShadowSystem(active, instances);
+//		lighting.addListener(shadowSystem);
+//
+//		for (int i = 0; i < shadowSystem.getPassQuantity(); i++) {
+//			passBatches.add(new ModelBatch(shadowSystem.getPassShaderProvider(i)));
+//		}
+//		shadowModelBatch = new ModelBatch(shadowSystem.getShaderProvider());
 	}
 
 	protected void setUpEntities() {
