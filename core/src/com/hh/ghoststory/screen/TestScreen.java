@@ -263,11 +263,6 @@ public class TestScreen extends AbstractScreen {
 					modelBatch.end();
 
 					if (activeStencilIndex > 0) {
-//						spriteBatch.begin();
-//							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//						spriteBatch.end();
-
-
 						Vector3 drawColor = new Vector3();
 						for (int i = 0; i < instances.size; i++) {
 							StencilIndexAttribute stencilAttr = (StencilIndexAttribute) instances.get(i).getMaterial("skin").get(StencilIndexAttribute.ID);
@@ -282,7 +277,7 @@ public class TestScreen extends AbstractScreen {
 							silhouetteShader.setUniformf("u_alpha", 0.6f);
 							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
-//						tmpTextureRegion.getTexture().dispose();
+						tmpTextureRegion.getTexture().dispose();
 						tmpTextureRegion = null;
 					}
 					// pass silhouette as sample to spritebatch shader
