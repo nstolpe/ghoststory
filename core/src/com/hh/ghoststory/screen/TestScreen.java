@@ -271,12 +271,24 @@ public class TestScreen extends AbstractScreen {
 								drawColor = color.value;
 							}
 						}
+
 						spriteBatch.setShader(silhouetteShader);
 						spriteBatch.begin();
 							silhouetteShader.setUniformf("u_color", drawColor);
 							silhouetteShader.setUniformf("u_alpha", 0.6f);
 							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
+
+						spriteBatch.setShader(edgeShader);
+						spriteBatch.begin();
+							edgeShader.setUniformf("u_screenWidth", Gdx.graphics.getWidth());
+							edgeShader.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
+							edgeShader.setUniformf("u_rFactor", drawColor.x);
+							edgeShader.setUniformf("u_gFactor", drawColor.y);
+							edgeShader.setUniformf("u_bFactor", drawColor.z);
+							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+						spriteBatch.end();
+
 						tmpTextureRegion.getTexture().dispose();
 						tmpTextureRegion = null;
 					}

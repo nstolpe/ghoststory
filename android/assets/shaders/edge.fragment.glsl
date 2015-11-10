@@ -6,6 +6,10 @@ uniform sampler2D u_texture;
 uniform float u_screenWidth;
 uniform float u_screenHeight;
 
+uniform float u_rFactor;
+uniform float u_gFactor;
+uniform float u_bFactor;
+
 float threshold(in float thr1, in float thr2 , in float val) {
  if (val < thr1) { return 0.0; }
  if (val > thr2) { return 1.0; }
@@ -53,9 +57,9 @@ void main() {
 vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
 	color.a = IsEdge(v_texCoords);
 
-	color.r = IsEdge(v_texCoords) * 1.863;
-	color.g = IsEdge(v_texCoords) * 0.078;
-	color.b = IsEdge(v_texCoords) * 0.235;
+	color.r = IsEdge(v_texCoords) * u_rFactor;
+	color.g = IsEdge(v_texCoords) * u_gFactor;
+	color.b = IsEdge(v_texCoords) * u_bFactor;
 
 	gl_FragColor = color;
 }
