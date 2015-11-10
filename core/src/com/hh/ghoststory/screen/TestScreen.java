@@ -12,76 +12,97 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.render.shaders.LocationShader;
 import com.hh.ghoststory.render.shaders.LocationShaderProvider;
-
-import java.nio.ByteBuffer;
 
 /**
  * Created by nils on 10/8/15.
  */
 public class TestScreen extends AbstractScreen {
-	private SpriteBatch spriteBatch = new SpriteBatch();
-	private ModelBatch modelBatch = new ModelBatch();
-	public ModelBatch locationBatch = new ModelBatch(new LocationShaderProvider());
-//	public ModelBatch locationBatch = new ModelBatch(
-//		"attribute vec3 a_position;\n" +
-//		"\n" +
-//		"uniform mat4 u_worldTrans;\n" +
-//		"uniform mat4 u_projViewTrans;\n" +
-//		"\n" +
-//		"\n" +
-//		"void main() {\n" +
-//		"    gl_Position = u_projViewTrans * u_worldTrans * vec4(a_position, 1.0);\n" +
-//		"}",
-//		"#ifdef GL_ES \n" +
-//		"precision mediump float;\n" +
-//		"#endif\n" +
-//		"\n" +
-//		"\n" +
-//		"void main() {\n" +
-//		"    gl_FragColor = vec4(1.0, 0.0, 0.0, 0.5);\n" +
-//		"}"
-//	);
+	private ShaderProgram silhouetteShader = new ShaderProgram(
+		"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" +
+		"attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" +
+		"attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" +
+		"uniform mat4 u_projTrans;\n" +
+		"varying vec4 v_color;\n" +
+		"varying vec2 v_texCoords;\n" +
+		"\n" +
+		"void main()\n" +
+		"{\n" +
+		"   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" +
+		"   v_color.a = v_color.a * (255.0/254.0);\n" +
+		"   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" +
+		"   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" +
+		"}\n",
+		"#ifdef GL_ES\n" +
+		"#define LOWP lowp\n" +
+		"precision mediump float;\n" +
+		"#else\n" +
+		"#define LOWP \n" +
+		"#endif\n" +
+		"varying LOWP vec4 v_color;\n" +
+		"varying vec2 v_texCoords;\n" +
+		"uniform vec3 u_color;\n" +
+		"uniform float u_alpha;\n" +
+		"uniform sampler2D u_texture;\n" +
+		"void main()\n " +
+		"{\n" +
+		"  if (u_color == texture2D(u_texture, v_texCoords).rgb) {\n" +
+		"    gl_FragColor = vec4(u_color, u_alpha);\n" +
+		"  } else {\n" +
+		"    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+		"  }\n" +
+		"}");
 	private ShaderProgram edgeShader = new ShaderProgram(
-		"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
-			+ "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
-			+ "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
-			+ "uniform mat4 u_projTrans;\n" //
-			+ "varying vec4 v_color;\n" //
-			+ "varying vec2 v_texCoords;\n" //
-			+ "\n" //
-			+ "void main()\n" //
-			+ "{\n" //
-			+ "   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
-			+ "   v_color.a = v_color.a * (255.0/254.0);\n" //
-			+ "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
-			+ "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
-			+ "}\n",
+		"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" +
+		"attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" +
+		"attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" +
+		"uniform mat4 u_projTrans;\n" +
+		"varying vec4 v_color;\n" +
+		"varying vec2 v_texCoords;\n" +
+		"\n" +
+		"void main()\n" +
+		"{\n" +
+		"   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" +
+		"   v_color.a = v_color.a * (255.0/254.0);\n" +
+		"   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" +
+		"   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" +
+		"}\n",
 		Gdx.files.internal("shaders/edge.fragment.glsl").readString()
 	);
 	private AssetManager assets = new AssetManager();
 	private PerspectiveCamera mainCamera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-	private FrameBuffer locationBuffer;
-	private FrameBuffer frameBuffer2;
+	private SpriteBatch spriteBatch = new SpriteBatch();
+	private ModelBatch modelBatch = new ModelBatch();
+	public ModelBatch locationBatch = new ModelBatch(new LocationShaderProvider());
+
+	private FrameBuffer overlayBuffer;
+	private FrameBuffer edgeBuffer;
 	private FrameBuffer frameBuffer3;
 
 	private Array<ModelInstance> instances = new Array<ModelInstance>();
 
 	private final CameraInputController camController;
+
 	private Texture tmpTexture;
 	private TextureRegion tmpTextureRegion;
 	private Texture tmpTexture2;
 	private TextureRegion tmpTextureRegion2;
 	private Texture tmpTexture3;
 	private TextureRegion tmpTextureRegion3;
-	private int activeStencilIndex = 0;
-	private static TextureRegion tmpRegion;
+
 	private Array<Array<Float>> alphas = new Array<Array<Float>>();
 
+	private Vector3 selectMask;
+
+	private UserData overlayData;
+
+	private Pixmap locationMap;
+
+	private FPSLogger logger = new FPSLogger();
 
 	public TestScreen(GhostStory game) {
 		super(game);
@@ -101,25 +122,50 @@ public class TestScreen extends AbstractScreen {
 				return super.touchDown(screenX, screenY, pointer, button);
 			}
 		};
+
 		Gdx.input.setInputProcessor(camController);
+
 		Array<Float> values = new Array<Float>() {
 			{
 				add(0.0f); add(0.1f); add(0.2f); add(0.3f); add(0.4f); add(0.5f); add(0.6f); add(0.7f); add(0.8f); add(0.9f);
 			}
 		};
+
 		permutations(values, 3, new Array<Float>(), alphas);
 	}
 
-	private void getObject(int screenX, int screenY) {
-		ByteBuffer pixels = ByteBuffer.allocateDirect(8);
-		Gdx.gl.glReadPixels(screenX, Gdx.graphics.getHeight() - screenY, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_UNSIGNED_INT, pixels);
-		int stencilIndex = (int) pixels.get();
-		System.out.println("Stencil: " + stencilIndex + " " + (stencilIndex < 0 ? stencilIndex + 256 : stencilIndex)); //-128 to 127. 0 is clear
+	public class UserData {
+		public Vector3 selectMask;
+		public Vector3 highlightRGB;
 
-		for (int i = 0; i < instances.size; i++) {
-			SelectableAttribute stencilAttr = (SelectableAttribute) instances.get(i).getMaterial("skin").get(SelectableAttribute.ID);
-			activeStencilIndex = stencilIndex;
+		public UserData(Vector3 silhouetteColor, Vector3 selectColor) {
+			this.selectMask = silhouetteColor;
+			this.highlightRGB = selectColor;
 		}
+	}
+
+	private void getObject(int screenX, int screenY) {
+		Color rgb = new Color(locationMap.getPixel(screenX, Gdx.graphics.getHeight() - screenY));
+
+		Vector3 rgbVec = new Vector3(Math.round(rgb.r * 100) / 100f, Math.round(rgb.g * 100) / 100f, Math.round(rgb.b * 100) / 100f);
+
+		if (rgb.r == 0.0f && rgb.g == 0.0f && rgb.b == 0.0f && rgb.a == 0.0f) {
+			overlayData = null;
+			selectMask = null;
+		} else {
+			// components will work better here.
+			for (ModelInstance instance : instances) {
+				UserData ud = (UserData) instance.userData;
+				if (ud.selectMask.x == rgbVec.x && ud.selectMask.y == rgbVec.y && ud.selectMask.z == rgbVec.z) {
+					overlayData = ud;
+					selectMask = new Vector3(rgb.r, rgb.g, rgb.b);
+				}
+			}
+
+		}
+
+		System.out.println(rgb); //-128 to 127. 0 is clear
+		System.out.println(selectMask); //-128 to 127. 0 is clear
 	}
 
 	/**
@@ -138,7 +184,7 @@ public class TestScreen extends AbstractScreen {
 	public void permutations(Array<Float> values, int size, Array<Float> passes, Array<Array<Float>> output) {
 		if (passes.size >= size) {
 			output.add(new Array(passes));
-			System.out.println(passes.items);
+//			System.out.println(passes.items);
 		} else {
 			Array<Float> tmp = new Array<Float>();
 			for (int i = 0; i < values.size; ++i) {
@@ -158,76 +204,65 @@ public class TestScreen extends AbstractScreen {
 		if (assets.update() && instances.size == 0) {
 			ModelInstance ghost = new ModelInstance(assets.get("models/ghost_blue.g3dj", Model.class));
 			ghost.transform.translate(1.0f, 0.0f, 4.0f);
-			ghost.getMaterial("skin").set(new LocationShader.SilhouetteColorAttribute(new Vector3(alphas.get(0).get(0), alphas.get(0).get(1), alphas.get(0).get(2))));
+			ghost.getMaterial("skin").set(new LocationShader.SilhouetteColorAttribute(new Vector3(alphas.get(35).get(0), alphas.get(35).get(1), alphas.get(35).get(2))));
+			ghost.getMaterial("skin").set(new SelectableAttribute(true, new Vector3(0.95f, 0.0f, 0.2f)));
+			ghost.userData = new UserData(new Vector3(alphas.get(35).get(0), alphas.get(35).get(1), alphas.get(35).get(2)), new Vector3(0.95f, 0.0f, 0.2f));
+
 			ModelInstance cube = new ModelInstance(assets.get("models/cube.g3dj", Model.class));
 			cube.transform.translate(2.0f, 0.0f, 2.0f);
-			cube.getMaterial("skin").set(new LocationShader.SilhouetteColorAttribute(new Vector3(alphas.get(1).get(0), alphas.get(1).get(1), alphas.get(1).get(2))));
+			cube.getMaterial("skin").set(new LocationShader.SilhouetteColorAttribute(new Vector3(alphas.get(300).get(0), alphas.get(300).get(1), alphas.get(300).get(2))));
+			cube.getMaterial("skin").set(new SelectableAttribute(false, new Vector3(0.3f, 0.9f, 0.2f)));
+			cube.userData = new UserData(new Vector3(alphas.get(300).get(0), alphas.get(300).get(1), alphas.get(300).get(2)), new Vector3(0.3f, 0.9f, 0.2f));
+
 			instances.add(ghost);
 			instances.add(cube);
 		}
+
 		if (instances != null) {
 			int mode = 0;
 			switch (mode) {
 				// multiple frame buff
 				// ers
 				case 0:
-					// enable stencil test. set clear color to transparent black. clear color, stencil, depth
+					// set clear color to transparent black. clear color, stencil, depth
 					Gdx.gl.glClearColor(0, 0, 0, 0);
-
-					// render the instances. is it ok to begin and end the ModelBach for each object?
-					// it doesn't work w/o cause you need to modify glStencilFunc and can only do that
-					// correctly outside of the batch.
-//					frameBuffer3.begin();
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
 
+					// draw a single color silhouette for each object. it will be sampled, then cleared and drawn over.
+					locationBatch.begin(mainCamera);
+					locationBatch.render(instances);
+					locationBatch.end();
+
+					// cache the output here, a framebuffer won't work
+					// https://code.google.com/p/libgdx/issues/detail?id=1626
+					if (locationMap != null) locationMap.dispose();
+					locationMap = ScreenUtils.getFrameBufferPixmap(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
+
+					// begin the real batch, where the scene is rendered.
 					modelBatch.begin(mainCamera);
-						modelBatch.render(instances);
+					modelBatch.render(instances);
 					modelBatch.end();
 
-					tmpTexture3 = frameBuffer3.getColorBufferTexture();
-					tmpTextureRegion3 = new TextureRegion(tmpTexture3);
-					tmpTextureRegion3.flip(false, true);
-					// do the overlay part of highlight, if activeStencilIndex is above 0
-					// overlay for inactive is rendered to the FBO, and considered when calculating the outline
-					// but it is not drawn over the inactive object. Which is weird.
-					if (activeStencilIndex >= 0) {
-						// don't update the stencil buffer anymore.
-//						Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
-						// only write pixels when stencil buffer = activeStencilIndex
-//						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0xFF);
+					// something has been selected, draw the overlay and outline.
+					if (selectMask != null) {
+						// use temp objects to extract only the silhouette of the active object
+						tmpTexture = new Texture(locationMap);
+						tmpTextureRegion = new TextureRegion(tmpTexture);
+						tmpTextureRegion.flip(false, true);
 
-						// start fbo to draw the selected silhouette. both objects are being drawn, should only be the one that matches
-						// the stencil value in activeStencilIndex.
-						locationBuffer.begin();
-							Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-							// locationBatch writes a solid color.
-							locationBatch.begin(mainCamera);
-								locationBatch.render(instances);
-							locationBatch.end();
-//							ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "location");
-						locationBuffer.end();
-
-						// draw edges around the activeIndex object.
-						frameBuffer2.begin();
-							Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-							spriteBatch.setShader(edgeShader);
+//						overlayBuffer.begin();
+							spriteBatch.setShader(silhouetteShader);
 							spriteBatch.begin();
-								edgeShader.setUniformf("u_screenWidth", Gdx.graphics.getWidth());
-								edgeShader.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
-								spriteBatch.draw(makeFlippedRegion(locationBuffer.getColorBufferTexture()), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+								silhouetteShader.setUniformf("u_color", overlayData.highlightRGB);
+								silhouetteShader.setUniformf("u_alpha", 1.0f);
+								spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 							spriteBatch.end();
 //							ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
-						frameBuffer2.end();
+//						overlayBuffer.end();
 
-						// Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-//						Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-						// draw the silhouette w/ a sprite batch.
-						spriteBatch.setShader(SpriteBatch.createDefaultShader());
-						spriteBatch.begin();
-//							spriteBatch.draw(tmpTextureRegion3, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//							spriteBatch.draw(makeFlippedRegion(locationBuffer.getColorBufferTexture()), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-							spriteBatch.draw(makeFlippedRegion(frameBuffer2.getColorBufferTexture()), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-						spriteBatch.end();
+						tmpTexture.dispose();
 					}
 					break;
 				// stencil
@@ -318,17 +353,8 @@ public class TestScreen extends AbstractScreen {
 			}
 
 		}
-	}
 
-	/*
-	 * Takes a texture, puts it in a TextureRegion, flips the TextureRegion on y
-	 * and returns the TextureRegion. Use this to make FrameBuffer output and the like
-	 * match the screen.
-	 */
-	private TextureRegion makeFlippedRegion(Texture texture) {
-		tmpRegion = new TextureRegion(texture);
-		tmpRegion.flip(false, true);
-		return tmpRegion;
+		logger.log();
 	}
 
 	@Override
@@ -342,8 +368,9 @@ public class TestScreen extends AbstractScreen {
 
 	@Override
 	public void dispose() {
-		locationBuffer.dispose();
-		frameBuffer2.dispose();
+		locationMap.dispose();
+		overlayBuffer.dispose();
+		edgeBuffer.dispose();
 		frameBuffer3.dispose();
 		spriteBatch.dispose();
 		modelBatch.dispose();
@@ -352,13 +379,13 @@ public class TestScreen extends AbstractScreen {
 	}
 
 	private void initFBOS() {
-		if (locationBuffer != null) locationBuffer.dispose();
+		if (overlayBuffer != null) overlayBuffer.dispose();
 
-		locationBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		overlayBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
-		if (frameBuffer2 != null) frameBuffer2.dispose();
+		if (edgeBuffer != null) edgeBuffer.dispose();
 
-		frameBuffer2 = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		edgeBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
 		if (frameBuffer3 != null) frameBuffer3.dispose();
 
@@ -375,26 +402,27 @@ public class TestScreen extends AbstractScreen {
 		public boolean on;
 		public Vector3 color;
 
-		public SelectableAttribute(final boolean on) {
+		public SelectableAttribute(final boolean on, Vector3 color) {
 			super(ID);
 			this.on = on;
+			this.color = color;
 		}
 
 		@Override
 		public Attribute copy () {
-			return new SelectableAttribute(on);
+			return new SelectableAttribute(on, color);
 		}
 
 		@Override
 		protected boolean equals (Attribute other) {
-			return ((SelectableAttribute)other).on == on;
+			return ((SelectableAttribute)other).on == on && ((SelectableAttribute)other).color == color;
 		}
 
 		@Override
 		public int compareTo (Attribute o) {
 			if (type != o.type) return type < o.type ? -1 : 1;
 			Vector3 otherColor = ((SelectableAttribute)o).color;
-			return color == otherColor ? 0 : (color.x + color.y + color .z < otherColor.x +otherColor.y + otherColor.z ? -1 : 1);
+			return color == otherColor ? 0 : (color.x + color.y + color .z < otherColor.x + otherColor.y + otherColor.z ? -1 : 1);
 		}
 	}
 
