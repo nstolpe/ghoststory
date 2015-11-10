@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
  */
 public class LocationShader extends DefaultShader {
 	public final int u_color = register("u_color");
+	public final int u_black = register("u_black");
 
 	public LocationShader(Renderable renderable) {
 		super(renderable, config);
@@ -30,8 +31,13 @@ public class LocationShader extends DefaultShader {
 		"precision mediump float;\n" +
 		"#endif\n" +
 		"uniform vec3 u_color;\n" +
+		"uniform int u_black;\n" +
 		"void main() {\n" +
-		"    gl_FragColor = vec4(u_color, 1.0);\n" +
+		"    if (u_black == true) {\n" +
+		"        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n" +
+		"    } else {\n" +
+		"        gl_FragColor = vec4(u_color, 1.0);\n" +
+		"    }\n" +
 		"}"
 	);
 
@@ -44,7 +50,14 @@ public class LocationShader extends DefaultShader {
 	@Override
 	public void render(final Renderable renderable) {
 		SilhouetteColorAttribute colorAttr = (SilhouetteColorAttribute) renderable.material.get(SilhouetteColorAttribute.ID);
+
 		set(u_color, colorAttr.value);
+
+		if (renderable.material.has(SilhouetteAttribute.ID))
+			set(u_black, 1);
+		else
+			set(u_black, 0);
+
 		super.render(renderable);
 	}
 
@@ -81,6 +94,36 @@ public class LocationShader extends DefaultShader {
 			if (type != o.type) return type < o.type ? -1 : 1;
 			Vector3 otherValue = ((SilhouetteColorAttribute)o).value;
 			return (value == otherValue) ? 0 : 1;
+		}
+	}
+
+	public static class SilhouetteAttribute extends Attribute {
+
+		public final static String Alias = "Silhouette";
+		public final static long ID = register(Alias);
+
+		public int value;
+
+		public SilhouetteAttribute(final int value) {
+			super(ID);
+			this.value = value;
+		}
+
+		@Override
+		public Attribute copy() {
+			return new SilhouetteAttribute(value);
+		}
+
+		@Override
+		protected boolean equals(Attribute other) {
+			return ((SilhouetteAttribute)other).value == value;
+		}
+
+		@Override
+		public int compareTo(Attribute o) {
+			if (type != o.type) return type < o.type ? -1 : 1;
+			int otherValue = ((SilhouetteAttribute)o).value;
+			return (value == otherValue) ? 0 : value > otherValue ? 1 : -1;
 		}
 	}
 }
