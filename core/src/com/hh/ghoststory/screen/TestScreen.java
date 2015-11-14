@@ -10,11 +10,11 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.render.shaders.LocationShader;
 import com.hh.ghoststory.render.shaders.LocationShaderProvider;
 
@@ -109,12 +109,13 @@ public class TestScreen extends AbstractScreen {
 
 	private FPSLogger logger = new FPSLogger();
 
-	private int activeStencilIndex = 1;
+	private int activeStencilIndex = 0x01;
 	private ByteBuffer pixels = ByteBuffer.allocateDirect(8);
+
+	private Vector2 inputTarget = new Vector2(-1.0f, -1.0f);
 
 	public TestScreen(GhostStory game) {
 		super(game);
-		initFBOS();
 		assets.load("models/ghost_blue.g3dj", Model.class);
 		assets.load("models/cube.g3dj", Model.class);
 		mainCamera.position.set(5, 5, 5);
@@ -127,6 +128,7 @@ public class TestScreen extends AbstractScreen {
 			@Override
 			public boolean touchDown (int screenX, int screenY, int pointer, int button) {
 				TestScreen.this.activateStencilIndex(screenX, screenY);
+				TestScreen.this.setInputTarget(screenX, screenY);
 				return super.touchDown(screenX, screenY, pointer, button);
 			}
 		};
@@ -140,6 +142,12 @@ public class TestScreen extends AbstractScreen {
 		};
 
 		permutations(values, 3, new Array<Float>(), alphas);
+		System.out.println(Gdx.graphics.supportsExtension("GL_OES_packed_depth_stencil"));
+		System.out.println(Gdx.graphics.supportsExtension("GL_EXT_packed_depth_stencil"));
+	}
+
+	private void setInputTarget(int x, int y) {
+		inputTarget.set(x, y);
 	}
 
 	public class UserData {
@@ -208,10 +216,10 @@ public class TestScreen extends AbstractScreen {
 		}
 
 		if (instances != null) {
-			int mode = 1;
+			int mode = 2;
 			switch (mode) {
 				case 0:
-					Gdx.gl.glClearColor(1, 0, 0, 0);
+					Gdx.gl.glClearColor(0, 0, 0, 0);
 					Gdx.gl.glClearStencil(0x00);
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
 					// enable stencil test and clear stencil buffer
@@ -246,9 +254,9 @@ public class TestScreen extends AbstractScreen {
 
 					if (activeStencilIndex > 0) {
 						// draw black silhouette w/ stencil test on.
-						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0xFF);
+						Gdx.gl.glStencilFunc(GL20.GL_EQUAL, activeStencilIndex, 0x00);
 
-						frameBuffer3.begin();
+//						frameBuffer3.begin();
 							for (int i = 0; i < instances.size; i++) {
 								instances.get(i).getMaterial("skin").set(new LocationShader.SilhouetteAttribute(1));
 								locationBatch.begin(mainCamera);
@@ -256,12 +264,12 @@ public class TestScreen extends AbstractScreen {
 								locationBatch.end();
 								instances.get(i).getMaterial("skin").remove(LocationShader.SilhouetteAttribute.ID);
 							}
-							ScreenshotFactory.saveScreenshot(frameBuffer3.getWidth(), frameBuffer3.getHeight(), "stuff");
-						frameBuffer3.end();
-
-						tmpTexture = frameBuffer3.getColorBufferTexture();
-						tmpTextureRegion = new TextureRegion(tmpTexture);
-						tmpTextureRegion.flip(false, true);
+//							ScreenshotFactory.saveScreenshot(frameBuffer3.getWidth(), frameBuffer3.getHeight(), "stuff");
+//						frameBuffer3.end();
+						tmpTextureRegion = ScreenUtils.getFrameBufferTexture();
+//						tmpTexture = frameBuffer3.getColorBufferTexture();
+//						tmpTextureRegion = new TextureRegion(tmpTexture);
+//						tmpTextureRegion.flip(false, true);
 
 						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, activeStencilIndex, 0xFF);
 						Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
@@ -289,7 +297,7 @@ public class TestScreen extends AbstractScreen {
 						spriteBatch.begin();
 							silhouetteShader.setUniformf("u_color", drawColor);
 							silhouetteShader.setUniformf("u_alpha", 0.6f);
-//							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
 
 						// create the outline passing the silhouette to the spritebatch shader.
@@ -300,36 +308,33 @@ public class TestScreen extends AbstractScreen {
 							edgeShader.setUniformf("u_rFactor", drawColor.x);
 							edgeShader.setUniformf("u_gFactor", drawColor.y);
 							edgeShader.setUniformf("u_bFactor", drawColor.z);
-//							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
 
 						spriteBatch.begin();
 							spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 						spriteBatch.end();
-						tmpTexture.dispose();
+//						tmpTexture.dispose();
 						tmpTextureRegion = null;
 					}
 					break;
 				case 1:
-					Gdx.gl.glClearColor(1, 0, 0, 1);
-
-					Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+
+					Gdx.gl.glClearColor(0, 0, 0, 0);
+					Gdx.gl.glClearStencil(0x00);
+
 					Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
 					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
-					Gdx.gl.glClearStencil(0x00);
-//					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xFF);
+
+					Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xff);
 					Gdx.gl.glStencilMask(0xFF);
 
 					modelBatch.begin(mainCamera);
-					for (int i = 0; i < instances.size; i++) {
-						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, i + 1, -1);
-						modelBatch.render(instances.get(i));
-					}
+						modelBatch.render(instances);
 					modelBatch.end();
 
 					Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, 0xFF);
-
 					Gdx.gl.glStencilMask(0x00);
 					Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 
@@ -343,6 +348,56 @@ public class TestScreen extends AbstractScreen {
 
 					Gdx.gl.glStencilMask(0xFF);
 					Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+					break;
+				case 2:
+					frameBuffer3.begin();
+						Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
+
+						Gdx.gl.glClearColor(0, 0, 0, 0);
+						Gdx.gl.glClearStencil(0x00);
+
+						Gdx.gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_REPLACE);
+						Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
+
+						Gdx.gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0xff);
+						Gdx.gl.glStencilMask(0xFF);
+
+						modelBatch.begin(mainCamera);
+						modelBatch.render(instances);
+						modelBatch.end();
+
+						Gdx.gl.glStencilFunc(GL20.GL_NOTEQUAL, 1, 0xFF);
+						Gdx.gl.glStencilMask(0x00);
+						Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
+
+						locationBatch.begin(mainCamera);
+						for (ModelInstance instance : instances) {
+							instance.transform.scl(1.1f);
+							locationBatch.render(instance);
+							instance.transform.scl(100f / 110f);
+						}
+						locationBatch.end();
+
+						Gdx.gl.glStencilMask(0xFF);
+						Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
+
+						if (inputTarget.x >= 0 && inputTarget.y >= 0) {
+							Gdx.gl.glReadPixels((int) inputTarget.x, Gdx.graphics.getHeight() - (int) inputTarget.y, 1, 1, GL20.GL_STENCIL_INDEX, GL20.GL_FLOAT, pixels);
+							int stencilIndex = (int) pixels.get();
+							System.out.println(stencilIndex);
+							inputTarget.set(-1.0f, -1.0f);
+						}
+					frameBuffer3.end();
+
+					tmpTexture = frameBuffer3.getColorBufferTexture();
+					tmpTextureRegion = new TextureRegion(tmpTexture);
+					tmpTextureRegion.flip(false,true);
+
+					Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_STENCIL_BUFFER_BIT);
+
+					spriteBatch.begin();
+					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.end();
 					break;
 				default:
 					break;
@@ -385,7 +440,7 @@ public class TestScreen extends AbstractScreen {
 
 		if (frameBuffer3 != null) frameBuffer3.dispose();
 
-		frameBuffer3 = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		frameBuffer3 = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true, true);
 
 		spriteBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	}
