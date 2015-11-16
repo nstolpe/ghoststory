@@ -63,7 +63,6 @@ public class LocationShader extends DefaultShader {
 
 	@Override
 	public boolean canRender(Renderable instance) {
-		boolean foo = instance.material.has(SilhouetteColorAttribute.ID);
 		return instance.material.has(SilhouetteColorAttribute.ID);
 	}
 
