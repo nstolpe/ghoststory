@@ -65,17 +65,18 @@ public class TestScreen extends AbstractScreen {
 		"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" +
 		"attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" +
 		"attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" +
+
 		"uniform mat4 u_projTrans;\n" +
+
 		"varying vec4 v_color;\n" +
 		"varying vec2 v_texCoords;\n" +
-		"\n" +
-		"void main()\n" +
-		"{\n" +
+
+		"void main() {\n" +
 		"   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" +
 		"   v_color.a = v_color.a * (255.0/254.0);\n" +
 		"   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" +
 		"   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" +
-		"}\n",
+		"}",
 		Gdx.files.internal("shaders/gaussian.fragment.glsl").readString());
 	private ShaderProgram edgeShader = new ShaderProgram(
 		"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" +
@@ -241,22 +242,26 @@ public class TestScreen extends AbstractScreen {
 				case 0:
 					Gdx.gl.glClearColor(0, 0, 0, 0);
 
+					/* draw silhouettes to buffer */
 					overlayBuffer.begin();
 					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+
 					locationBatch.begin(mainCamera);
 					locationBatch.render(instances);
 					locationBatch.end();
+
 					overlayBuffer.end();
-
+					// cache the texture
 					tmpTexture = overlayBuffer.getColorBufferTexture();
-					tmpTextureRegion = new TextureRegion(tmpTexture);
-					tmpTextureRegion.flip(false, true);
 
 
+					/* draw first buffer as is and then with edge detection. capture both in different buffer */
 					frameBuffer3.begin();
+
 					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+
 					spriteBatch.begin();
-					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.draw(tmpTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 					spriteBatch.end();
 
 					spriteBatch.setShader(edgeShader);
@@ -265,62 +270,55 @@ public class TestScreen extends AbstractScreen {
 					edgeShader.setUniformf("u_screenHeight", Gdx.graphics.getHeight());
 					edgeShader.setUniformf("u_rFactor", 0.8f);
 					edgeShader.setUniformf("u_gFactor", 0.0f);
-					edgeShader.setUniformf("u_bFactor", 0.8f);
-					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					edgeShader.setUniformf("u_bFactor", 0.1f);
+					spriteBatch.draw(tmpTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 					spriteBatch.end();
+
 					frameBuffer3.end();
 
+					// draw 10 or whatever passes for gaussian. this is slow.
 					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 
-					int passes = 10;
-					int horizontal = 1;
-					boolean firstPass = true;
-
+					pp1Buffer.begin();
+					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 					spriteBatch.setShader(gaussianShader);
-					for (int i = 0; i < passes; i++) {
-						if (i % 2 == 0) {
-							pp1Buffer.begin();
-							spriteBatch.begin();
-							gaussianShader.setUniformf("invWidth", 1.0f / Gdx.graphics.getWidth());
-							gaussianShader.setUniformf("invHeight", 1.0f / Gdx.graphics.getHeight());
-							gaussianShader.setUniformi("horizontal", horizontal);
-							if (firstPass) {
-								spriteBatch.draw(frameBuffer3.getColorBufferTexture(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-								firstPass = false;
-							} else {
-								spriteBatch.draw(pp2Buffer.getColorBufferTexture(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-							}
-							spriteBatch.end();
-							pp1Buffer.end();
-							horizontal = 0;
-						} else {
-							pp2Buffer.begin();
-							spriteBatch.begin();
-							gaussianShader.setUniformf("invWidth", 1.0f / Gdx.graphics.getWidth());
-							gaussianShader.setUniformf("invHeight", 1.0f / Gdx.graphics.getHeight());
-							gaussianShader.setUniformi("horizontal", horizontal);
-							spriteBatch.draw(pp1Buffer.getColorBufferTexture(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-							spriteBatch.end();
-							pp2Buffer.end();
-							horizontal = 1;
-						}
-					}
+					spriteBatch.begin();
+					gaussianShader.setUniformf("dir", 1f, 0f);
+					gaussianShader.setUniformf("width", Gdx.graphics.getWidth());
+					gaussianShader.setUniformf("height", Gdx.graphics.getHeight());
+					gaussianShader.setUniformf("radius", 1f);
+					spriteBatch.draw(frameBuffer3.getColorBufferTexture(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.end();
+					pp1Buffer.end();
 
-					tmpTexture2 = pp2Buffer.getColorBufferTexture();
-					tmpTextureRegion2 = new TextureRegion(tmpTexture2);
-					tmpTextureRegion2.flip(false, true);
+					pp2Buffer.begin();
+					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+					spriteBatch.begin();
+					gaussianShader.setUniformf("dir", 0f, 1f);
+					spriteBatch.draw(pp1Buffer.getColorBufferTexture(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.end();
+					ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
+					pp2Buffer.end();
 
-//					modelBatch.begin(mainCamera);
-//					modelBatch.render(instances);
-//					modelBatch.end();
 
-//					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+
+
+//					Gdx.gl.glEnable(GL20.GL_BLEND);
+//					Gdx.gl.glBlendFunc(GL20.GL_ZERO, GL20.GL_ONE);
+//					Gdx.gl.glBlendEquation(GL20.GL_FUNC_ADD);
+					Gdx.gl.glClearColor(1, 0, 1, 0);
+					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+
+					modelBatch.begin(mainCamera);
+					modelBatch.render(instances);
+					modelBatch.end();
 
 					spriteBatch.setShader(SpriteBatch.createDefaultShader());
 					spriteBatch.begin();
-					spriteBatch.draw(tmpTextureRegion2, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.draw(pp2Buffer.getColorBufferTexture(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 					spriteBatch.end();
 
+					Gdx.gl.glDisable(GL20.GL_BLEND);
 					break;
 				case 1:
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
