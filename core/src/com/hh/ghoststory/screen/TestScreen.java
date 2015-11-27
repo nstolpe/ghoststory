@@ -119,7 +119,8 @@ public class TestScreen extends AbstractScreen {
 	private Texture tmpTexture3;
 	private TextureRegion tmpTextureRegion3;
 
-	private Array<Array<Float>> alphas = new Array<Array<Float>>();
+	private Array<Array<Integer>> alphas = new Array<Array<Integer>>();
+//	private Array<Array<Float>> alphas = new Array<Array<Float>>();
 
 	private Vector3 selectMask;
 
@@ -162,9 +163,9 @@ public class TestScreen extends AbstractScreen {
 			}
 		};
 
-		permutations(values, 3, new Array<Float>(), alphas);
-		System.out.println(Gdx.graphics.supportsExtension("GL_OES_packed_depth_stencil"));
-		System.out.println(Gdx.graphics.supportsExtension("GL_EXT_packed_depth_stencil"));
+//		permutations(values, 3, new Array<Float>(), alphas);
+		permutations(0, 255, 3, new Array<Integer>(), alphas);
+		System.out.println(alphas.size);
 	}
 
 	private void setInputTarget(int x, int y) {
@@ -201,17 +202,43 @@ public class TestScreen extends AbstractScreen {
 	 * };
 	 * permutations(values, 3, new Array<Float>(), output);
 	 */
-	public void permutations(Array<Float> values, int size, Array<Float> passes, Array<Array<Float>> output) {
-		if (passes.size >= size) {
-			output.add(new Array(passes));
-//			System.out.println(passes.items);
+//	public void permutations(Array<Float> values, int size, Array<Float> passes, Array<Array<Float>> output) {
+//		if (passes.size >= size) {
+//			output.add(new Array(passes));
+//			System.out.println(passes);
+//		} else {
+//			Array<Float> tmp = new Array<Float>();
+//			for (int i = 0; i < values.size; i++) {
+//				tmp.clear();
+//				tmp.addAll(passes);
+//				tmp.add(values.get(i));
+//				permutations(values, size, tmp, output);
+//			}
+//		}
+//	}
+
+	/**
+	 * Returns an array containing all permutations for integer values in the inclusive range of `min` to `max` for
+	 * `number` amount of sample points.
+	 *
+	 * @param min     The first/lowest sample number available in each permutation point.
+	 * @param max     The highest/last sample number available in each permutation point.
+	 * @param number  The number of points in each permutation set
+	 * @param passes  An empty Array<Integer> that will be used on recursive calls to `permutations` to store already
+	 *                calulated permutation sets.
+	 * @param result  An empty Array<Array<Integer>> that will be populated with the full set of permutations.
+	 */
+	public void permutations(int min, int max, int number, Array<Integer> passes, Array<Array<Integer>> result) {
+		if (passes.size >= number) {
+			result.add(new Array(passes));
+//			System.out.println(passes);
 		} else {
-			Array<Float> tmp = new Array<Float>();
-			for (int i = 0; i < values.size; ++i) {
+			Array<Integer> tmp = new Array<Integer>();
+			for (int i = min; i <= max; i++) {
 				tmp.clear();
 				tmp.addAll(passes);
-				tmp.add(values.get(i));
-				permutations(values, size, tmp, output);
+				tmp.add(i);
+				permutations(min, max, number, tmp, result);
 			}
 		}
 	}
@@ -240,6 +267,8 @@ public class TestScreen extends AbstractScreen {
 			int mode = 0;
 			switch (mode) {
 				case 0:
+					break;
+				case 1:
 					Gdx.gl.glClearColor(0, 0, 0, 0);
 
 					/* draw silhouettes to buffer */
@@ -297,7 +326,6 @@ public class TestScreen extends AbstractScreen {
 					gaussianShader.setUniformf("dir", 0f, 1f);
 					spriteBatch.draw(pp1Buffer.getColorBufferTexture(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 					spriteBatch.end();
-					ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "edge");
 					pp2Buffer.end();
 
 
@@ -320,7 +348,7 @@ public class TestScreen extends AbstractScreen {
 
 					Gdx.gl.glDisable(GL20.GL_BLEND);
 					break;
-				case 1:
+				case 2:
 					Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
 
 					Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -351,7 +379,7 @@ public class TestScreen extends AbstractScreen {
 					Gdx.gl.glStencilMask(0xFF);
 					Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 					break;
-				case 2:
+				case 3:
 					frameBuffer3.begin();
 						Gdx.gl.glEnable(GL20.GL_STENCIL_TEST);
 
