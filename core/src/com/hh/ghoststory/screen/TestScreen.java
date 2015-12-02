@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.*;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -13,6 +15,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
@@ -134,12 +137,14 @@ public class TestScreen extends AbstractScreen {
 	private ByteBuffer pixels = ByteBuffer.allocateDirect(8);
 
 	private Vector2 inputTarget = new Vector2(-1.0f, -1.0f);
+	private Environment environment = new Environment();
 
 
 	public TestScreen(GhostStory game) {
 		super(game);
 		assets.load("models/ghost_blue.g3dj", Model.class);
 		assets.load("models/cube.g3dj", Model.class);
+		assets.load("models/spider.g3dj", Model.class);
 		mainCamera.position.set(5, 5, 5);
 		mainCamera.lookAt(0, 0, 0);
 		mainCamera.near = 1;
@@ -162,9 +167,13 @@ public class TestScreen extends AbstractScreen {
 				add(0.0f); add(0.1f); add(0.2f); add(0.3f); add(0.4f); add(0.5f); add(0.6f); add(0.7f); add(0.8f); add(0.9f);
 			}
 		};
-
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 //		permutations(values, 3, new Array<Float>(), alphas);
-		permutations(0, 255, 3, new Array<Integer>(), alphas);
+		permutations(0, 19, 3, new Array<Integer>(), alphas);
+		Json json = new Json();
+		String foo = json.prettyPrint(alphas);
+		System.out.println(foo);
 		System.out.println(alphas.size);
 	}
 
@@ -259,14 +268,25 @@ public class TestScreen extends AbstractScreen {
 			cube.getMaterial("skin").set(new LocationShader.SilhouetteColorAttribute(new Vector3(0.0f, 0.9f, 0.2f)));
 			cube.getMaterial("skin").set(new StencilIndexAttribute(200));
 
+			ModelInstance spider = new ModelInstance(assets.get("models/spider.g3dj", Model.class));
+			spider.transform.translate(3.0f, 0.0f, 6.0f);
+//			spider.transform.scale(1000.0f, 1000.0f, 1000.0f);
+			spider.getMaterial("skin").set(new LocationShader.SilhouetteColorAttribute(new Vector3(1.0f, 0.0f, 0.1f)));
+
 			instances.add(ghost);
 			instances.add(cube);
+			instances.add(spider);
 		}
 
 		if (instances != null) {
 			int mode = 0;
 			switch (mode) {
 				case 0:
+					Gdx.gl.glClearColor(0, 0, 0, 0);
+					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+					modelBatch.begin(mainCamera);
+					modelBatch.render(instances, environment);
+					modelBatch.end();
 					break;
 				case 1:
 					Gdx.gl.glClearColor(0, 0, 0, 0);
