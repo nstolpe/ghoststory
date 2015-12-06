@@ -21,6 +21,8 @@ import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
 import com.hh.ghoststory.render.shaders.LocationShader;
 import com.hh.ghoststory.render.shaders.LocationShaderProvider;
+import com.hh.ghoststory.render.shaders.PlayShaderProvider;
+import com.hh.ghoststory.render.shaders.SilhouetteShaderProvider;
 
 import java.nio.ByteBuffer;
 
@@ -102,7 +104,9 @@ public class TestScreen extends AbstractScreen {
 	private PerspectiveCamera mainCamera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 	private SpriteBatch spriteBatch = new SpriteBatch();
-	private ModelBatch modelBatch = new ModelBatch();
+//	private ModelBatch modelBatch = new ModelBatch();
+	private ModelBatch modelBatch = new ModelBatch(new PlayShaderProvider());
+	private ModelBatch silhouetteBatch = new ModelBatch(new SilhouetteShaderProvider());
 	public ModelBatch locationBatch = new ModelBatch(new LocationShaderProvider());
 
 	private FrameBuffer overlayBuffer;
@@ -282,7 +286,7 @@ public class TestScreen extends AbstractScreen {
 			int mode = 0;
 			switch (mode) {
 				case 0:
-					Gdx.gl.glClearColor(0, 0, 0, 0);
+					Gdx.gl.glClearColor(1, 1, 1 , 0);
 					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 					modelBatch.begin(mainCamera);
 					modelBatch.render(instances, environment);

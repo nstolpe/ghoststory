@@ -11,6 +11,7 @@ public class DesktopLauncher {
 //		config.foregroundFPS = 0;
 //		config.backgroundFPS = 0;
 		config.stencil = 8;
+//		config.samples = 4;
 		new LwjglApplication(new GhostStory(), config);
 	}
 }
