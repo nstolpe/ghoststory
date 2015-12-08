@@ -26,6 +26,7 @@ import java.nio.ByteBuffer;
  * Created by nils on 10/8/15.
  */
 public class TestScreen extends AbstractScreen {
+	private final Mesh quad;
 	private ShaderProgram silhouetteShader = new ShaderProgram(
 		"attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" +
 		"attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" +
@@ -140,6 +141,9 @@ public class TestScreen extends AbstractScreen {
 	private Vector2 inputTarget = new Vector2(-1.0f, -1.0f);
 	private Environment environment = new Environment();
 
+	private final Matrix4 projectionMatrix = new Matrix4();
+	private final Matrix4 transformMatrix = new Matrix4();
+	private final Matrix4 combinedMatrix = new Matrix4();
 
 	public TestScreen(GhostStory game) {
 		super(game);
@@ -172,6 +176,7 @@ public class TestScreen extends AbstractScreen {
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 //		permutations(values, 3, new Array<Float>(), alphas);
 		permutations(0, 19, 3, new Array<Integer>(), alphas);
+		quad = createFullScreenQuad();
 		Json json = new Json();
 		String foo = json.prettyPrint(alphas);
 		System.out.println(foo);
@@ -190,6 +195,43 @@ public class TestScreen extends AbstractScreen {
 			this.selectMask = silhouetteColor;
 			this.highlightRGB = selectColor;
 		}
+	}
+
+	public Mesh createFullScreenQuad(){
+		float[] verts = new float[20];
+		int i = 0;
+		verts[i++] = 0; // x1
+		verts[i++] = 0; // y1
+		verts[i++] = 0;
+		verts[i++] = 0; // u1
+		verts[i++] = 1; // v1
+
+		verts[i++] = 0; // x2
+		verts[i++] = Gdx.graphics.getHeight(); // y2
+		verts[i++] = 0;
+		verts[i++] = 0; // u2
+		verts[i++] = 0; // v2
+
+		verts[i++] = Gdx.graphics.getWidth(); // x3
+		verts[i++] = Gdx.graphics.getHeight(); // y2
+		verts[i++] = 0;
+		verts[i++] = 1; // u3
+		verts[i++] = 0; // v3
+
+		verts[i++] = Gdx.graphics.getWidth(); // x4
+		verts[i++] = 0; // y4
+		verts[i++] = 0;
+		verts[i++] = 1; // u4
+		verts[i++] = 1; // v4
+		Mesh tmpMesh = new Mesh(
+			true,
+			4,
+			0,
+			new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+			new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE + "0")
+		);
+		tmpMesh.setVertices(verts);
+		return tmpMesh;
 	}
 
 	private void activateStencilIndex(int screenX, int screenY) {
@@ -302,11 +344,19 @@ public class TestScreen extends AbstractScreen {
 					modelBatch.render(instances, environment);
 					modelBatch.end();
 
-					spriteBatch.setShader(lineShader);
-					spriteBatch.begin();
+					pp1Buffer.getColorBufferTexture().bind();
+					combinedMatrix.set(projectionMatrix).mul(transformMatrix);
+					lineShader.begin();
 					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					spriteBatch.end();
+					lineShader.setUniformMatrix("u_projTrans", combinedMatrix);
+					quad.render(lineShader, GL20.GL_TRIANGLE_STRIP, 0, quad.getNumVertices());
+					lineShader.end();
+
+//					spriteBatch.setShader(lineShader);
+//					spriteBatch.begin();
+//					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//					spriteBatch.end();
 
 					break;
 				case 1:
@@ -522,6 +572,7 @@ public class TestScreen extends AbstractScreen {
 		pp2Buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
 
 		spriteBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+		projectionMatrix.setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	public static class SelectableAttribute extends Attribute {
