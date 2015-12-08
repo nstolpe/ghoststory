@@ -119,7 +119,7 @@ void main() {
 
 	#ifdef PackedDepthFlag
 	    // 1.0 and 999 should be uniforms, camera near and far: v_depth = (-pos.z - near) / (far - near);
-		v_depth = (-pos.z - 1.0) / 999.0;
+		v_depth = (pos.z - 1.0) / 999.0;
 		// v_depth = pos.z * 0.5 + 0.5;
 	#endif //PackedDepthFlag
 
