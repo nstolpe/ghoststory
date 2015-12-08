@@ -1,5 +1,8 @@
 attribute vec3 a_position;
+
 uniform mat4 u_projViewWorldTrans;
+uniform float u_near;
+uniform float u_far;
 
 #if defined(diffuseTextureFlag) && defined(blendedFlag)
 #define blendedTextureFlag
@@ -63,7 +66,7 @@ attribute vec2 a_boneWeight7;
 #endif //boneWeight7Flag
 
 #if defined(numBones) && defined(boneWeightsFlag)
-#if (numBones > 0) 
+#if (numBones > 0)
 #define skinningFlag
 #endif
 #endif
@@ -82,16 +85,16 @@ void main() {
 	#ifdef blendedTextureFlag
 		v_texCoords0 = a_texCoord0;
 	#endif // blendedTextureFlag
-	
+
 	#ifdef skinningFlag
 		mat4 skinning = mat4(0.0);
 		#ifdef boneWeight0Flag
 			skinning += (a_boneWeight0.y) * u_bones[int(a_boneWeight0.x)];
 		#endif //boneWeight0Flag
-		#ifdef boneWeight1Flag				
+		#ifdef boneWeight1Flag
 			skinning += (a_boneWeight1.y) * u_bones[int(a_boneWeight1.x)];
 		#endif //boneWeight1Flag
-		#ifdef boneWeight2Flag		
+		#ifdef boneWeight2Flag
 			skinning += (a_boneWeight2.y) * u_bones[int(a_boneWeight2.x)];
 		#endif //boneWeight2Flag
 		#ifdef boneWeight3Flag
@@ -118,8 +121,7 @@ void main() {
 	#endif
 
 	#ifdef PackedDepthFlag
-	    // 1.0 and 999 should be uniforms, camera near and far: v_depth = (-pos.z - near) / (far - near);
-		v_depth = (pos.z - 1.0) / 999.0;
+		v_depth = (pos.z - u_near) / (u_far - u_near);
 		// v_depth = pos.z * 0.5 + 0.5;
 	#endif //PackedDepthFlag
 
