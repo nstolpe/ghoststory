@@ -344,19 +344,19 @@ public class TestScreen extends AbstractScreen {
 					modelBatch.render(instances, environment);
 					modelBatch.end();
 
-					pp1Buffer.getColorBufferTexture().bind();
-					combinedMatrix.set(projectionMatrix).mul(transformMatrix);
-					lineShader.begin();
-					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					lineShader.setUniformMatrix("u_projTrans", combinedMatrix);
-					quad.render(lineShader, GL20.GL_TRIANGLE_STRIP, 0, quad.getNumVertices());
-					lineShader.end();
-
-//					spriteBatch.setShader(lineShader);
-//					spriteBatch.begin();
+//					pp1Buffer.getColorBufferTexture().bind();
+//					combinedMatrix.set(projectionMatrix).mul(transformMatrix);
+//					lineShader.begin();
 //					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//					spriteBatch.end();
+//					lineShader.setUniformMatrix("u_projTrans", combinedMatrix);
+//					quad.render(lineShader, GL20.GL_TRIANGLE_STRIP, 0, quad.getNumVertices());
+//					lineShader.end();
+
+					spriteBatch.setShader(lineShader);
+					spriteBatch.begin();
+					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.end();
 
 					break;
 				case 1:
