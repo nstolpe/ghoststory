@@ -16,13 +16,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
-import com.hh.ghoststory.render.shaders.LocationShader;
-import com.hh.ghoststory.render.shaders.LocationShaderProvider;
-import com.hh.ghoststory.render.shaders.PlayShaderProvider;
-import com.hh.ghoststory.render.shaders.SilhouetteShaderProvider;
+import com.hh.ghoststory.render.shaders.*;
 
 import java.nio.ByteBuffer;
 
@@ -100,13 +96,14 @@ public class TestScreen extends AbstractScreen {
 		"}\n",
 		Gdx.files.internal("shaders/edge.fragment.glsl").readString()
 	);
+	private ShaderProgram lineShader = new ShaderProgram(Gdx.files.internal("shaders/cel.line.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.line.fragment.glsl").readString());
 	private AssetManager assets = new AssetManager();
 	private PerspectiveCamera mainCamera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 	private SpriteBatch spriteBatch = new SpriteBatch();
 //	private ModelBatch modelBatch = new ModelBatch();
 	private ModelBatch modelBatch = new ModelBatch(new PlayShaderProvider());
-	private ModelBatch silhouetteBatch = new ModelBatch(new SilhouetteShaderProvider());
+	private ModelBatch celDepthBatch = new ModelBatch(new CelDepthShaderProvider());
 	public ModelBatch locationBatch = new ModelBatch(new LocationShaderProvider());
 
 	private FrameBuffer overlayBuffer;
@@ -274,7 +271,6 @@ public class TestScreen extends AbstractScreen {
 
 			ModelInstance spider = new ModelInstance(assets.get("models/spider.g3dj", Model.class));
 			spider.transform.translate(3.0f, 0.0f, 6.0f);
-//			spider.transform.scale(1000.0f, 1000.0f, 1000.0f);
 			spider.getMaterial("skin").set(new LocationShader.SilhouetteColorAttribute(new Vector3(1.0f, 0.0f, 0.1f)));
 
 			instances.add(ghost);
@@ -286,11 +282,32 @@ public class TestScreen extends AbstractScreen {
 			int mode = 0;
 			switch (mode) {
 				case 0:
-					Gdx.gl.glClearColor(1, 1, 1 , 0);
+					Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+
+					pp1Buffer.begin();
 					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+					celDepthBatch.begin(mainCamera);
+					celDepthBatch.render(instances, environment);
+					celDepthBatch.end();
+//					ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
+					pp1Buffer.end();
+
+					tmpTexture = pp1Buffer.getColorBufferTexture();
+					tmpTextureRegion = new TextureRegion(tmpTexture);
+					tmpTextureRegion.flip(false, true);
+
+					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+
 					modelBatch.begin(mainCamera);
 					modelBatch.render(instances, environment);
 					modelBatch.end();
+
+					spriteBatch.setShader(lineShader);
+					spriteBatch.begin();
+					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					spriteBatch.end();
+
 					break;
 				case 1:
 					Gdx.gl.glClearColor(0, 0, 0, 0);
@@ -498,7 +515,7 @@ public class TestScreen extends AbstractScreen {
 
 		if (pp1Buffer != null) pp1Buffer.dispose();
 
-		pp1Buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
+		pp1Buffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 
 		if (pp2Buffer != null) pp2Buffer.dispose();
 
@@ -569,5 +586,4 @@ public class TestScreen extends AbstractScreen {
 			return value == otherValue ? 0 : value < otherValue ? -1 : 1;
 		}
 	}
-
 }
