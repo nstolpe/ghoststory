@@ -34,8 +34,8 @@ float IsEdge(in vec2 coords) {
   float delta;
 
   // read neighboring pixel intensities
-  for (int i=-1; i<2; i++) {
-	for (int j=-1; j<2; j++) {
+  for (int i = -1; i < 2; i++) {
+	for (int j = -1; j < 2; j++) {
 		k++;
 //		pix[k] = avg_intensity(get_pixel(coords, float(i) * dxtex, float(j) * dytex));
 		pix[k] = get_pixel(coords, float(i) * dxtex, float(j) * dytex).a;

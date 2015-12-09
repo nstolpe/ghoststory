@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.ScreenshotFactory;
@@ -351,10 +352,10 @@ public class TestScreen extends AbstractScreen {
 //					lineShader.setUniformMatrix("u_projTrans", combinedMatrix);
 //					quad.render(lineShader, GL20.GL_TRIANGLE_STRIP, 0, quad.getNumVertices());
 //					lineShader.end();
-
+					if (!lineShader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + lineShader.getLog());
 					spriteBatch.setShader(lineShader);
 					spriteBatch.begin();
-//					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 					spriteBatch.end();
 
