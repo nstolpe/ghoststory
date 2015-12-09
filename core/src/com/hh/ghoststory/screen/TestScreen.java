@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.DepthShaderProvider;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
@@ -105,7 +106,7 @@ public class TestScreen extends AbstractScreen {
 	private SpriteBatch spriteBatch = new SpriteBatch();
 //	private ModelBatch modelBatch = new ModelBatch();
 	private ModelBatch modelBatch = new ModelBatch(new PlayShaderProvider());
-	private ModelBatch celDepthBatch = new ModelBatch(new CelDepthShaderProvider());
+	private ModelBatch celDepthBatch = new ModelBatch(new DepthShaderProvider(Gdx.files.internal("shaders/cel.depth.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.depth.fragment.glsl").readString()));
 	public ModelBatch locationBatch = new ModelBatch(new LocationShaderProvider());
 
 	private FrameBuffer overlayBuffer;
@@ -332,7 +333,6 @@ public class TestScreen extends AbstractScreen {
 					celDepthBatch.begin(mainCamera);
 					celDepthBatch.render(instances, environment);
 					celDepthBatch.end();
-//					ScreenshotFactory.saveScreenshot(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), "stuff");
 					pp1Buffer.end();
 
 					tmpTexture = pp1Buffer.getColorBufferTexture();
@@ -341,9 +341,9 @@ public class TestScreen extends AbstractScreen {
 
 					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 
-//					modelBatch.begin(mainCamera);
-//					modelBatch.render(instances, environment);
-//					modelBatch.end();
+					modelBatch.begin(mainCamera);
+					modelBatch.render(instances, environment);
+					modelBatch.end();
 
 //					pp1Buffer.getColorBufferTexture().bind();
 //					combinedMatrix.set(projectionMatrix).mul(transformMatrix);
@@ -352,7 +352,7 @@ public class TestScreen extends AbstractScreen {
 //					lineShader.setUniformMatrix("u_projTrans", combinedMatrix);
 //					quad.render(lineShader, GL20.GL_TRIANGLE_STRIP, 0, quad.getNumVertices());
 //					lineShader.end();
-					if (!lineShader.isCompiled()) throw new GdxRuntimeException("Couldn't compile shader: " + lineShader.getLog());
+
 					spriteBatch.setShader(lineShader);
 					spriteBatch.begin();
 					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
