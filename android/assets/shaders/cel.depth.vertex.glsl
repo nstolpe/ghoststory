@@ -121,8 +121,8 @@ void main() {
 	#endif
 
 	#ifdef PackedDepthFlag
-		v_depth = (pos.z + u_near) / (u_far - u_near);
-		// v_depth = pos.z * 0.5 + 0.5;
+//		v_depth = (pos.z + u_near) / (u_far - u_near);
+		 v_depth = pos.z * 0.5 + 0.5;
 	#endif //PackedDepthFlag
 
 	gl_Position = pos;

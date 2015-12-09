@@ -324,7 +324,7 @@ public class TestScreen extends AbstractScreen {
 			int mode = 0;
 			switch (mode) {
 				case 0:
-					Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+					Gdx.gl.glClearColor(1.0f, 0.0f, 1.0f, 0.0f);
 
 					pp1Buffer.begin();
 					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
@@ -340,9 +340,9 @@ public class TestScreen extends AbstractScreen {
 
 					Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 
-					modelBatch.begin(mainCamera);
-					modelBatch.render(instances, environment);
-					modelBatch.end();
+//					modelBatch.begin(mainCamera);
+//					modelBatch.render(instances, environment);
+//					modelBatch.end();
 
 //					pp1Buffer.getColorBufferTexture().bind();
 //					combinedMatrix.set(projectionMatrix).mul(transformMatrix);
@@ -354,7 +354,7 @@ public class TestScreen extends AbstractScreen {
 
 					spriteBatch.setShader(lineShader);
 					spriteBatch.begin();
-					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 					spriteBatch.end();
 
