@@ -1,0 +1,3 @@
+ghost_blue.g3dj
+cube.g3dj
+spider.g3dj

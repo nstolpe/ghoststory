@@ -106,7 +106,7 @@ public class TestScreen extends AbstractScreen {
 	private SpriteBatch spriteBatch = new SpriteBatch();
 //	private ModelBatch modelBatch = new ModelBatch();
 	private ModelBatch modelBatch = new ModelBatch(new PlayShaderProvider());
-	private ModelBatch celDepthBatch = new ModelBatch(new DepthShaderProvider(Gdx.files.internal("shaders/cel.depth.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.depth.fragment.glsl").readString()));
+	private ModelBatch celDepthBatch = new ModelBatch(new CelDepthShaderProvider());
 	public ModelBatch locationBatch = new ModelBatch(new LocationShaderProvider());
 
 	private FrameBuffer overlayBuffer;
@@ -183,6 +183,8 @@ public class TestScreen extends AbstractScreen {
 		String foo = json.prettyPrint(alphas);
 		System.out.println(foo);
 		System.out.println(alphas.size);
+		String blah = Gdx.files.internal("config/cel_models.txt").readString();
+		String[] bar = blah.split("\n");
 	}
 
 	private void setInputTarget(int x, int y) {
@@ -345,19 +347,19 @@ public class TestScreen extends AbstractScreen {
 					modelBatch.render(instances, environment);
 					modelBatch.end();
 
-//					pp1Buffer.getColorBufferTexture().bind();
-//					combinedMatrix.set(projectionMatrix).mul(transformMatrix);
-//					lineShader.begin();
-//					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//					lineShader.setUniformMatrix("u_projTrans", combinedMatrix);
-//					quad.render(lineShader, GL20.GL_TRIANGLE_STRIP, 0, quad.getNumVertices());
-//					lineShader.end();
-
-					spriteBatch.setShader(lineShader);
-					spriteBatch.begin();
+					pp1Buffer.getColorBufferTexture().bind();
+					combinedMatrix.set(projectionMatrix).mul(transformMatrix);
+					lineShader.begin();
 					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					spriteBatch.end();
+					lineShader.setUniformMatrix("u_projTrans", combinedMatrix);
+					quad.render(lineShader, GL20.GL_TRIANGLE_STRIP, 0, quad.getNumVertices());
+					lineShader.end();
+
+//					spriteBatch.setShader(lineShader);
+//					spriteBatch.begin();
+//					lineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//					spriteBatch.draw(tmpTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//					spriteBatch.end();
 
 					break;
 				case 1:

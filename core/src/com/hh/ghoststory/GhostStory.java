@@ -6,10 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.hh.ghoststory.lib.utility.Config;
-import com.hh.ghoststory.screen.CreateScreen;
-import com.hh.ghoststory.screen.MainScreen;
-import com.hh.ghoststory.screen.PlayScreen;
-import com.hh.ghoststory.screen.TestScreen;
+import com.hh.ghoststory.screen.*;
 
 public class GhostStory extends Game {
     public Config config;
@@ -27,7 +24,8 @@ public class GhostStory extends Game {
 //		setScreen(getCreateScreen());
 //		setScreen(getPlayScreen());
 //		setScreen(new PlayScreen(this));
-		setScreen(new TestScreen(this));
+		setScreen(new CelShaderScreen(this));
+//		setScreen(new TestScreen(this));
 	}
 
 	/**
