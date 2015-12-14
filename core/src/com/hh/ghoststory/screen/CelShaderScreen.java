@@ -1,9 +1,7 @@
 package com.hh.ghoststory.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -19,17 +17,13 @@ import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.lib.utility.GameObject;
+import com.hh.ghoststory.lib.utility.Gob;
 import com.hh.ghoststory.render.shaders.CelColorShaderProgram;
 import com.hh.ghoststory.render.shaders.CelDepthShaderProvider;
 import com.hh.ghoststory.render.shaders.CelLineShaderProgram;
-
-import java.util.ArrayList;
 
 /**
  * Created by nils on 12/12/15.
@@ -56,6 +50,7 @@ public class CelShaderScreen extends AbstractScreen {
 	private FrameBuffer celDepthFbo;
 
 	private TextureRegion depthTextureRegion;
+	private TextureRegion defaultTextureRegion;
 
 	private ShaderProgram celLineShader = new CelLineShaderProgram();
 	private ShaderProgram celColorShader = new CelColorShaderProgram();
@@ -72,7 +67,7 @@ public class CelShaderScreen extends AbstractScreen {
 
 	private CameraInputController camController;
 
-	private final Array<GameObject> gameObjects;
+	private final Array<Gob> gameObjects;
 	private String configJson =  Gdx.files.internal("config/cel_models.json").readString();
 	private Json json = new Json();
 
@@ -109,7 +104,7 @@ public class CelShaderScreen extends AbstractScreen {
 			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 
 			celDepthFbo.begin();
-			Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+			Gdx.gl.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 			celDepthBatch.begin(camera);
 			celDepthBatch.render(modelInstances);
@@ -119,24 +114,41 @@ public class CelShaderScreen extends AbstractScreen {
 			depthTextureRegion = new TextureRegion(celDepthFbo.getColorBufferTexture());
 			depthTextureRegion.flip(false, true);
 
+			defaultFbo.begin();
+			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 			defaultBatch.begin(camera);
 			defaultBatch.render(modelInstances, environment);
 			defaultBatch.end();
+			defaultFbo.end();
+
+			defaultTextureRegion = new TextureRegion(defaultFbo.getColorBufferTexture());
+			defaultTextureRegion.flip(false, true);
+
+			if (!celColorShader.isCompiled()) Gdx.app.log("shader", celColorShader.getLog());
+
+			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+
+			spriteBatch.setShader(celColorShader);
+			spriteBatch.begin();
+			spriteBatch.draw(defaultTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			spriteBatch.end();
 
 			spriteBatch.setShader(celLineShader);
 			celLineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			spriteBatch.begin();
 			spriteBatch.draw(depthTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			spriteBatch.end();
+
+			spriteBatch.setShader(null);
 		}
 	}
 
 	@Override
 	protected void doneLoading() {
-		for (GameObject gameObject: gameObjects) {
-			gameObject.modelInstance(new ModelInstance(assetManager.get("models/" + gameObject.modelAsset(), Model.class)));
-			gameObject.modelInstance().transform.translate(gameObject.position());
-			modelInstances.add(gameObject.modelInstance());
+		for (Gob gob : gameObjects) {
+			gob.modelInstance(new ModelInstance(assetManager.get("models/" + gob.modelAsset(), Model.class)));
+			gob.modelInstance().transform.translate(gob.position());
+			modelInstances.add(gob.modelInstance());
 		}
 
 		super.doneLoading();
@@ -172,8 +184,8 @@ public class CelShaderScreen extends AbstractScreen {
 	}
 
 	private void loadModels() {
-		for (GameObject gameObject: gameObjects)
-			assetManager.load("models/" + gameObject.modelAsset(), Model.class);
+		for (Gob gob : gameObjects)
+			assetManager.load("models/" + gob.modelAsset(), Model.class);
 
 		loading = true;
 	}

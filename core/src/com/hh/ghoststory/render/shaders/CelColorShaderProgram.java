@@ -9,6 +9,6 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 public class CelColorShaderProgram extends ShaderProgram {
 	// using the cel line shaders right now. cause color doesn't exist.
 	public CelColorShaderProgram() {
-		super(Gdx.files.internal("shaders/cel.line.vertex.glsl"), Gdx.files.internal("shaders/cel.line.fragment.glsl"));
+		super(Gdx.files.internal("shaders/cel.color.vertex.glsl"), Gdx.files.internal("shaders/cel.color.fragment.glsl"));
 	}
 }

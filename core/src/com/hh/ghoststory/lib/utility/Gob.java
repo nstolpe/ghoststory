@@ -6,14 +6,14 @@ import com.badlogic.gdx.math.Vector3;
 /**
  * Created by nils on 12/13/15.
  */
-public class GameObject {
+public class Gob {
 	private String id;
 	private String modelAsset;
 	private Vector3 position;
 	private ModelInstance modelInstance;
 
-	public GameObject(){}
-	public GameObject(String id, String modelAsset, Vector3 position) {
+	public Gob(){}
+	public Gob(String id, String modelAsset, Vector3 position) {
 		this.id = id;
 		this.modelAsset = modelAsset;
 		this.position = position;
@@ -24,22 +24,22 @@ public class GameObject {
 	public Vector3 position() { return position; }
 	public ModelInstance modelInstance() { return modelInstance; }
 
-	public GameObject id(String id) {
+	public Gob id(String id) {
 		this.id = id;
 		return this;
 	}
 
-	public GameObject modelAsset(String modelAsset) {
+	public Gob modelAsset(String modelAsset) {
 		this.modelAsset = modelAsset;
 		return this;
 	}
 
-	public GameObject position(Vector3 position) {
+	public Gob position(Vector3 position) {
 		this.position = position;
 		return this;
 	}
 
-	public GameObject modelInstance(ModelInstance modelInstance) {
+	public Gob modelInstance(ModelInstance modelInstance) {
 		this.modelInstance = modelInstance;
 		return this;
 	}
