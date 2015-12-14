@@ -1,11 +1,14 @@
 package com.hh.ghoststory.screen;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -15,12 +18,18 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.hh.ghoststory.GhostStory;
+import com.hh.ghoststory.lib.utility.GameObject;
 import com.hh.ghoststory.render.shaders.CelColorShaderProgram;
 import com.hh.ghoststory.render.shaders.CelDepthShaderProvider;
 import com.hh.ghoststory.render.shaders.CelLineShaderProgram;
+
+import java.util.ArrayList;
 
 /**
  * Created by nils on 12/12/15.
@@ -45,7 +54,8 @@ public class CelShaderScreen extends AbstractScreen {
 
 	private FrameBuffer defaultFbo;
 	private FrameBuffer celDepthFbo;
-	private Array<FrameBuffer> frameBuffers = new Array<FrameBuffer>();
+
+	private TextureRegion depthTextureRegion;
 
 	private ShaderProgram celLineShader = new CelLineShaderProgram();
 	private ShaderProgram celColorShader = new CelColorShaderProgram();
@@ -58,15 +68,18 @@ public class CelShaderScreen extends AbstractScreen {
 
 	private AssetManager assetManager = new AssetManager();
 
-	private Array<String> modelAssets = new Array<String>(Gdx.files.internal("config/cel_models.txt").readString().split("\n"));
-
 	private Array<ModelInstance> modelInstances = new Array<ModelInstance>();
 
 	private CameraInputController camController;
 
+	private final Array<GameObject> gameObjects;
+	private String configJson =  Gdx.files.internal("config/cel_models.json").readString();
+	private Json json = new Json();
+
 	public CelShaderScreen(GhostStory game) {
 		super(game);
-		init();
+//		init();
+		gameObjects = json.fromJson(Array.class, configJson);
 		loadModels();
 
 		camera.position.set(5, 5, 5);
@@ -92,39 +105,63 @@ public class CelShaderScreen extends AbstractScreen {
 		if (loading && assetManager.update()) {
 			doneLoading();
 		} else {
+			Gdx.gl.glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+
+			celDepthFbo.begin();
 			Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+			celDepthBatch.begin(camera);
+			celDepthBatch.render(modelInstances);
+			celDepthBatch.end();
+			celDepthFbo.end();
+
+			depthTextureRegion = new TextureRegion(celDepthFbo.getColorBufferTexture());
+			depthTextureRegion.flip(false, true);
+
 			defaultBatch.begin(camera);
 			defaultBatch.render(modelInstances, environment);
 			defaultBatch.end();
+
+			spriteBatch.setShader(celLineShader);
+			celLineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			spriteBatch.begin();
+			spriteBatch.draw(depthTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			spriteBatch.end();
 		}
 	}
 
 	@Override
 	protected void doneLoading() {
-		for (String modelAsset : modelAssets)
-			modelInstances.add(new ModelInstance(assetManager.get("models/" + modelAsset, Model.class)));
+		for (GameObject gameObject: gameObjects) {
+			gameObject.modelInstance(new ModelInstance(assetManager.get("models/" + gameObject.modelAsset(), Model.class)));
+			gameObject.modelInstance().transform.translate(gameObject.position());
+			modelInstances.add(gameObject.modelInstance());
+		}
+
 		super.doneLoading();
 	}
 	@Override
 	public void resize(int width, int height) {
 		initFrameBuffers(width, height);
 		initCamera(width, height);
+		spriteBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, width, height));
 	}
 
 	@Override
 	public void dispose() {
-		for (FrameBuffer frameBuffer : frameBuffers) frameBuffer.dispose();
 		for (ModelBatch modelBatch : modelBatches) modelBatch.dispose();
+		defaultFbo.dispose();
+		celDepthFbo.dispose();
 		spriteBatch.dispose();
 		assetManager.dispose();
 	}
 
 	private void initFrameBuffers(int width, int height) {
-		for (FrameBuffer frameBuffer : frameBuffers) {
-			if (frameBuffer!= null) frameBuffer.dispose();
-			frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
-		}
+		if (defaultFbo != null) defaultFbo.dispose();
+		defaultFbo = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		if (celDepthFbo != null) celDepthFbo.dispose();
+		celDepthFbo = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 	}
 
 	private void initCamera(int width, int height) {
@@ -134,16 +171,10 @@ public class CelShaderScreen extends AbstractScreen {
 		camera.update();
 	}
 
-	private void init() {
-		frameBuffers.add(defaultFbo);
-		frameBuffers.add(celDepthFbo);
-		modelBatches.add(defaultBatch);
-		modelBatches.add(celDepthBatch);
-	}
-
 	private void loadModels() {
-		for (String modelAsset : modelAssets)
-			assetManager.load("models/" + modelAsset, Model.class);
+		for (GameObject gameObject: gameObjects)
+			assetManager.load("models/" + gameObject.modelAsset(), Model.class);
+
 		loading = true;
 	}
 }

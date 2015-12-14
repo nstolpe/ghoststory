@@ -1,0 +1,30 @@
+[
+  {
+    "class":"com.hh.ghoststory.lib.utility.GameObject",
+    "id":"ghost",
+    "modelAsset":"ghost_blue.g3dj",
+    "position":{
+      "x":1,
+      "z":4
+    }
+  },
+  {
+
+    "class":"com.hh.ghoststory.lib.utility.GameObject",
+    "id":"cube",
+    "modelAsset":"cube.g3dj",
+    "position":{
+      "x":-4,
+      "z":3
+    }
+  },
+  {
+    "class":"com.hh.ghoststory.lib.utility.GameObject",
+    "id":"spider",
+    "modelAsset":"spider.g3dj",
+    "position":{
+      "x":-7,
+      "z":-8
+    }
+  }
+]
