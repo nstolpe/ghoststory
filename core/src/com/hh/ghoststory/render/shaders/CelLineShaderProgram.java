@@ -17,6 +17,6 @@ public class CelLineShaderProgram extends ShaderProgram {
 	@Override
 	public void begin() {
 		super.begin();
-		setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		setUniformf("u_size", Gdx.graphics.getWidth() / 4, Gdx.graphics.getHeight() / 4);
 	}
 }

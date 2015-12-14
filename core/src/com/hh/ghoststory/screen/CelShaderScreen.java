@@ -20,10 +20,11 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.hh.ghoststory.GhostStory;
-import com.hh.ghoststory.lib.utility.Gob;
+import com.hh.ghoststory.lib.utility.GameObject;
 import com.hh.ghoststory.render.shaders.CelColorShaderProgram;
 import com.hh.ghoststory.render.shaders.CelDepthShaderProvider;
 import com.hh.ghoststory.render.shaders.CelLineShaderProgram;
+import com.hh.ghoststory.render.shaders.PlayShaderProvider;
 
 /**
  * Created by nils on 12/12/15.
@@ -42,7 +43,7 @@ public class CelShaderScreen extends AbstractScreen {
 	 * celLineShader     Draws draws the cel lines by sampling `defaultFbo`
 	 * celColorShader    Draws the cel colors by sampling `celDepthFbo`
 	 */
-	private ModelBatch defaultBatch = new ModelBatch();
+	private ModelBatch defaultBatch = new ModelBatch(new PlayShaderProvider());
 	private ModelBatch celDepthBatch = new ModelBatch(new CelDepthShaderProvider());
 	private Array<ModelBatch> modelBatches = new Array<ModelBatch>();
 
@@ -67,13 +68,12 @@ public class CelShaderScreen extends AbstractScreen {
 
 	private CameraInputController camController;
 
-	private final Array<Gob> gameObjects;
+	private final Array<GameObject> gameObjects;
 	private String configJson =  Gdx.files.internal("config/cel_models.json").readString();
 	private Json json = new Json();
 
 	public CelShaderScreen(GhostStory game) {
 		super(game);
-//		init();
 		gameObjects = json.fromJson(Array.class, configJson);
 		loadModels();
 
@@ -83,7 +83,7 @@ public class CelShaderScreen extends AbstractScreen {
 		camera.far = 1000;
 		camera.update();
 
-		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+//		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
 		camController = new CameraInputController(camera);
@@ -114,24 +114,24 @@ public class CelShaderScreen extends AbstractScreen {
 			depthTextureRegion = new TextureRegion(celDepthFbo.getColorBufferTexture());
 			depthTextureRegion.flip(false, true);
 
-			defaultFbo.begin();
+//			defaultFbo.begin();
 			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 			defaultBatch.begin(camera);
 			defaultBatch.render(modelInstances, environment);
 			defaultBatch.end();
-			defaultFbo.end();
+//			defaultFbo.end();
 
 			defaultTextureRegion = new TextureRegion(defaultFbo.getColorBufferTexture());
 			defaultTextureRegion.flip(false, true);
 
 			if (!celColorShader.isCompiled()) Gdx.app.log("shader", celColorShader.getLog());
 
-			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
+//			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
 
-			spriteBatch.setShader(celColorShader);
-			spriteBatch.begin();
-			spriteBatch.draw(defaultTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			spriteBatch.end();
+//			spriteBatch.setShader(celColorShader);
+//			spriteBatch.begin();
+//			spriteBatch.draw(defaultTextureRegion, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//			spriteBatch.end();
 
 			spriteBatch.setShader(celLineShader);
 			celLineShader.setUniformf("u_size", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -145,10 +145,10 @@ public class CelShaderScreen extends AbstractScreen {
 
 	@Override
 	protected void doneLoading() {
-		for (Gob gob : gameObjects) {
-			gob.modelInstance(new ModelInstance(assetManager.get("models/" + gob.modelAsset(), Model.class)));
-			gob.modelInstance().transform.translate(gob.position());
-			modelInstances.add(gob.modelInstance());
+		for (GameObject gameObject : gameObjects) {
+			gameObject.modelInstance(new ModelInstance(assetManager.get("models/" + gameObject.modelAsset(), Model.class)));
+			gameObject.modelInstance().transform.translate(gameObject.position());
+			modelInstances.add(gameObject.modelInstance());
 		}
 
 		super.doneLoading();
@@ -184,8 +184,8 @@ public class CelShaderScreen extends AbstractScreen {
 	}
 
 	private void loadModels() {
-		for (Gob gob : gameObjects)
-			assetManager.load("models/" + gob.modelAsset(), Model.class);
+		for (GameObject gameObject : gameObjects)
+			assetManager.load("models/" + gameObject.modelAsset(), Model.class);
 
 		loading = true;
 	}

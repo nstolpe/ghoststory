@@ -145,6 +145,19 @@ void main() {
 		vec4 diffuse = vec4(1.0);
 	#endif
 
+//	float diffIntensity = max(diffuse.r, max(diffuse.g, diffuse.b));
+//	float diffFactor;
+//	if (diffIntensity > 0.8)
+//		diffFactor = 1.0;
+//	else if (diffIntensity > 0.5)
+//		diffFactor = 0.8;
+//	else if (diffIntensity > 0.25)
+//		diffFactor = 0.3;
+//	else
+//		diffFactor = 0.1;
+//
+//	diffuse *= diffFactor;
+
 	#if (!defined(lightingFlag))
 		gl_FragColor.rgb = diffuse.rgb;
 	#elif (!defined(specularFlag))
@@ -172,6 +185,17 @@ void main() {
 		#else
 			vec3 specular = v_lightSpecular;
 		#endif
+
+		float specIntensity = max(specular.r, max(specular.g, specular.b));
+		float specFactor;
+		if (specIntensity > 0.6)
+			specFactor = 1.0;
+		else if (specIntensity > 0.3)
+			specFactor = 0.5;
+		else
+			specFactor = 0.1;
+
+		specular *= specFactor;
 
 		#if defined(ambientFlag) && defined(separateAmbientFlag)
 			#ifdef shadowMapFlag
