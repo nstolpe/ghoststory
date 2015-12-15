@@ -24,18 +24,17 @@ import com.hh.ghoststory.lib.utility.GameObject;
 import com.hh.ghoststory.render.shaders.CelColorShaderProgram;
 import com.hh.ghoststory.render.shaders.CelDepthShaderProvider;
 import com.hh.ghoststory.render.shaders.CelLineShaderProgram;
-import com.hh.ghoststory.render.shaders.PlayShaderProvider;
 
 /**
  * Created by nils on 12/12/15.
  */
 public class CelShaderScreen extends AbstractScreen {
 	/**
-	 * defaultBatch      Draws all models w/ the default LibGDX shader.
+	 * mainBatch      Draws all models w/ the default LibGDX shader.
 	 * celDepthBatch     Draws the scene depth w/ some calculations from camera near/far. Captured in FBO for drawing
 	 *                   cel lines in post processing pass
 	 *
-	 * defaultFbo        FBO to capture the output of `defaultBatch`
+	 * defaultFbo        FBO to capture the output of `mainBatch`
 	 * celDepthFbo       FBO to capture the output of `celDepthBatch`
 	 *
 	 * fbos              An array of `FrameBuffer` objects. For performing batch operations (resizing...)
@@ -43,7 +42,8 @@ public class CelShaderScreen extends AbstractScreen {
 	 * celLineShader     Draws draws the cel lines by sampling `defaultFbo`
 	 * celColorShader    Draws the cel colors by sampling `celDepthFbo`
 	 */
-	private ModelBatch defaultBatch = new ModelBatch(new PlayShaderProvider());
+	private ModelBatch mainBatch = new ModelBatch(Gdx.files.internal("shaders/cel.main.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.main.fragment.glsl").readString());
+//	private ModelBatch mainBatch = new ModelBatch(new PlayShaderProvider());
 	private ModelBatch celDepthBatch = new ModelBatch(new CelDepthShaderProvider());
 	private Array<ModelBatch> modelBatches = new Array<ModelBatch>();
 
@@ -83,7 +83,7 @@ public class CelShaderScreen extends AbstractScreen {
 		camera.far = 1000;
 		camera.update();
 
-//		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
+		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
 		camController = new CameraInputController(camera);
@@ -116,9 +116,9 @@ public class CelShaderScreen extends AbstractScreen {
 
 //			defaultFbo.begin();
 			Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT | GL20.GL_COLOR_BUFFER_BIT);
-			defaultBatch.begin(camera);
-			defaultBatch.render(modelInstances, environment);
-			defaultBatch.end();
+			mainBatch.begin(camera);
+			mainBatch.render(modelInstances, environment);
+			mainBatch.end();
 //			defaultFbo.end();
 
 			defaultTextureRegion = new TextureRegion(defaultFbo.getColorBufferTexture());

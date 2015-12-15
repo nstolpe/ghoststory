@@ -104,24 +104,6 @@ uniform vec4 u_fogColor;
 varying float v_fog;
 #endif // fogFlag
 
-//uniform sampler2DShadow u_shadows;
-uniform sampler2D u_shadows;
-uniform float u_screenWidth;
-uniform float u_screenHeight;
-
-float PCF(sampler2D u_shadows, vec2 uv) {
-    float result = 0.0;
-    float depth = texture2D(u_shadows, uv).a;
-    for (float x = -2.0; x <= 2.0; x++) {
-        for (float y = -2.0; y <= 2.0; y++) {
-            vec2 off = vec2(x, y) / 1024.0;
-            float alpha = texture2D(u_shadows, uv + off).a;
-            result += texture2D(u_shadows, uv + off).a;
-        }
-    }
-    return result/25.0;
-}
-
 void main() {
 	#if defined(normalFlag)
 		vec3 normal = v_normal;
@@ -144,6 +126,19 @@ void main() {
 	#else
 		vec4 diffuse = vec4(1.0);
 	#endif
+
+	float diffIntensity = max(diffuse.r, max(diffuse.g, diffuse.b));
+	float diffFactor;
+	if (diffIntensity > 0.8)
+		diffFactor = 1.0;
+	else if (diffIntensity > 0.5)
+		diffFactor = 0.8;
+	else if (diffIntensity > 0.25)
+		diffFactor = 0.3;
+	else
+		diffFactor = 0.1;
+
+	diffuse *= diffFactor;
 
 	#if (!defined(lightingFlag))
 		gl_FragColor.rgb = diffuse.rgb;
@@ -172,6 +167,17 @@ void main() {
 		#else
 			vec3 specular = v_lightSpecular;
 		#endif
+
+		float specIntensity = max(specular.r, max(specular.g, specular.b));
+		float specFactor;
+		if (specIntensity > 0.6)
+			specFactor = 1.0;
+		else if (specIntensity > 0.3)
+			specFactor = 0.5;
+		else
+			specFactor = 0.1;
+
+		specular *= specFactor;
 
 		#if defined(ambientFlag) && defined(separateAmbientFlag)
 			#ifdef shadowMapFlag
@@ -203,22 +209,16 @@ void main() {
 		gl_FragColor.a = 1.0;
 	#endif
 
-	// get the xy coordinates of the current scene, then divide them by width and height
-	// to convert to the depth map.
-	vec2 c = gl_FragCoord.xy;
-	c.x /= u_screenWidth;
-	c.y /= u_screenHeight;
+	float intensity = max(gl_FragColor.r, max(gl_FragColor.g, gl_FragColor.b));
+	float factor;
+	if (intensity > 0.8)
+		factor = 1.0;
+	else if (intensity > 0.5)
+		factor = 0.8;
+	else if (intensity > 0.25)
+		factor = 0.3;
+	else
+		factor = 0.1;
 
-	// get the color from u_shadows
-	vec4 color = texture2D(u_shadows, c);
-//	color.a = PCF(u_shadows, c);
-//	vec4 color = texture(u_shadows, vec3(c, gl_FragCoord.z));
-	gl_FragColor.rgb *= (0.4 + 1.0 * color.a);
-// uncomment to just render shadow map
-//	gl_FragColor = color;
-	#ifdef alphaFlag
-		gl_FragColor.a = 0.0;
-	#else
-		gl_FragColor.a = 1.0;
-	#endif
+	gl_FragColor.rgb *= factor;
 }
