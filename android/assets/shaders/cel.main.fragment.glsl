@@ -138,7 +138,7 @@ void main() {
 	else
 		diffFactor = 0.1;
 
-	diffuse *= diffFactor;
+//	diffuse *= diffFactor;
 
 	#if (!defined(lightingFlag))
 		gl_FragColor.rgb = diffuse.rgb;

@@ -84,7 +84,7 @@ public class CelShaderScreen extends AbstractScreen {
 		camera.update();
 
 		environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+		environment.add(new DirectionalLight().set(0.8f, 0.8f, 1.8f, -1f, -0.8f, 0.2f));
 
 		camController = new CameraInputController(camera);
 		Gdx.input.setInputProcessor(camController);

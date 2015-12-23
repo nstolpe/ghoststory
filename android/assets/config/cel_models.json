@@ -1,8 +1,17 @@
 [
   {
     "class":"com.hh.ghoststory.lib.utility.GameObject",
+    "id":"scene",
+    "modelAsset":"scene.g3dj",
+    "position":{
+      "x":0,
+      "z":0
+    }
+  },
+  {
+    "class":"com.hh.ghoststory.lib.utility.GameObject",
     "id":"ghost",
-    "modelAsset":"ghost_blue.g3dj",
+    "modelAsset":"mask_ghost.g3dj",
     "position":{
       "x":1,
       "z":4
