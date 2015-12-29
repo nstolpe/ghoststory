@@ -170,6 +170,7 @@ void main() {
 
 		float specIntensity = max(specular.r, max(specular.g, specular.b));
 		float specFactor;
+
 		if (specIntensity > 0.6)
 			specFactor = 1.0;
 		else if (specIntensity > 0.3)
