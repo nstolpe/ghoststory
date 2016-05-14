@@ -31,7 +31,7 @@ public class CelTutorialScreen extends AbstractScreen {
 	private ShaderProgram lineShader = new CelLineShaderProgram();
 
 	private SpriteBatch spriteBatch = new SpriteBatch();
-	private ModelBatch modelBatch = new ModelBatch(Gdx.files.internal("shaders/cel.main.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.main.fragment.glsl").readString());
+	private ModelBatch modelBatch = new ModelBatch(Gdx.files.classpath("com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.main.fragment.glsl").readString());
 	private ModelBatch depthBatch = new ModelBatch(new CelDepthShaderProvider());
 	private Environment environment = new Environment();
 

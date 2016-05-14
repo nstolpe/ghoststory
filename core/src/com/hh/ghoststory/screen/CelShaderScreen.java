@@ -42,7 +42,8 @@ public class CelShaderScreen extends AbstractScreen {
 	 * celLineShader     Draws draws the cel lines by sampling `defaultFbo`
 	 * celColorShader    Draws the cel colors by sampling `celDepthFbo`
 	 */
-	private ModelBatch mainBatch = new ModelBatch(Gdx.files.internal("shaders/cel.main.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.main.fragment.glsl").readString());
+//	private ModelBatch mainBatch = new ModelBatch(Gdx.files.internal("shaders/cel.main.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.main.fragment.glsl").readString());
+	private ModelBatch mainBatch = new ModelBatch(Gdx.files.classpath("com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl").readString(), Gdx.files.internal("shaders/cel.main.fragment.glsl").readString());
 //	private ModelBatch mainBatch = new ModelBatch(new PlayShaderProvider());
 	private ModelBatch celDepthBatch = new ModelBatch(new CelDepthShaderProvider());
 	private Array<ModelBatch> modelBatches = new Array<ModelBatch>();
