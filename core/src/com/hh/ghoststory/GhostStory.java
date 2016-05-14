@@ -24,7 +24,7 @@ public class GhostStory extends Game {
 //		setScreen(getCreateScreen());
 //		setScreen(getPlayScreen());
 //		setScreen(new PlayScreen(this));
-		setScreen(new CelShaderScreen(this));
+		setScreen(new CelTutorialScreen(this));
 //		setScreen(new TestScreen(this));
 	}
 
