@@ -20,9 +20,6 @@ import com.hh.ghoststory.GhostStory;
 import com.hh.ghoststory.render.shaders.CelDepthShaderProvider;
 import com.hh.ghoststory.render.shaders.CelLineShaderProgram;
 
-/**
- * Created by nils on 5/14/16.
- */
 public class CelTutorialScreen extends AbstractScreen {
 	private PerspectiveCamera camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
