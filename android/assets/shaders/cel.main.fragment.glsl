@@ -105,16 +105,16 @@ void main() {
 		vec4 diffuse = vec4(1.0);
 	#endif
 
-	float diffIntensity = max(diffuse.r, max(diffuse.g, diffuse.b));
-	float diffFactor;
-	if (diffIntensity > 0.8)
-		diffFactor = 1.0;
-	else if (diffIntensity > 0.5)
-		diffFactor = 0.8;
-	else if (diffIntensity > 0.25)
-		diffFactor = 0.3;
-	else
-		diffFactor = 0.1;
+//	float diffIntensity = max(diffuse.r, max(diffuse.g, diffuse.b));
+//	float diffFactor;
+//	if (diffIntensity > 0.8)
+//		diffFactor = 1.0;
+//	else if (diffIntensity > 0.5)
+//		diffFactor = 0.8;
+//	else if (diffIntensity > 0.25)
+//		diffFactor = 0.3;
+//	else
+//		diffFactor = 0.1;
 
 //	diffuse *= diffFactor;
 
